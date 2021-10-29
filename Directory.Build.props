@@ -1,0 +1,36 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>disable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>Full</DebugType>
+        
+        <GameProvider>Static</GameProvider>
+        <GameVersion>$(SolutionDir)Among Us</GameVersion>
+        
+        <Version>0.0.0</Version>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <EmbeddedResource Include="**\Resources\**" />
+        <EmbeddedResource Remove="**\Resources\**\*.manifest" />
+        <None Update="**\Resources\**\*.manifest">
+            <DependentUpon>%(Filename)</DependentUpon>
+        </None>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Reference Include="Reactor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\..\Reactor\Reactor\bin\Debug\netstandard2.1\Reactor.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Reactor.MSBuild" Version="0.1.5">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>
