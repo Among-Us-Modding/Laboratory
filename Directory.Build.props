@@ -6,9 +6,9 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>Full</DebugType>
-        
-        <GameProvider>Static</GameProvider>
-        <GameVersion>$(SolutionDir)Among Us</GameVersion>
+
+        <GamePlatform>Steam</GamePlatform>
+        <GameVersion>2021.6.30-s</GameVersion>
         
         <Version>0.0.0</Version>
     </PropertyGroup>
@@ -20,17 +20,12 @@
             <DependentUpon>%(Filename)</DependentUpon>
         </None>
     </ItemGroup>
-    
+
     <ItemGroup>
-        <Reference Include="Reactor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Reactor\Reactor\bin\Debug\netstandard2.1\Reactor.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="Reactor.MSBuild" Version="0.1.5">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Reactor" Version="1.0.0-dev" />
+        <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.0" />
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.426" />
+        <PackageReference Include="AmongUs.GameLibs" Version="$(GameVersion)" />
+        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="0.1.0" />
     </ItemGroup>
 </Project>
