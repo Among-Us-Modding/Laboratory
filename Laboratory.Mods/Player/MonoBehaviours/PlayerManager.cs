@@ -17,9 +17,7 @@ namespace Laboratory.Mods.Player.MonoBehaviours
         public PlayerControl MyPlayer { get; set; }
         public PlayerPhysics MyPhysics { get; set; }
         public CustomNetworkTransform MyNetTransform { get; set; }
-        public List<CooldownButton> Buttons { [HideFromIl2Cpp] get; } = new();
-
-
+        
         public void Awake()
         {
             MyPlayer = GetComponent<PlayerControl>();
@@ -34,13 +32,6 @@ namespace Laboratory.Mods.Player.MonoBehaviours
                 if (MyPhysics.body) MyPhysics.EnableInterpolation();
                 MyPhysics.Skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
             }
-        }
-        
-        public void Update()
-        {
-            if (!AmOwner) return;
-            
-            foreach (CooldownButton button in new List<CooldownButton>(Buttons)) button.Update();
         }
     }
 }
