@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnhollowerBaseLib;
 using UnityEngine;
 
-namespace Crewmate.Mods.Utilities.MapChanges
+namespace Laboratory.Mods.CustomMap
 {
     public static class LavaColorChanger
     {

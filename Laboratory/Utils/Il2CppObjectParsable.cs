@@ -2,6 +2,9 @@ using Il2CppSystem;
 
 namespace Laboratory.Utils
 {
+    /// <summary>
+    /// This utility provides a simple way to get the boxed version of any il2cpp value type
+    /// </summary>
     public readonly struct Il2CppObjectParsable
     {
         public readonly Object Object;

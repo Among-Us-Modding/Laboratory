@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Crewmate.Mods.Utilities.MapChanges;
 using HarmonyLib;
 using Laboratory.Extensions;
 using Reactor.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Laboratory.Mods.Utils.MapChanges.Patches
+namespace Laboratory.Mods.CustomMap.Patches
 {
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
     public static class ShipStatus_Awake_Patch

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Laboratory.Debugging;
-using Laboratory.Mods.Utils.General;
+using Laboratory.Mods.Effects.Utils;
 using UnityEngine;
 
 namespace Laboratory.Mods

@@ -1,8 +1,8 @@
 using HarmonyLib;
-using Laboratory.Mods.Utils.General;
+using Laboratory.Mods.Effects.Utils;
 using UnityEngine;
 
-namespace Laboratory.Mods.Utils.MapChanges.Patches
+namespace Laboratory.Mods.CustomMap.Patches
 {
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Start))]
     public static class HudManager_Start_Patch

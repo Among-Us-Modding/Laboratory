@@ -3,7 +3,7 @@ using Reactor;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace Laboratory.Mods.Utils.General
+namespace Laboratory.Mods.Effects.Utils
 {
     /// <summary>
     /// Camera allowing for zooming while in game without interacting with other Hud elements

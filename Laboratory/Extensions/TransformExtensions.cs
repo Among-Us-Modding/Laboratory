@@ -5,6 +5,9 @@ namespace Laboratory.Extensions
 {
     public static class TransformExtensions
     {
+        /// <summary>
+        /// Sets the world X position of a transform
+        /// </summary>
         public static Transform SetXPos(this Transform transform, float x)
         {
             Vector3 vector = transform.position;
@@ -14,6 +17,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the world Y position of a transform
+        /// </summary>
         public static Transform SetYPos(this Transform transform, float y)
         {
             Vector3 vector = transform.position;
@@ -23,6 +29,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the world Z position of a transform
+        /// </summary>
         public static Transform SetZPos(this Transform transform, float z)
         {
             Vector3 vector = transform.position;
@@ -32,6 +41,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the local X position of a transform
+        /// </summary>
         public static Transform SetXLocalPos(this Transform transform, float x)
         {
             Vector3 vector = transform.localPosition;
@@ -41,6 +53,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the local Y position of a transform
+        /// </summary>
         public static Transform SetYLocalPos(this Transform transform, float y)
         {
             Vector3 vector = transform.localPosition;
@@ -50,6 +65,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the local Z position of a transform
+        /// </summary>
         public static Transform SetZLocalPos(this Transform transform, float z)
         {
             Vector3 vector = transform.localPosition;
@@ -58,22 +76,10 @@ namespace Laboratory.Extensions
             
             return transform;
         }
-        
-        public static void SetLocalZ(this Transform self, float z)
-        {
-            Vector3 localPosition = self.localPosition;
-            localPosition.z = z;
-            self.localPosition = localPosition;
-        }
-        
-        public static void SetWorldZ(this Transform self, float z)
-        {
-            Vector3 position = self.position;
-            position.z = z;
-            self.position = position;
-        }
 
-        
+        /// <summary>
+        /// Sets the local X scale of a transform
+        /// </summary>
         public static Transform SetXScale(this Transform transform, float x)
         {
             Vector3 vector = transform.localScale;
@@ -83,6 +89,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the local Y scale of a transform
+        /// </summary>
         public static Transform SetYScale(this Transform transform, float y)
         {
             Vector3 vector = transform.localScale;
@@ -92,6 +101,9 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Sets the local Z scale of a transform
+        /// </summary>
         public static Transform SetZScale(this Transform transform, float z)
         {
             Vector3 vector = transform.localScale;
@@ -101,14 +113,22 @@ namespace Laboratory.Extensions
             return transform;
         }
         
+        /// <summary>
+        /// Performs an action on every child of a transform
+        /// </summary>
         public static void ForeachChild(this Transform transform, Action<Transform> action)
         {
-            for (int i = 0; i < transform.childCount; i++)
+            foreach (var child in transform.GetChildren())
             {
-                action(transform.GetChild(i));
+                action(child);
             }
         }
     
+        /// <summary>
+        /// Performs an action on every child of a transform with its sibling index
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="action"></param>
         public static void ForeachChildIdx(this Transform transform, Action<int, Transform> action)
         {
             for (int i = 0; i < transform.childCount; i++)
@@ -117,6 +137,9 @@ namespace Laboratory.Extensions
             }
         }
 
+        /// <summary>
+        /// Get all the children of a transform
+        /// </summary>
         public static Transform[] GetChildren(this Transform transform)
         {
             int childCount = transform.childCount;

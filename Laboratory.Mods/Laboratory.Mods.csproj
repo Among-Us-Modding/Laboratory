@@ -7,5 +7,4 @@
     <ItemGroup>
       <ProjectReference Include="..\Laboratory\Laboratory.csproj" />
     </ItemGroup>
-
 </Project>

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Laboratory.Mods.Enums;
+using Laboratory.Mods.Systems;
 using UnityEngine;
 
-namespace Laboratory.Mods.Utils.MapChanges
+namespace Laboratory.Mods.CustomMap
 {
     /// <summary>
     /// Configuration options for the appearance of the map
@@ -18,12 +20,15 @@ namespace Laboratory.Mods.Utils.MapChanges
         /// Hide the room tracker on the HUD
         /// </summary>
         public static bool DisableRoomTracker { get; set; }
-        
+
         /// <summary>
         /// Custom Systems that will be added to the map
         /// Type must be able to be cast into ISystemType
         /// </summary>
-        public static Dictionary<SystemTypes, Type> CustomSystems { get; set; }
+        public static Dictionary<SystemTypes, Type> CustomSystems { get; set; } = new()
+        {
+            { CustomSystemTypes.HealthSystem, typeof(HealthSystem) }
+        };
 
         /// <summary>
         /// Removes the snow particles on polus

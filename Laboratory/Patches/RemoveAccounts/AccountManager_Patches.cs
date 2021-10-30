@@ -1,10 +1,4 @@
-﻿using System;
-using HarmonyLib;
-using Laboratory.Extensions;
-using TMPro;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
+﻿using HarmonyLib;
 
 namespace Laboratory.Patches.RemoveAccounts
 {

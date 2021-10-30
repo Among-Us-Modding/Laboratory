@@ -3,7 +3,7 @@ using System.Linq;
 using UnhollowerBaseLib;
 using UnityEngine;
 
-namespace Laboratory.Mods.Utils.MapChanges
+namespace Laboratory.Mods.CustomMap
 {
     public static class SpriteSwapper
     {

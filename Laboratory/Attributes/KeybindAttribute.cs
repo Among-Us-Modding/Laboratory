@@ -40,9 +40,9 @@ namespace Laboratory.Attributes
         private static Dictionary<KeyCode, List<MethodInfo>> Keybinds = new();
         private static Dictionary<int, List<MethodInfo>> Mousebinds = new();
 
-        public static void Initialize()
+        internal static void Initialize()
         {
-            ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+            ChainloaderHooks.PluginLoaded += plugin => Register(plugin.GetType().Assembly);
         }
         
         private static void Register(Assembly assembly = null)

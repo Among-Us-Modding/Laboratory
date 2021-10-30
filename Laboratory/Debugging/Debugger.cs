@@ -6,6 +6,9 @@ using Reactor;
 
 namespace Laboratory.Debugging
 {
+    /// <summary>
+    /// Debug class which will be added to the debug window on plugin load
+    /// </summary>
     public abstract class Debugger
     {
         /// <summary>
@@ -15,12 +18,12 @@ namespace Laboratory.Debugging
 
         internal static void Initialize()
         {
-            ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+            ChainloaderHooks.PluginLoaded += plugin => Register(plugin.GetType().Assembly);
         }
 
         private static void Register(Assembly asm)
         {
-            foreach (Type type in asm.GetTypes().Where(typeof(Debugger).IsAssignableFrom))
+            foreach (Type type in asm.GetTypes().Where(t => t.IsSubclassOf(typeof(Debugger))))
             {
                 Debugger debugger = (Debugger) Activator.CreateInstance(type);
                 Tabs.AddRange(debugger.DebugTabs());

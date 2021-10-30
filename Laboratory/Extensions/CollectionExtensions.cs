@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnhollowerBaseLib;
 using I = Il2CppSystem.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace Laboratory.Extensions
         /// </summary>
         public static System.Collections.Generic.List<T> ToSystemList<T>(this I.List<T> iList)
         {
-            return new System.Collections.Generic.List<T>(iList.ToArray());
+            return iList.ToArray().ToList();
         }
         
         /// <summary>
