@@ -45,19 +45,14 @@ namespace Laboratory.Mods.Effects
 
         public override void Write(MessageWriter writer, EffectInfo effectInfo)
         {
-            if (effectInfo.TargetPlayer)
-            {
-                writer.Write(true);
-                writer.WriteNetObject(effectInfo.TargetPlayer);
-            }
-            else writer.Write(false);
+            writer.WriteNetObject(effectInfo.TargetPlayer);
             writer.Write(effectInfo.Primary);
             writer.Write(effectInfo.FullName);
         }
 
         public override EffectInfo Read(MessageReader reader)
         {
-            var player = reader.ReadBoolean() ? reader.ReadNetObject<PlayerControl>() : null;
+            var player = reader.ReadNetObject<PlayerControl>();
             var primary = reader.ReadBoolean();
             return new EffectInfo(player, reader.ReadString(), primary);
         }
