@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Laboratory.Debugging;
 using Laboratory.Mods.Buttons;
 using Laboratory.Mods.Effects.Interfaces;
-using Laboratory.Mods.Effects.MonoBehaviours;
 using Laboratory.Mods.Effects.Utils;
+using Laboratory.Mods.Player;
 using Laboratory.Mods.Player.MonoBehaviours;
 using Reactor;
 using UnityEngine;
@@ -40,10 +39,35 @@ namespace Laboratory.Mods
 
             CustomGUILayout.Button("Test Button", () =>
             {
-                var button = CooldownButton.Create<TargetButton>();
+                var button = CooldownButton.Create<CooldownButton>();
                 button.SetSprite(HudManager.Instance.KillButton.renderer.sprite);
-                button.CurrentTime = button.Cooldown = 5f;
-                button.OnClickAction += () => Logger<ModPlugin>.Message("Clicked");
+                button.CurrentTime = button.Cooldown = 1f;
+                button.OnClickAction += () =>
+                {
+                    PlayerControl.LocalPlayer.Visible = !PlayerControl.LocalPlayer.Visible;
+                };
+            });
+            
+            CustomGUILayout.Button("Test Button 2", () =>
+            {
+                var button = CooldownButton.Create<CooldownButton>();
+                button.SetSprite(HudManager.Instance.KillButton.renderer.sprite);
+                button.CurrentTime = button.Cooldown = 1f;
+                button.OnClickAction += () =>
+                {
+                    Visible.AddVisible(PlayerControl.LocalPlayer, "Button");
+                };
+            });
+            
+            CustomGUILayout.Button("Test Button 3", () =>
+            {
+                var button = CooldownButton.Create<CooldownButton>();
+                button.SetSprite(HudManager.Instance.KillButton.renderer.sprite);
+                button.CurrentTime = button.Cooldown = 1f;
+                button.OnClickAction += () =>
+                {
+                    Visible.RemoveVisible(PlayerControl.LocalPlayer, "Button");
+                };
             });
         }
     }

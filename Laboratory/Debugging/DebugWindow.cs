@@ -33,14 +33,19 @@ namespace Laboratory.Debugging
         public int SelectedTab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
         
         /// <summary>
-        /// Window Id used to build windw
-        /// </summary>
-        public int WindowId { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-        
-        /// <summary>
         /// Rect of the debug window
         /// </summary>
-        private Rect PrimaryWindow { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; } = new(20, 20, 100, 100);
+        private Rect PrimaryRect { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; } = new(20, 20, 100, 100);
+        
+        /// <summary>
+        /// Draw window used to draw debug components
+        /// </summary>
+        private DragWindow PrimaryWindow { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+
+        private void Awake()
+        {
+            PrimaryWindow = new(PrimaryRect, "Debug", (i) => BuildPrimaryWindow(i));
+        }
         
         private void Update()
         {
@@ -51,15 +56,7 @@ namespace Laboratory.Debugging
         {
             if (!Enabled) return;
 
-            WindowId = 0;
-            PrimaryWindow = new Rect(PrimaryWindow.x, PrimaryWindow.y, 20, 20);
-            PrimaryWindow = GUILayout.Window(WindowId++, PrimaryWindow, (Action<int>) BuildPrimaryWindow, "Debug", EmptyOptions);
-            PrimaryWindow.ClampScreen();
-
-            if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && PrimaryWindow.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
-            {
-                Input.ResetInputAxes();
-            }
+            PrimaryWindow.OnGUI();
         }
 
         [HideFromIl2Cpp]

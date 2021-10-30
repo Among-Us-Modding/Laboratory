@@ -2,6 +2,7 @@
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Laboratory.Mods.Player.Attributes;
+using Laboratory.Mods.Utils;
 using Reactor;
 using Reactor.Patches;
 
@@ -22,6 +23,9 @@ namespace Laboratory.Mods
         {
             Harmony.CreateAndPatchAll(GetType().Assembly);
             PlayerComponentAttribute.Initialize();
+            
+            MapLoader.Instance = AddComponent<MapLoader>();
+
             ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory.Mods Loaded";
         }
     }

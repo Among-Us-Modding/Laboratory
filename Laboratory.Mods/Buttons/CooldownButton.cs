@@ -12,8 +12,8 @@ namespace Laboratory.Mods.Buttons
     [RegisterInIl2Cpp]
     public class CooldownButton : MonoBehaviour
     {
-        public static float XDistFromEdge = 1.45f;
-        public static float YDistFromEdge = 1.4f;
+        public static float XDistFromEdge = 1.1f;
+        public static float YDistFromEdge = 1.1f;
 
         private static readonly int Percent = Shader.PropertyToID("_Percent");
         private static readonly int Desat = Shader.PropertyToID("_Desat");

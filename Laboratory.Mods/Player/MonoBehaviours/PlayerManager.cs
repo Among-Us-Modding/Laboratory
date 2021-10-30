@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using Laboratory.Mods.Buttons;
 using Laboratory.Mods.Player.Attributes;
+using Laboratory.Mods.Player.Interfaces;
 using Reactor;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
@@ -18,6 +17,17 @@ namespace Laboratory.Mods.Player.MonoBehaviours
         public PlayerPhysics MyPhysics { get; set; }
         public CustomNetworkTransform MyNetTransform { get; set; }
         
+        private IAnimationController m_AnimationController;
+        public IAnimationController AnimationController
+        {
+            [HideFromIl2Cpp] get => m_AnimationController;
+            [HideFromIl2Cpp] set
+            {
+                m_AnimationController = value;
+                value.Initialize(this);
+            }
+        }
+        
         public void Awake()
         {
             MyPlayer = GetComponent<PlayerControl>();
@@ -32,6 +42,8 @@ namespace Laboratory.Mods.Player.MonoBehaviours
                 if (MyPhysics.body) MyPhysics.EnableInterpolation();
                 MyPhysics.Skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
             }
+            
+            // AnimationController = new DefaultAnimationController();
         }
     }
 }

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Hazel;
 using Laboratory.Mods.Enums;
 using Reactor;
+using Reactor.Extensions;
 using Reactor.Networking.MethodRpc;
 using UnhollowerBaseLib.Attributes;
 using UnhollowerRuntimeLib;
 
 namespace Laboratory.Mods.Systems
 {
+    // TODO Implement death
     /// <summary>
     /// Generic system to manage player healths
     /// </summary>
@@ -21,7 +23,7 @@ namespace Laboratory.Mods.Systems
         public static int MaxHealth { get; set; } = 100;
 
         /// <summary>
-        /// The current instance of hte health system
+        /// The current instance of the health system
         /// </summary>
         public static HealthSystem Instance { get; set; }
 
@@ -51,14 +53,20 @@ namespace Laboratory.Mods.Systems
         internal Dictionary<byte, int> PlayerHealths { [HideFromIl2Cpp] get; } = new();
 
         /// <summary>
-        /// Sets the health of a player
+        /// Sets the health of a player and updated their name
         /// </summary>
         /// <param name="playerId">The player id of the player being changed</param>
         /// <param name="newHealth">The new amount of heath to set the player with</param>
         public void SetHealth(byte playerId, int newHealth)
         {
-            PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
+            int playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
             IsDirty = true;
+
+            GameData.PlayerInfo ownerData = GameData.Instance.GetPlayerById(playerId);
+            if (ownerData != null && ownerData.Object)
+            {
+                ownerData.Object.nameText.text = $"<color=#{Palette.PlayerColors[(ownerData.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{ownerData.PlayerName}";
+            }
         }
 
         /// <summary>
@@ -81,7 +89,9 @@ namespace Laboratory.Mods.Systems
             byte length = reader.ReadByte();
             for (int i = 0; i < length; i++)
             {
-                PlayerHealths[reader.ReadByte()] = reader.ReadInt32();
+                bool dirty = IsDirty;
+                SetHealth(reader.ReadByte(), reader.ReadInt32());
+                IsDirty = dirty;
             }
         }
 
