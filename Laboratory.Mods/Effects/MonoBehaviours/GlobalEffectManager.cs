@@ -15,12 +15,11 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         public static GlobalEffectManager Instance { get; set; }
 
         private IEffect m_PrimaryEffect;
-
-        [HideFromIl2Cpp]
+        
         public IEffect PrimaryEffect
         {
-            get => m_PrimaryEffect;
-            set
+            [HideFromIl2Cpp] get => m_PrimaryEffect;
+            [HideFromIl2Cpp] set
             {
                 var current = PrimaryEffect;
                 if (current is not null)
@@ -32,11 +31,10 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             }
         }
         
-        [HideFromIl2Cpp] 
-        private List<IEffect> Effects { get; } = new();
+        private List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
 
         [HideFromIl2Cpp]
-        public void AddEffect(IEffect effect, bool primary)
+        public void AddEffect(IEffect effect, bool primary = false)
         {
             effect.Awake();
             Effects.Add(effect);

@@ -1,58 +1,112 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Laboratory.Mods.Extensions;
-using Laboratory.Mods.Player.MonoBehaviours;
 using Laboratory.Utils;
 using Reactor;
-using Reactor.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace Laboratory.Mods.Buttons
 {
     [RegisterInIl2Cpp]
     public class CooldownButton : MonoBehaviour
     {
-        #region Cached Shader Stuff
+        public static float XDistFromEdge = 1.45f;
+        public static float YDistFromEdge = 1.4f;
 
         private static readonly int Percent = Shader.PropertyToID("_Percent");
         private static readonly int Desat = Shader.PropertyToID("_Desat");
 
-        #endregion
-        
-        public static float XDistFromEdge = 1.45f;
-        public static float YDistFromEdge = 1.4f;
-        
         public static List<CooldownButton> Buttons { get; } = new();
 
         public static T Create<T>() where T : CooldownButton
         {
-            var buttonObj = new GameObject(typeof(T).Name);
-            var button = buttonObj.AddComponent<T>();
-
-            button.Renderer = buttonObj.AddComponent<SpriteRenderer>();
-            button.Renderer.material = new Material(HudManager.Instance.KillButton.renderer.material);
-
-            button.Aspect = buttonObj.AddComponent<AspectPosition>();
-            button.Aspect.parentCam = HudManager.Instance.UICamera;
-
-            button.SetPosition(AspectPosition.EdgeAlignments.LeftBottom);
-            return button;
+            var buttonObj = new GameObject(typeof(T).Name) {layer = 5};
+            buttonObj.transform.parent = HudManager.Instance.transform;
+            return buttonObj.AddComponent<T>();
         }
-        
+
         public CooldownButton(IntPtr ptr) : base(ptr) { }
 
         public SpriteRenderer Renderer;
-        public AspectPosition Aspect;
         public TextMeshPro TimerText;
-
+        public AspectPosition Aspect;
+        public PassiveButton Button;
+        public Action OnClickAction;
+        
         public float CurrentTime;
         public float Cooldown;
 
-        public Action OnClickAction;
+        #region Event Loop
+
+        public void Awake()
+        {
+            Buttons.Add(this);
+
+            var buttonObj = gameObject;
+            
+            // SpriteRenderer
+            Renderer = buttonObj.AddComponent<SpriteRenderer>();
+            Renderer.material = new Material(Shader.Find("Unlit/CooldownShader"));
+            
+            // TextMeshPro
+            TimerText = Instantiate(HudManager.Instance.KillButton.TimerText, buttonObj.transform);
+            TimerText.transform.localPosition = new Vector3(0, 0.07f, -0.001f);
+            
+            // AspectPosition
+            Aspect = buttonObj.AddComponent<AspectPosition>();
+            Aspect.parentCam = HudManager.Instance.UICamera;
+            
+            // PassiveButton
+            var buttonColl = buttonObj.AddComponent<BoxCollider2D>();
+            buttonColl.size = new Vector2(1.15f, 1.15f);
+
+            Button = buttonObj.AddComponent<PassiveButton>();
+            Button.OnMouseOut = Button.OnMouseOver = new Button.ButtonClickedEvent();
+            Button.Colliders = new[] { buttonColl };
+            Button.OnClick = new Button.ButtonClickedEvent();
+            Button.OnClick.AddListener((Action) PerformClick);
+            
+            SetPosition(AspectPosition.EdgeAlignments.LeftBottom);
+        }
+        
+        public virtual void Update()
+        {
+            Renderer.enabled = TimerText.enabled = ShouldBeVisible();
+            if (CurrentTime == int.MaxValue) return;
+            if (MeetingHud.Instance || ExileController.Instance) CurrentTime = Cooldown;
+            
+            if (!Unlocked())
+            {
+                SetButtonSaturation(false);
+                SetButtonCooldownLevel(1);
+                TimerText.enabled = false;
+                return;
+            }
+            
+            CurrentTime -= Time.deltaTime;
+
+            SetButtonCooldownLevel(Cooldown == 0 ? 0 : Mathf.Clamp01(CurrentTime / Cooldown));
+            SetButtonSaturation(true);
+            
+            if (CurrentTime <= 0)
+            {
+                CurrentTime = 0;
+                TimerText.enabled = false;
+                return;
+            }
+            
+            TimerText.text = Mathf.CeilToInt(CurrentTime).ToString();
+        }
+        
+        public void OnDestroy()
+        {
+            var myHashCode = GetHashCode();
+            Buttons.RemoveAll(b => b.GetHashCode() == myHashCode);
+        }
+
+        #endregion
         
         #region Appearance
 
@@ -97,77 +151,35 @@ namespace Laboratory.Mods.Buttons
         #region Usability
 
         public virtual bool Unlocked() => true;
-        
-        public virtual bool ShouldBeVisible() => HudManager.Instance.UseButton.gameObject.active && 
-                                                 PlayerControl.LocalPlayer != null && 
-                                                 PlayerControl.LocalPlayer.Data is {IsDead: false} && 
-                                                 ShipStatus.Instance != null;
+
+        public virtual bool ShouldBeVisible()
+        {
+            if (!ShipStatus.Instance) return false;
+            if (!HudManager.Instance.UseButton.gameObject.active) return false;
+            var localPlayer = PlayerControl.LocalPlayer;
+            if (!localPlayer || localPlayer.Data == null) return false;
+            if (localPlayer.Data.IsDead) return false;
+            return true;
+        }
+
         public virtual bool ShouldCooldown() => PlayerControl.LocalPlayer.CanMove;
 
-        public virtual bool CantUse() => CurrentTime > 0 || 
-                                         !Unlocked()||
-                                         PlayerControl.LocalPlayer.inVent || 
-                                         !ShipStatus.Instance || 
-                                         MeetingHud.Instance || 
-                                         Minigame.Instance || 
-                                         !isActiveAndEnabled;
-
-        public void InvokePerformClick()
+        public virtual bool CanUse()
         {
-            PerformClick();
+            if (!isActiveAndEnabled || CurrentTime > 0) return false;
+            if (!Unlocked()) return false;
+            if (!ShipStatus.Instance || MeetingHud.Instance || Minigame.Instance) return false;
+            if (PlayerControl.LocalPlayer.inVent) return false;
+            return true;
         }
-        
+
         public virtual void PerformClick()
         {
-            if (!ShouldCooldown() || !ShouldBeVisible() || CantUse()) return;
+            if (!ShouldCooldown() || !ShouldBeVisible() || !CanUse()) return;
 
             CurrentTime = Cooldown;
             OnClickAction?.Invoke();
         }
-
-        #endregion
-
-        #region Event Loop
-        
-        public void Awake()
-        {
-            Buttons.Add(this);
-        }
-
-        public void Update()
-        {
-            Renderer.enabled = TimerText.enabled = ShouldBeVisible();
-            if (MeetingHud.Instance || ExileController.Instance) CurrentTime = Cooldown;
-            
-            if (!Unlocked())
-            {
-                SetButtonSaturation(false);
-                SetButtonCooldownLevel(1);
-                TimerText.enabled = false;
-                return;
-            }
-            
-            CurrentTime -= Time.deltaTime;
-
-            SetButtonCooldownLevel(Cooldown == 0 ? 0 : Mathf.Clamp01(CurrentTime / Cooldown));
-            SetButtonSaturation(true);
-            
-            if (CurrentTime <= 0)
-            {
-                CurrentTime = 0;
-                TimerText.enabled = false;
-                return;
-            }
-            
-            TimerText.text = Mathf.CeilToInt(CurrentTime).ToString();
-        }
-
-        public void OnDestroy()
-        {
-            var myHashCode = GetHashCode();
-            Buttons.RemoveAll(b => b.GetHashCode() == myHashCode);
-        }
-
         #endregion
     }
 }

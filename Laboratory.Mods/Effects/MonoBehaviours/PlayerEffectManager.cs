@@ -17,11 +17,10 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         private PlayerManager m_MyManager;
         private IEffect m_PrimaryEffect;
         
-        [HideFromIl2Cpp] 
         public IEffect PrimaryEffect
         {
-            get => GlobalEffectManager.Instance ? GlobalEffectManager.Instance.PrimaryEffect ?? m_PrimaryEffect : m_PrimaryEffect;
-            set
+            [HideFromIl2Cpp] get => GlobalEffectManager.Instance ? GlobalEffectManager.Instance.PrimaryEffect ?? m_PrimaryEffect : m_PrimaryEffect;
+            [HideFromIl2Cpp] set
             {
                 var current = PrimaryEffect;
                 if (current is not null)
@@ -34,8 +33,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             }
         }
 
-        [HideFromIl2Cpp] 
-        private List<IEffect> Effects { get; } = new();
+        private List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
 
         [HideFromIl2Cpp]
         public void AddEffect(IEffect effect, bool primary)

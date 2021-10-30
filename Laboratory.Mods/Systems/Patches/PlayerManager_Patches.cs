@@ -4,7 +4,7 @@ using Reactor.Extensions;
 
 namespace Laboratory.Mods.Systems.Patches
 {
-    [HarmonyPatch(typeof(PlayerManager), nameof(PlayerManager.Update))]
+    // [HarmonyPatch(typeof(PlayerManager), nameof(PlayerManager.Update))]
     public static class PlayerManager_Patches
     {
         public static void Postfix(PlayerManager __instance)
