@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Laboratory.Mods.Effects.Interfaces;
 using Reactor;
+using Reactor.Networking;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -34,6 +35,12 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         private List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
 
         [HideFromIl2Cpp]
+        public void RpcAddEffect(IEffect effect, bool primary = false)
+        {
+            Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(null, effect, primary), true);
+        }
+        
+        [HideFromIl2Cpp]
         public void AddEffect(IEffect effect, bool primary = false)
         {
             effect.Awake();
@@ -50,22 +57,22 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             effect.OnDestroy();
         }
 
-        public void Awake()
+        private void Awake()
         {
             Instance = this;
         }
 
-        public void FixedUpdate()
+        private void FixedUpdate()
         {
             foreach (IEffect effect in Effects) effect.FixedUpdate();
         }
         
-        public void Update()
+        private void Update()
         {
             foreach (IEffect effect in Effects) effect.Update();
         }
 
-        public void LateUpdate()
+        private void LateUpdate()
         {
             List<IEffect> effects = new();
             foreach (IEffect effect in Effects)
@@ -79,7 +86,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             }
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             foreach (IEffect effect in Effects) effect.Cancel();
             Instance = null;

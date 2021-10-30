@@ -4,6 +4,7 @@ using Laboratory.Mods.Effects.Interfaces;
 using Laboratory.Mods.Player.Attributes;
 using Laboratory.Mods.Player.MonoBehaviours;
 using Reactor;
+using Reactor.Networking;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -36,6 +37,12 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         private List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
 
         [HideFromIl2Cpp]
+        public void RpcAddEffect(IEffect effect, bool primary = false)
+        {
+            Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(m_MyManager.MyPlayer, effect, primary), true);
+        }
+        
+        [HideFromIl2Cpp]
         public void AddEffect(IEffect effect, bool primary)
         {
             effect.Owner = m_MyManager;
@@ -53,22 +60,22 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             effect.OnDestroy();
         }
 
-        public void Start()
+        private void Start()
         {
             m_MyManager = GetComponent<PlayerManager>();
         }
 
-        public void FixedUpdate()
+        private void FixedUpdate()
         {
             foreach (IEffect effect in Effects) effect.FixedUpdate();
         }
         
-        public void Update()
+        private void Update()
         {
             foreach (IEffect effect in Effects) effect.Update();
         }
 
-        public void LateUpdate()
+        private void LateUpdate()
         {
             List<IEffect> effects = new();
             foreach (IEffect effect in Effects)
@@ -82,7 +89,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             }
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             foreach (IEffect effect in Effects) effect.Cancel();
         }
