@@ -5,6 +5,7 @@ using Laboratory.Mods.Effects.Interfaces;
 using Laboratory.Mods.Effects.MonoBehaviours;
 using Laboratory.Mods.Enums;
 using Reactor;
+using Reactor.Extensions;
 using Reactor.Networking;
 
 namespace Laboratory.Mods.Effects
@@ -45,14 +46,14 @@ namespace Laboratory.Mods.Effects
 
         public override void Write(MessageWriter writer, EffectInfo effectInfo)
         {
-            writer.WriteNetObject(effectInfo.TargetPlayer);
+            writer.Write((InnerNetObject) effectInfo.TargetPlayer);
             writer.Write(effectInfo.Primary);
             writer.Write(effectInfo.FullName);
         }
 
         public override EffectInfo Read(MessageReader reader)
         {
-            var player = reader.ReadNetObject<PlayerControl>();
+            var player = MessageExtensions.ReadNetObject<PlayerControl>(reader);
             var primary = reader.ReadBoolean();
             return new EffectInfo(player, reader.ReadString(), primary);
         }

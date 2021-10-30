@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using InnerNet;
 using Laboratory.Debugging;
 using Laboratory.Mods.Buttons;
 using Laboratory.Mods.Effects.Interfaces;
@@ -6,7 +8,11 @@ using Laboratory.Mods.Effects.Utils;
 using Laboratory.Mods.Player;
 using Laboratory.Mods.Player.MonoBehaviours;
 using Reactor;
+using Reactor.Extensions;
+using UnhollowerBaseLib;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Laboratory.Mods
 {
@@ -28,7 +34,8 @@ namespace Laboratory.Mods
         {
             yield return new DebugTab("Mods", BuildUI);
         }
-
+        
+            
         private void BuildUI()
         {
             if (CameraZoomController.Instance)
@@ -36,39 +43,6 @@ namespace Laboratory.Mods
                 CustomGUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
                 CameraZoomController.Instance.OrthographicSize = GUILayout.HorizontalSlider(CameraZoomController.Instance.OrthographicSize, 1f, 24f, DebugWindow.EmptyOptions);
             }
-
-            CustomGUILayout.Button("Test Button", () =>
-            {
-                var button = CooldownButton.Create<CooldownButton>();
-                button.SetSprite(HudManager.Instance.KillButton.renderer.sprite);
-                button.CurrentTime = button.Cooldown = 1f;
-                button.OnClickAction += () =>
-                {
-                    PlayerControl.LocalPlayer.Visible = !PlayerControl.LocalPlayer.Visible;
-                };
-            });
-            
-            CustomGUILayout.Button("Test Button 2", () =>
-            {
-                var button = CooldownButton.Create<CooldownButton>();
-                button.SetSprite(HudManager.Instance.KillButton.renderer.sprite);
-                button.CurrentTime = button.Cooldown = 1f;
-                button.OnClickAction += () =>
-                {
-                    Visible.AddVisible(PlayerControl.LocalPlayer, "Button");
-                };
-            });
-            
-            CustomGUILayout.Button("Test Button 3", () =>
-            {
-                var button = CooldownButton.Create<CooldownButton>();
-                button.SetSprite(HudManager.Instance.KillButton.renderer.sprite);
-                button.CurrentTime = button.Cooldown = 1f;
-                button.OnClickAction += () =>
-                {
-                    Visible.RemoveVisible(PlayerControl.LocalPlayer, "Button");
-                };
-            });
         }
     }
 }

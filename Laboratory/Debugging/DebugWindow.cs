@@ -57,6 +57,16 @@ namespace Laboratory.Debugging
             if (!Enabled) return;
 
             PrimaryWindow.OnGUI();
+            
+            bool anyActive = false;
+            for (int index = 0; index < Debugger.Tabs.Count; index++)
+            {
+                DebugTab debugTab = Debugger.Tabs[index];
+                if (!debugTab.Visible()) continue;
+                anyActive = SelectedTab == index;
+            }
+            
+            if (anyActive) Debugger.Tabs[SelectedTab].OnGUI();
         }
 
         [HideFromIl2Cpp]
