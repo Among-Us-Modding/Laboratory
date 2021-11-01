@@ -1,4 +1,5 @@
 using System;
+using Laboratory.Mods.Player.AnimationControllers;
 using Laboratory.Mods.Player.Attributes;
 using Laboratory.Mods.Player.Interfaces;
 using Reactor;
@@ -43,7 +44,25 @@ namespace Laboratory.Mods.Player.MonoBehaviours
                 MyPhysics.Skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
             }
             
-            // AnimationController = new DefaultAnimationController();
+            AnimationController = new DefaultController();
+        }
+
+        public void Update()
+        {
+            AnimationController?.Update();
+        }
+
+        public void LateUpdate()
+        {
+            GameData.PlayerInfo data = MyPlayer.Data;
+            if (data == null) return;
+            MyPlayer.nameText.enabled = !AnimationController.HideName;
+            MyPhysics.Skin.gameObject.SetActive(!AnimationController.HideCosmetics & MyPlayer.Visible);
+            MyPlayer.HatRenderer.gameObject.SetActive(!AnimationController.HideCosmetics && !data.IsDead & MyPlayer.Visible);
+            if (MyPlayer.CurrentPet) MyPlayer.CurrentPet.gameObject.SetActive(!AnimationController.HideCosmetics & MyPlayer.Visible);
+
+            MyPlayer.Collider.offset = new Vector2(0, AnimationController.ColliderOffset);
+            MyPlayer.myRend.transform.localPosition = new Vector3(0, AnimationController.RendOffset, 0);
         }
     }
 }
