@@ -16,13 +16,17 @@ namespace Laboratory.Mods
         public const string GUID = "Mods";
         public const string Name = "Mods";
         public const string Version = "0.0.0";
+
+        public ModPlugin()
+        {
+            PlayerComponentAttribute.Initialize();
+        }
         
         public static ModPlugin Instance => PluginSingleton<ModPlugin>.Instance;
         
         public override void Load()
         {
             Harmony.CreateAndPatchAll(GetType().Assembly);
-            PlayerComponentAttribute.Initialize();
             
             MapLoader.Instance = AddComponent<MapLoader>();
 

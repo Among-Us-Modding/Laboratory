@@ -36,11 +36,15 @@ namespace Laboratory
         
         public static LaboratoryPlugin Instance => PluginSingleton<LaboratoryPlugin>.Instance;
 
+        public LaboratoryPlugin()
+        {
+            KeybindAttribute.Initialize();
+            Debugger.Initialize();
+        }
+        
         public override void Load()
         {
             Harmony.CreateAndPatchAll(GetType().Assembly);
-            KeybindAttribute.Initialize();
-            Debugger.Initialize();
             SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) OnSceneLoaded);
             AddComponent<UnityEvents>();
 

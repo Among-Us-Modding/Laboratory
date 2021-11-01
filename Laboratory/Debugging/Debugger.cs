@@ -18,7 +18,7 @@ namespace Laboratory.Debugging
 
         internal static void Initialize()
         {
-            ChainloaderHooks.PluginLoaded += plugin => Register(plugin.GetType().Assembly);
+            ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
         }
 
         private static void Register(Assembly asm)

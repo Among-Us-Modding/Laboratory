@@ -11,7 +11,7 @@ namespace Laboratory.Mods.Player.Attributes
 
         internal static void Initialize()
         {
-            ChainloaderHooks.PluginLoaded += plugin => Register(plugin.GetType().Assembly);
+            ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
         }
         
         private static void Register(Assembly assembly = null)

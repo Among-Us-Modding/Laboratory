@@ -2,13 +2,10 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DebugSymbols>true</DebugSymbols>
-        <DebugType>Full</DebugType>
-
-        <GamePlatform>Steam</GamePlatform>
-        <GameVersion>2021.6.30-s</GameVersion>
+        <DebugType>Embedded</DebugType>
         
         <Version>0.0.0</Version>
     </PropertyGroup>
@@ -22,10 +19,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Reactor" Version="1.0.0-dev" />
-        <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.0" />
-        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.434" />
-        <PackageReference Include="AmongUs.GameLibs" Version="$(GameVersion)" />
-        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="0.1.0" />
+        <PackageReference Include="AmongUs.GameLibs" Version="2021.6.30-s" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.0" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.508" />
+        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="1.0.1" PrivateAssets="all" />
+        <PackageReference Include="Reactor" Version="1.1.0-ci.98" />
     </ItemGroup>
 </Project>
