@@ -14,22 +14,22 @@ namespace Laboratory.Mods.CustomMap
         public delegate void MouseClickEvent(CustomMapBehaviour instance, int mouseButton, Vector2 worldPosition);
 
         // PLS Unsubscribe from these thanks
-        public MouseClickEvent MouseDownEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-        public MouseClickEvent MouseHeldEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-        public MouseClickEvent MouseUpEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+        public MouseClickEvent? MouseDownEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+        public MouseClickEvent? MouseHeldEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+        public MouseClickEvent? MouseUpEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
 
         private Dictionary<GameData.PlayerInfo, SpriteRenderer> HerePoints { [HideFromIl2Cpp] get; } = new();
 
-        public MapBehaviour Parent { get; set; }
+        public MapBehaviour? Parent { get; set; }
         
         public void ShowAllPlayers()
         {
-            foreach ((GameData.PlayerInfo key, SpriteRenderer value) in HerePoints)
+            foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
             {
                 Destroy(value.gameObject);
             }
             HerePoints.Clear();
-            
+            if (Parent == null) return;
             foreach (GameData.PlayerInfo player in GameData.Instance.AllPlayers)
             {
                 if (player.Disconnected) continue;
@@ -69,7 +69,7 @@ namespace Laboratory.Mods.CustomMap
                 // sketchy hack to remove the delegate when done
                 MouseClickEvent[] clicks = new MouseClickEvent[2];
                 customMapBehaviour.MouseUpEvent += clicks[0] = mouseUpEvent;
-                customMapBehaviour.MouseUpEvent += clicks[1] = delegate(CustomMapBehaviour instance, int button, Vector2 position)
+                customMapBehaviour.MouseUpEvent += clicks[1] = delegate(CustomMapBehaviour instance, int _, Vector2 _)
                 {
                     foreach (MouseClickEvent mouseClickEvent in clicks)
                     {
@@ -84,6 +84,9 @@ namespace Laboratory.Mods.CustomMap
         {
             if (set) return mapPosition;
             set = true;
+
+            if (Parent == null) return default;
+            
             Vector2 offset = ShipStatus.Instance.Type switch
             {
                 ShipStatus.MapType.Ship => new Vector2(-2.3f, -5.4f),
@@ -156,7 +159,7 @@ namespace Laboratory.Mods.CustomMap
         
         private void OnDisable()
         {
-            foreach ((GameData.PlayerInfo key, SpriteRenderer value) in HerePoints)
+            foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
             {
                 Destroy(value.gameObject);
             }

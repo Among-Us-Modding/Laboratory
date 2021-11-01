@@ -13,11 +13,11 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
     {
         public GlobalEffectManager(IntPtr ptr) : base(ptr) { }
 
-        public static GlobalEffectManager Instance { get; set; }
+        public static GlobalEffectManager? Instance { get; set; }
 
-        private IEffect m_PrimaryEffect;
+        private IEffect? m_PrimaryEffect;
         
-        public IEffect PrimaryEffect
+        public IEffect? PrimaryEffect
         {
             [HideFromIl2Cpp] get => m_PrimaryEffect;
             [HideFromIl2Cpp] set
@@ -39,13 +39,16 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         {
             Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(null, effect, primary), true);
         }
-        
+
         [HideFromIl2Cpp]
-        public void AddEffect(IEffect effect, bool primary = false)
+        public void AddEffect(IEffect? effect, bool primary)
         {
-            effect.Awake();
-            Effects.Add(effect);
-            
+            if (effect != null)
+            {
+                effect.Awake();
+                Effects.Add(effect);
+            }
+
             if (primary) PrimaryEffect = effect;
         }
         

@@ -9,18 +9,19 @@ namespace Laboratory.Debugging
         /// </summary>
         /// <param name="tabName">Name of the tab</param>
         /// <param name="buildUI">Action which will build the contents of the tab</param>
+        /// <param name="onGUI">Action called during the OnGUI event of the debug window</param>
         /// <param name="visible">Func which should return if the tab is visible - defaults to always visible</param>
-        public DebugTab(string tabName, Action buildUI, Action onGUI = null, Func<bool> visible = null)
+        public DebugTab(string tabName, Action? buildUI, Action? onGUI = null, Func<bool>? visible = null)
         {
             TabName = tabName;
             BuildUI = buildUI;
             OnGUI = onGUI;
-            Visible = visible ?? (() => true);
+            Visible = visible;
         }
         
         public string TabName { get; }
-        public Action BuildUI { get; }
-        public Action OnGUI { get; }
-        public Func<bool> Visible { get; }
+        public Action? BuildUI { get; }
+        public Action? OnGUI { get; }
+        public Func<bool>? Visible { get; }
     }
 }

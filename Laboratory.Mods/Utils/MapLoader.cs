@@ -18,17 +18,17 @@ namespace Laboratory.Mods.Utils
         public static bool LoadDleks;
         public static bool LoadAirship;
 
-        public static SkeldShipStatus Skeld => Instance.Maps[0].TryCast<SkeldShipStatus>();
-        public static MiraShipStatus Mira => Instance.Maps[1].TryCast<MiraShipStatus>();
-        public static PolusShipStatus Polus => Instance.Maps[2].TryCast<PolusShipStatus>();
-        public static SkeldShipStatus Dleks => Instance.Maps[3].TryCast<SkeldShipStatus>();
-        public static AirshipStatus Airship => Instance.Maps[4].TryCast<AirshipStatus>();
+        public static SkeldShipStatus? Skeld => Instance is not {Maps: { }} ? null : Instance.Maps[0].TryCast<SkeldShipStatus>();
+        public static MiraShipStatus? Mira => Instance is not {Maps: { }} ? null : Instance.Maps[1].TryCast<MiraShipStatus>();
+        public static PolusShipStatus? Polus => Instance is not {Maps: { }} ? null : Instance.Maps[2].TryCast<PolusShipStatus>();
+        public static SkeldShipStatus? Dleks => Instance is not {Maps: { }} ? null : Instance.Maps[3].TryCast<SkeldShipStatus>();
+        public static AirshipStatus? Airship => Instance is not {Maps: { }} ? null : Instance.Maps[4].TryCast<AirshipStatus>();
         
         public MapLoader(IntPtr ptr) : base(ptr) { }
 
-        public static MapLoader Instance { get; set; }
+        public static MapLoader? Instance { get; set; }
 
-        private ShipStatus[] Maps;
+        private ShipStatus[]? Maps;
         private static bool Initialized;
 
         private void Awake()

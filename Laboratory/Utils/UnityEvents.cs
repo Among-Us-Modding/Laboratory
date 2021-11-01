@@ -10,7 +10,7 @@ namespace Laboratory.Utils
         /// <summary>
         /// Action which is called according to the update function of unity's event loop
         /// </summary>
-        public static Action UpdateEvent;
+        public static Action? UpdateEvent;
         
         public UnityEvents(IntPtr ptr) : base(ptr) { }
         

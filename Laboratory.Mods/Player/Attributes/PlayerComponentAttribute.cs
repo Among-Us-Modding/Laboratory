@@ -14,7 +14,7 @@ namespace Laboratory.Mods.Player.Attributes
             ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
         }
         
-        private static void Register(Assembly assembly = null)
+        private static void Register(Assembly? assembly = null)
         {
             assembly ??= Assembly.GetCallingAssembly();
 

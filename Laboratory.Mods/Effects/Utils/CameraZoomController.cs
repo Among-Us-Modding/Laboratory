@@ -14,16 +14,16 @@ namespace Laboratory.Mods.Effects.Utils
         /// <summary>
         /// Current instance of the CameraZoomController
         /// </summary>
-        public static CameraZoomController Instance { get; set; }
+        public static CameraZoomController? Instance { get; set; }
         
         public CameraZoomController(IntPtr ptr) : base(ptr) { }
 
         /// <summary>
         /// Zoom controller's camera
         /// </summary>
-        public Camera Cam { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+        public Camera? Cam { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
         
-        private ShadowCollab ShadowCollab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+        private ShadowCollab? ShadowCollab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
         
         /// <summary>
         /// Orthographic size of the zoom camera
@@ -33,7 +33,7 @@ namespace Laboratory.Mods.Effects.Utils
             [HideFromIl2Cpp] get => m_OrthographicSize;
             [HideFromIl2Cpp] set
             {
-                ShadowCollab.ShadowCamera.aspect = Cam.aspect;
+                ShadowCollab!.ShadowCamera.aspect = Cam!.aspect;
                 ShadowCollab.ShadowCamera.orthographicSize = Cam.orthographicSize = m_OrthographicSize = value;
                 ShadowCollab.ShadowQuad.transform.localScale = new Vector3(value * Cam.aspect, value) * 2f;
             }
@@ -50,14 +50,14 @@ namespace Laboratory.Mods.Effects.Utils
                 if (Math.Abs(m_Aspect - value) > 0.05f)
                 {
                     m_Aspect = value;
-                    Cam.aspect = value;
+                    Cam!.aspect = value;
                     OrthographicSize = OrthographicSize;
                 }
             }
         }
         
         private float m_OrthographicSize = 3;
-        private float m_Aspect = 0;
+        private float m_Aspect;
         
         private void Awake()
         {
@@ -68,10 +68,10 @@ namespace Laboratory.Mods.Effects.Utils
             
             HudManager.Instance.FullScreen.transform.localScale *= 50;
 
-            Camera mainCam = Camera.main;
+            Camera mainCam = Camera.main!;
             GameObject newCamObj = new("ZoomCamera");
             Transform newCamTransform = newCamObj.transform;
-            newCamTransform.parent = mainCam!.transform;
+            newCamTransform.parent = mainCam.transform;
             newCamTransform.localPosition = new Vector3(0, 0, 0);
             newCamTransform.localScale = new Vector3(1, 1, 1);
             Cam = newCamObj.AddComponent<Camera>();
@@ -83,10 +83,10 @@ namespace Laboratory.Mods.Effects.Utils
         
         private void Update()
         {
-            Camera mainCam = Camera.main;
+            Camera mainCam = Camera.main!;
             if (!mainCam) return;
             
-            Cam.backgroundColor = mainCam.backgroundColor;
+            Cam!.backgroundColor = mainCam.backgroundColor;
             Aspect = mainCam.aspect;
         }
         

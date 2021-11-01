@@ -24,7 +24,7 @@ namespace Laboratory.Utils
         /// <param name="spriteName">Name of the embedded resource</param>
         /// <param name="ppu">pixels per unit of the sprite</param>
         /// <param name="assembly">Assembly containing the sprite - defaults to searching all loaded assemblies</param>
-        public static Sprite LoadSprite(string spriteName, float ppu = 100f, Assembly assembly = null)
+        public static Sprite? LoadSprite(string spriteName, float ppu = 100f, Assembly? assembly = null)
         {
             var assemblies = assembly == null ? 
                 AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : 
@@ -33,11 +33,11 @@ namespace Laboratory.Utils
             for (int i = 0; i < assemblies.Length; i++)
             {
                 var asm = assemblies[i];
-                string match = asm.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
-                if (match == default) continue;
+                string? match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
+                if (match == null) continue;
                 
                 if (CachedEmbeddedSprites.ContainsKey(match)) return CachedEmbeddedSprites[match];
-                byte[] buffer = ReadAll(asm.GetManifestResourceStream(match));
+                byte[]? buffer = ReadAll(asm?.GetManifestResourceStream(match));
                 if (buffer == null) return null;
 
                 Texture2D tex = new(2, 2, TextureFormat.ARGB32, false);
@@ -54,8 +54,10 @@ namespace Laboratory.Utils
         /// <param name="bundleName">Name of the embedded resource</param>
         /// <param name="assembly">Assembly containing the bundle - defaults to searching all loaded assemblies</param>
         /// <returns></returns>
-        public static AssetBundle LoadBundle(string bundleName, Assembly assembly = null)
+        public static AssetBundle? LoadBundle(string? bundleName, Assembly? assembly = null)
         {
+            if (bundleName == null) return null;
+
             var assemblies = assembly == null ? 
                 AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : 
                 new[] {assembly};
@@ -63,11 +65,11 @@ namespace Laboratory.Utils
             for (var i = 0; i < assemblies.Length; i++)
             {
                 var asm = assemblies[i];
-                string match = asm.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
-                if (match == default) continue;
+                string? match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
+                if (match == null) continue;
                 
                 if (CachedEmbeddedBundles.ContainsKey(match)) return CachedEmbeddedBundles[match];
-                byte[] buffer = ReadAll(asm.GetManifestResourceStream(match));
+                byte[]? buffer = ReadAll(asm?.GetManifestResourceStream(match));
                 if (buffer == null) return null;
 
                 return CachedEmbeddedBundles[match] = AssetBundle.LoadFromMemory(buffer).DontUnload();
@@ -75,12 +77,12 @@ namespace Laboratory.Utils
             return null;
         }
 
-        private static byte[] ReadAll(Stream stream)
+        private static byte[]? ReadAll(Stream? stream)
         {
             using MemoryStream ms = new();
             
-            stream.CopyTo(ms);
-            return ms.ToArray();
+            stream?.CopyTo(ms);
+            return stream != null ? ms.ToArray() : null;
         }
 
         /// <summary>
@@ -104,18 +106,18 @@ namespace Laboratory.Utils
         }
 
         private Dictionary<string, Object> ObjectCache { get; } = new();
-        private AssetBundle m_Bundle;
-        private string m_Name;
+        private AssetBundle? m_Bundle;
+        private string? m_Name;
         
         /// <summary>
         /// AssetManager's primary AssetBundle
         /// </summary>
-        public AssetBundle Bundle => m_Bundle ??= LoadBundle(m_Name);
+        public AssetBundle? Bundle => m_Bundle ??= LoadBundle(m_Name);
         
         /// <summary>
         /// Load asset of a given name from the manager's bundle
         /// </summary>
-        public T LoadAsset<T>(string name) where T : Object
+        public T? LoadAsset<T>(string name) where T : Object
         {
             if (ObjectCache.TryGetValue(name, out Object result)) return result.TryCast<T>();
             
@@ -132,8 +134,9 @@ namespace Laboratory.Utils
         /// Load all assets stored in the manager's bundle
         /// </summary>
         /// <returns></returns>
-        public Object[] LoadAllAssets()
+        public Object[]? LoadAllAssets()
         {
+            if (Bundle == null) return null;
             Il2CppReferenceArray<Object> assets = Bundle.LoadAllAssets();
             foreach (Object asset in assets) asset.DontUnload();
             return assets;

@@ -10,11 +10,11 @@ namespace Laboratory.Mods.Player.MonoBehaviours
     {
         public CollisionManager(IntPtr ptr) : base(ptr) { }
         
-        public PlayerControl MyPlayer;
-        public PlayerManager MyManager;
-        public PlayerEffectManager MyEffectsManager;
+        public PlayerControl? MyPlayer;
+        public PlayerManager? MyManager;
+        public PlayerEffectManager? MyEffectsManager;
 
-        public bool AmOwner => MyPlayer.AmOwner;
+        public bool AmOwner => MyPlayer!.AmOwner;
         
         public virtual void Awake()
         {
@@ -55,16 +55,16 @@ namespace Laboratory.Mods.Player.MonoBehaviours
     {
         public CollisionDetector(IntPtr ptr) : base(ptr) { }
 
-        public CollisionManager Parent;
+        public CollisionManager? Parent;
         
         public void OnTriggerEnter2D(Collider2D other) // Make a collider that doesnt interact with walls -> Layer = Player (8) - Trigger
         {
-            Parent.OnCollision(other);
+            Parent!.OnCollision(other);
         }
 
         public void OnCollisionEnter2D(Collision2D other) // Make a collider that interacts with walls -> Layer = Player (8) - Not Trigger
         {
-            Parent.OnCollision(other.collider);
+            Parent!.OnCollision(other.collider);
         }
     }
 }

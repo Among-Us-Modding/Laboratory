@@ -12,7 +12,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 {
     public class TextEditor
     {
-        public TouchScreenKeyboard keyboardOnScreen = null;
+        public TouchScreenKeyboard? keyboardOnScreen = null;
         public int controlID = 0;
         public GUIStyle style = GUIStyle.none;
         public bool multiline = false;
@@ -156,7 +156,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             InitKeyActions();
             EventModifiers m = e.modifiers;
             e.modifiers &= ~EventModifiers.CapsLock;
-            if (s_Keyactions.ContainsKey(e))
+            if (s_Keyactions!.ContainsKey(e))
             {
                 Logger<LaboratoryPlugin>.Message($"Event 2: {e.ToString()}");
                 TextEditOp op = s_Keyactions[e];
@@ -1232,7 +1232,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             ScrollStart, ScrollEnd, ScrollPageUp, ScrollPageDown
         }
 
-        string oldText;
+        string? oldText;
         int oldPos, oldSelectPos;
 
         public void SaveBackup()
@@ -1303,11 +1303,11 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         static void MapKey(string key, TextEditOp action)
         {
-            s_Keyactions[Event.KeyboardEvent(key)] = action;
+            s_Keyactions![Event.KeyboardEvent(key)] = action;
         }
 
-        static Dictionary<Event, TextEditOp> s_Keyactions;
-        static List<(Event, TextEditOp)> s_Keyactions2;
+        static Dictionary<Event, TextEditOp>? s_Keyactions;
+        static List<(Event, TextEditOp)>? s_Keyactions2;
         /// Set up a platform independant keyboard->Edit action map. This varies depending on whether we are on mac or windows.
         void InitKeyActions()
         {

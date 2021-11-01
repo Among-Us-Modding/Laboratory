@@ -15,12 +15,12 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
     {
         public PlayerEffectManager(IntPtr ptr) : base(ptr) { }
 
-        private PlayerManager m_MyManager;
-        private IEffect m_PrimaryEffect;
+        private PlayerManager? m_MyManager;
+        private IEffect? m_PrimaryEffect;
         
-        public IEffect PrimaryEffect
+        public IEffect? PrimaryEffect
         {
-            [HideFromIl2Cpp] get => GlobalEffectManager.Instance ? GlobalEffectManager.Instance.PrimaryEffect ?? m_PrimaryEffect : m_PrimaryEffect;
+            [HideFromIl2Cpp] get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? m_PrimaryEffect : m_PrimaryEffect;
             [HideFromIl2Cpp] set
             {
                 var current = PrimaryEffect;
@@ -39,16 +39,19 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         [HideFromIl2Cpp]
         public void RpcAddEffect(IEffect effect, bool primary = false)
         {
-            Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(m_MyManager.MyPlayer, effect, primary), true);
+            Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(m_MyManager!.MyPlayer, effect, primary), true);
         }
         
         [HideFromIl2Cpp]
-        public void AddEffect(IEffect effect, bool primary)
+        public void AddEffect(IEffect? effect, bool primary)
         {
-            effect.Owner = m_MyManager;
-            effect.Awake();
-            Effects.Add(effect);
-            
+            if (effect != null)
+            {
+                effect.Owner = m_MyManager!;
+                effect.Awake();
+                Effects.Add(effect);
+            }
+
             if (primary) PrimaryEffect = effect;
         }
         

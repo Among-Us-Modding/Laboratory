@@ -5,7 +5,6 @@ using Laboratory.Mods.Effects.Interfaces;
 using Laboratory.Mods.Effects.MonoBehaviours;
 using Laboratory.Mods.Enums;
 using Reactor;
-using Reactor.Extensions;
 using Reactor.Networking;
 
 namespace Laboratory.Mods.Effects
@@ -21,14 +20,14 @@ namespace Laboratory.Mods.Effects
         {
             public readonly string FullName;
             public readonly bool Primary;
-            public readonly Type EffectType;
-            public readonly PlayerControl TargetPlayer;
+            public readonly Type? EffectType;
+            public readonly PlayerControl? TargetPlayer;
             
-            public EffectInfo(PlayerControl targetPlayer, IEffect effect, bool primary)
+            public EffectInfo(PlayerControl? targetPlayer, IEffect? effect, bool primary)
             {
                 Primary = primary;
                 EffectType = effect?.GetType();
-                FullName = effect == null ? "" : EffectType.FullName;
+                FullName = (effect == null || EffectType == null ? "" : EffectType.FullName) ?? string.Empty;
                 TargetPlayer = targetPlayer;
             }
 
@@ -46,7 +45,7 @@ namespace Laboratory.Mods.Effects
 
         public override void Write(MessageWriter writer, EffectInfo effectInfo)
         {
-            writer.Write((InnerNetObject) effectInfo.TargetPlayer);
+            writer.Write((InnerNetObject?) effectInfo.TargetPlayer);
             writer.Write(effectInfo.Primary);
             writer.Write(effectInfo.FullName);
         }
@@ -60,14 +59,14 @@ namespace Laboratory.Mods.Effects
 
         public override void Handle(PlayerControl innerNetObject, EffectInfo effectInfo)
         {
-            var effect = (IEffect) Activator.CreateInstance(effectInfo.EffectType);
-            if (effectInfo.TargetPlayer)
+            var effect = effectInfo.EffectType == null ? null : (IEffect) Activator.CreateInstance(effectInfo.EffectType);
+            if (effectInfo.TargetPlayer != null)
             {
                 effectInfo.TargetPlayer.GetComponent<PlayerEffectManager>().AddEffect(effect, effectInfo.Primary);
             }
             else
             {
-                GlobalEffectManager.Instance.AddEffect(effect, effectInfo.Primary);
+                if (GlobalEffectManager.Instance != null) GlobalEffectManager.Instance.AddEffect(effect, effectInfo.Primary);
             }
         }
     }

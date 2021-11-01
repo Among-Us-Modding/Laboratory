@@ -1,7 +1,6 @@
 using System;
 using HarmonyLib;
 using Laboratory.Mods.Player.Attributes;
-using Reactor;
 using UnhollowerRuntimeLib;
 
 namespace Laboratory.Mods.Player.Patches

@@ -13,19 +13,19 @@ namespace Laboratory.Mods.Player.MonoBehaviours
     {
         public PlayerManager(IntPtr ptr) : base(ptr) { }
         
-        public bool AmOwner => MyPlayer.AmOwner;
-        public PlayerControl MyPlayer { get; set; }
-        public PlayerPhysics MyPhysics { get; set; }
-        public CustomNetworkTransform MyNetTransform { get; set; }
+        public bool AmOwner => MyPlayer!.AmOwner;
+        public PlayerControl? MyPlayer { get; set; }
+        public PlayerPhysics? MyPhysics { get; set; }
+        public CustomNetworkTransform? MyNetTransform { get; set; }
         
-        private IAnimationController m_AnimationController;
-        public IAnimationController AnimationController
+        private IAnimationController? m_AnimationController;
+        public IAnimationController? AnimationController
         {
             [HideFromIl2Cpp] get => m_AnimationController;
             [HideFromIl2Cpp] set
             {
                 m_AnimationController = value;
-                value.Initialize(this);
+                value?.Initialize(this);
             }
         }
         
@@ -38,7 +38,7 @@ namespace Laboratory.Mods.Player.MonoBehaviours
         
         public void Start()
         {
-            if (MyPhysics)
+            if (MyPhysics != null)
             {
                 if (MyPhysics.body) MyPhysics.EnableInterpolation();
                 MyPhysics.Skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
@@ -54,7 +54,9 @@ namespace Laboratory.Mods.Player.MonoBehaviours
 
         public void LateUpdate()
         {
-            GameData.PlayerInfo data = MyPlayer.Data;
+            if (AnimationController == null || MyPlayer == null || MyPhysics == null) return;
+
+            GameData.PlayerInfo? data = MyPlayer.Data;
             if (data == null) return;
             MyPlayer.nameText.enabled = !AnimationController.HideName;
             MyPhysics.Skin.gameObject.SetActive(!AnimationController.HideCosmetics & MyPlayer.Visible);

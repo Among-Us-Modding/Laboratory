@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Reactor;
-using UnityEngine;
 
 namespace Laboratory.Mods.Player
 {

@@ -25,7 +25,7 @@ namespace Laboratory.Mods.Systems
         /// <summary>
         /// The current instance of the health system
         /// </summary>
-        public static HealthSystem Instance { get; set; }
+        public static HealthSystem? Instance { get; set; }
 
         /// <summary>
         /// Changes the damage of a specified player

@@ -12,8 +12,8 @@ namespace Laboratory.Mods.Buttons
     {
         public EffectButton(IntPtr ptr) : base(ptr) { }
 
-        public IEffect Effect;
-        public Coroutine EffectRoutine;
+        public IEffect? Effect;
+        public Coroutine? EffectRoutine;
         
         public override void PerformClick()
         {
@@ -29,19 +29,18 @@ namespace Laboratory.Mods.Buttons
         [HideFromIl2Cpp]
         public IEnumerator ShowEffectDuration()
         {
-            float duration = 0;
             while (Effect == null)
             {
                 CurrentTime = int.MaxValue;
                 yield return null;
             }
 
-            duration = Effect.Timer;
+            float duration = Effect.Timer;
 
             while (Effect is { Timer: > 0 })
             {
                 CurrentTime = int.MaxValue;
-                TimerText.text = Mathf.CeilToInt(Effect.Timer).ToString();
+                TimerText!.text = Mathf.CeilToInt(Effect.Timer).ToString();
                 Color lerpedColor;
                 if (Effect.Timer / duration < 0.5) lerpedColor = Color.Lerp(new Color32(255, 0, 0, 255), new Color32(255, 242, 0, 255), (Effect.Timer / duration) * 2);
                 else lerpedColor = Color.Lerp(new Color32(255, 242, 0, 255), new Color32(30, 150, 0, 255), ((Effect.Timer / duration) - 0.5f) * 2);
@@ -51,7 +50,7 @@ namespace Laboratory.Mods.Buttons
             }
 
             CurrentTime = Cooldown;
-            TimerText.color = Color.white;
+            TimerText!.color = Color.white;
             EffectRoutine = null;
             Effect = null;
         }

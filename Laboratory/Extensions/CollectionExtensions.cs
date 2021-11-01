@@ -57,7 +57,7 @@ namespace Laboratory.Extensions
         /// <summary>
         /// Get a random item from a list
         /// </summary>
-        public static T Random<T>(this System.Collections.Generic.IList<T> self)
+        public static T? Random<T>(this System.Collections.Generic.IList<T> self)
         {
             return self.Count > 0 ? self[UnityEngine.Random.Range(0, self.Count)] : default(T);
         }

@@ -29,11 +29,11 @@ namespace Laboratory.Mods.Buttons
 
         public CooldownButton(IntPtr ptr) : base(ptr) { }
 
-        public SpriteRenderer Renderer;
-        public TextMeshPro TimerText;
-        public AspectPosition Aspect;
-        public PassiveButton Button;
-        public Action OnClickAction;
+        public SpriteRenderer? Renderer;
+        public TextMeshPro? TimerText;
+        public AspectPosition? Aspect;
+        public PassiveButton? Button;
+        public Action? OnClickAction;
         
         public float CurrentTime;
         public float Cooldown;
@@ -73,7 +73,8 @@ namespace Laboratory.Mods.Buttons
         
         public virtual void Update()
         {
-            Renderer.enabled = TimerText.enabled = ShouldBeVisible();
+            Renderer!.enabled = TimerText!.enabled = ShouldBeVisible();
+            // ReSharper disable once CompareOfFloatsByEqualityOperator -> Its set to this value manually
             if (CurrentTime == int.MaxValue) return;
             if (MeetingHud.Instance || ExileController.Instance) CurrentTime = Cooldown;
             
@@ -113,7 +114,7 @@ namespace Laboratory.Mods.Buttons
         public void SetPosition(AspectPosition.EdgeAlignments alignment, int buttonIndex = Int32.MaxValue)
         {
             var myHashCode = GetHashCode();
-            if (buttonIndex == Int32.MaxValue) buttonIndex = Buttons.Count(c => c.GetHashCode() != myHashCode && c.Aspect.Alignment == alignment);
+            if (buttonIndex == Int32.MaxValue) buttonIndex = Buttons.Count(c => c.GetHashCode() != myHashCode && c.Aspect!.Alignment == alignment);
             
             Vector3 distanceFromEdge = new(0.7f, 0.7f, -5f);
             
@@ -121,28 +122,28 @@ namespace Laboratory.Mods.Buttons
             distanceFromEdge.y += YDistFromEdge * (buttonIndex % 3);
             distanceFromEdge.z = -5f;
             
-            Aspect.Alignment = alignment;
+            Aspect!.Alignment = alignment;
             Aspect.DistanceFromEdge = distanceFromEdge;
             Aspect.AdjustPosition();
         }
 
         public void SetSprite(string spriteName, float ppu = 100) => SetSprite(AssetManager.LoadSprite(spriteName, ppu));
 
-        public void SetSprite(Sprite sprite)
+        public void SetSprite(Sprite? sprite)
         {
-            Renderer.sprite = sprite;
+            Renderer!.sprite = sprite;
             // ReSharper disable once InvokeAsExtensionMethod
             CooldownHelpers.SetCooldownNormalizedUvs(Renderer);
         }
 
         public void SetButtonCooldownLevel(float amount)
         {
-            Renderer.material.SetFloat(Percent, amount);
+            Renderer!.material.SetFloat(Percent, amount);
         }
 
         public void SetButtonSaturation(bool saturated)
         {
-            Renderer.material.SetFloat(Desat, saturated ? 0 : 1);
+            Renderer!.material.SetFloat(Desat, saturated ? 0 : 1);
             Renderer.color = saturated ? Palette.EnabledColor : Palette.DisabledClear;
         }
         

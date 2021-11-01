@@ -39,7 +39,7 @@ namespace Laboratory.Mods.CustomMap
         /// Sets the new Colors for the lava
         /// Leaving as default will keep original
         /// </summary>
-        public static Color32[] LavaColors { get; set; }
+        public static Color32[]? LavaColors { get; set; }
         
         /// <summary>
         /// Blue / Water color scheme for lava colors

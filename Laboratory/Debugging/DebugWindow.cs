@@ -14,39 +14,37 @@ namespace Laboratory.Debugging
         /// Default empty GUILayoutOptions array
         /// </summary>
         public static Il2CppReferenceArray<GUILayoutOption> EmptyOptions { get; } = new(0);
-        
+
         /// <summary>
         /// Current Instance of the debug window
         /// </summary>
-        public static DebugWindow Instance { get; set; }
+        public static DebugWindow? Instance { get; set; }
 
-        public DebugWindow(IntPtr ptr) : base(ptr) { }
+        public DebugWindow(IntPtr ptr) : base(ptr)
+        {
+            PrimaryWindow = new(PrimaryRect, "Debug", BuildPrimaryWindow);
+        }
 
         /// <summary>
         /// If the debug window is enabled
         /// </summary>
         public bool Enabled { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-        
+
         /// <summary>
         /// Index into the tabs array which is currently active
         /// </summary>
         public int SelectedTab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-        
+
         /// <summary>
         /// Rect of the debug window
         /// </summary>
         private Rect PrimaryRect { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; } = new(20, 20, 100, 100);
-        
+
         /// <summary>
         /// Draw window used to draw debug components
         /// </summary>
         private DragWindow PrimaryWindow { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
 
-        private void Awake()
-        {
-            PrimaryWindow = new(PrimaryRect, "Debug", (i) => BuildPrimaryWindow(i));
-        }
-        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.F1)) Enabled = !Enabled;
@@ -57,16 +55,16 @@ namespace Laboratory.Debugging
             if (!Enabled) return;
 
             PrimaryWindow.OnGUI();
-            
+
             bool anyActive = false;
             for (int index = 0; index < Debugger.Tabs.Count; index++)
             {
                 DebugTab debugTab = Debugger.Tabs[index];
-                if (!debugTab.Visible()) continue;
+                if (debugTab.Visible != null && !debugTab.Visible()) continue;
                 anyActive = SelectedTab == index;
             }
-            
-            if (anyActive) Debugger.Tabs[SelectedTab].OnGUI();
+
+            if (anyActive) Debugger.Tabs[SelectedTab].OnGUI?.Invoke();
         }
 
         [HideFromIl2Cpp]
@@ -81,7 +79,7 @@ namespace Laboratory.Debugging
                 for (int index = 0; index < Debugger.Tabs.Count; index++)
                 {
                     DebugTab debugTab = Debugger.Tabs[index];
-                    if (!debugTab.Visible()) continue;
+                    if (debugTab.Visible != null && !debugTab.Visible()) continue;
                     if (GUILayout.Toggle(SelectedTab == index, debugTab.TabName, GUI.skin.button, EmptyOptions)) SelectedTab = index;
                     anyActive = true;
                 }
@@ -91,7 +89,7 @@ namespace Laboratory.Debugging
                 if (anyActive)
                 {
                     CustomGUILayout.Divider();
-                    Debugger.Tabs[SelectedTab].BuildUI();
+                    Debugger.Tabs[SelectedTab].BuildUI?.Invoke();
                 }
 
                 GUILayout.EndVertical();

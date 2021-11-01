@@ -16,7 +16,8 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] bool down)
         {
-            IAnimationController anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) return true;
             __instance.rend.flipX = false;
             __instance.Skin.Flipped = false;
             __instance.Animator.Play(down ? anim.ClimbDownAnim : anim.ClimbAnim, 1f);
@@ -33,7 +34,8 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance, uint skinId)
         {
-            IAnimationController anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) return true;
             __instance.Skin.SetSkin(skinId, __instance.rend.flipX);
             if (__instance.Animator.IsPlaying(anim.SpawnAnim))
             {
@@ -49,7 +51,9 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance)
         {
-            IAnimationController anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) return true;
+
             __instance.myPlayer.FootSteps.Stop();
             __instance.myPlayer.FootSteps.loop = false;
             __instance.myPlayer.HatRenderer.SetIdleAnim();
@@ -98,7 +102,9 @@ namespace Laboratory.Mods.Player.Patches
             var res = States[pid] = !States[pid];
             if (!res) return false;
             if (!GameData.Instance) return false;
-            IAnimationController anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) return true;
+
             if (__instance.Animator.IsPlaying(anim.SpawnAnim)) return false;
 
             Vector2 velocity = __instance.body.velocity;
@@ -151,7 +157,9 @@ namespace Laboratory.Mods.Player.Patches
         [HarmonyPostfix]
         public static void Postfix(PlayerPhysics __instance)
         {
-            __instance.transform.position += new Vector3(0, 0, __instance.GetPlayerComponent<PlayerManager>().AnimationController.ZOffset);
+            var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) return;
+            __instance.transform.position += new Vector3(0, 0, anim.ZOffset);
         }
     }
     
@@ -161,8 +169,9 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static IEnumerator CoEnterVent(PlayerPhysics playerPhysics, int id)
         {
-            IAnimationController anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
-            Vent vent = ShipStatus.Instance.AllVents.First((Vent v) => v.Id == id);
+            IAnimationController? anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) yield break;
+            Vent vent = ShipStatus.Instance.AllVents.First(v => v.Id == id);
             if (playerPhysics.myPlayer.AmOwner)
             {
                 playerPhysics.inputHandler.enabled = true;
@@ -186,8 +195,9 @@ namespace Laboratory.Mods.Player.Patches
 
         public static IEnumerator CoExitVent(PlayerPhysics playerPhysics, int id)
         {
-            IAnimationController anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
-            Vent vent = ShipStatus.Instance.AllVents.First((Vent v) => v.Id == id);
+            IAnimationController? anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) yield break;
+            Vent vent = ShipStatus.Instance.AllVents.First(v => v.Id == id);
             if (playerPhysics.myPlayer.AmOwner)
             {
                 playerPhysics.inputHandler.enabled = true;
@@ -302,8 +312,9 @@ namespace Laboratory.Mods.Player.Patches
         {
             int num = __instance.__1__state;
             if (num != 1) return true;
-            
             PlayerPhysics playerPhysics = __instance.__4__this;
+            var anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
+            if (anim == null) return true;
             __instance.__1__state = -1;
             __instance._amFlipped_5__4 = (__instance._spawnSeatId_5__2 > 4);
             playerPhysics.myPlayer.MyRend.flipX = __instance._amFlipped_5__4;
@@ -313,7 +324,7 @@ namespace Laboratory.Mods.Player.Patches
             playerPhysics.Skin.Flipped = __instance._amFlipped_5__4;
             playerPhysics.GlowAnimator.GetComponent<SpriteRenderer>().flipX = playerPhysics.rend.flipX;
             playerPhysics.GlowAnimator.Play(playerPhysics.SpawnGlowAnim, 1f);
-            __instance.__2__current = new WaitForAnimationFinish(playerPhysics.Animator, playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController.SpawnAnim);
+            __instance.__2__current = new WaitForAnimationFinish(playerPhysics.Animator, anim.SpawnAnim);
             __instance.__1__state = 2;
             __result = true;
             return false;

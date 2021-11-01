@@ -1,21 +1,10 @@
-using System;
 using System.Collections.Generic;
-using InnerNet;
 using Laboratory.Debugging;
-using Laboratory.Mods.Buttons;
-using Laboratory.Mods.Effects.Interfaces;
 using Laboratory.Mods.Effects.Utils;
 using Laboratory.Mods.Enums;
-using Laboratory.Mods.Player;
-using Laboratory.Mods.Player.MonoBehaviours;
 using Laboratory.Mods.Systems;
 using Laboratory.Utils;
-using Reactor;
-using Reactor.Extensions;
-using UnhollowerBaseLib;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Laboratory.Mods
 {
@@ -29,7 +18,7 @@ namespace Laboratory.Mods
             
         private void BuildUI()
         {
-            if (CameraZoomController.Instance)
+            if (CameraZoomController.Instance != null)
             {
                 CustomGUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
                 CameraZoomController.Instance.OrthographicSize = GUILayout.HorizontalSlider(CameraZoomController.Instance.OrthographicSize, 1f, 24f, DebugWindow.EmptyOptions);

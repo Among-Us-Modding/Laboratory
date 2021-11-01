@@ -19,7 +19,7 @@ namespace Laboratory.Debugging
         /// <param name="label">Button label</param>
         /// <param name="action">Action to be invoked on use</param>
         /// <returns></returns>
-        public static bool Button(string label, Action action = null)
+        public static bool Button(string label, Action? action = null)
         {
             if (!GUILayout.Button(label, EmptyOptions)) return false;
             action?.Invoke();
