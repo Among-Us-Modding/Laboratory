@@ -1,0 +1,50 @@
+name: CI
+
+on: [ "push", "pull_request" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/.cache/bepinex
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.x
+
+      - name: Run the Cake script
+        uses: cake-build/cake-action@v1
+        with:
+          verbosity: Diagnostic
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Laboratory.dll
+          path: Laboratory/bin/Release/netstandard2.1/Laboratory.dll
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Laboratory.Mods.dll
+          path: Laboratory.Mods/bin/Release/netstandard2.1/Laboratory.Mods.dll
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Laboratory.nupkg
+          path: Laboratory/bin/Release/Laboratory.*.nupkg
+
+      - name: Push
+        run: dotnet nuget push Laboratory/bin/Release/Laboratory.*.nupkg --source https://nuget.pkg.github.com/Among-Us-Moding/index.json --api-key ${GITHUB_TOKEN}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

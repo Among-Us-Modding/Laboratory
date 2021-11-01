@@ -5,6 +5,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{095ED6FA-D3D6-4104-8322-EDD1CCCBBD30}"
 ProjectSection(SolutionItems) = preProject
 	Laboratory.props = Laboratory.props
+	Directory.Build.props = Directory.Build.props
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laboratory.Mods", "Laboratory.Mods\Laboratory.Mods.csproj", "{CBE4C3AD-54D4-4E2D-85A5-3FEA03889D3B}"
