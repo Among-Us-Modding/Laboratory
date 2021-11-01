@@ -12,14 +12,12 @@ using UnityEngine.SceneManagement;
 
 namespace Laboratory
 {
-    [BepInDependency(ReactorPlugin.Id)]
+    [BepInAutoPlugin]
     [BepInProcess("Among Us.exe")]
-    [BepInPlugin(GUID, Name, Version)]
-    public class LaboratoryPlugin : BasePlugin
+    [BepInDependency(ReactorPlugin.Id)]
+    public partial class LaboratoryPlugin : BasePlugin
     {
-        public const string GUID = "Laboratory";
-        public const string Name = "Laboratory";
-        public const string Version = "0.0.0";
+        public Harmony Harmony { get; } = new(Id);
 
         /// <summary>
         /// The name of the subfolder used for appdata
@@ -44,7 +42,7 @@ namespace Laboratory
         
         public override void Load()
         {
-            Harmony.CreateAndPatchAll(GetType().Assembly);
+            Harmony.PatchAll();
             SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) OnSceneLoaded);
             AddComponent<UnityEvents>();
 

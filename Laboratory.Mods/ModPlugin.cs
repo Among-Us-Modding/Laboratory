@@ -8,25 +8,24 @@ using Reactor.Patches;
 
 namespace Laboratory.Mods
 {
-    [BepInDependency(LaboratoryPlugin.GUID)]
+    [BepInAutoPlugin]
     [BepInProcess("Among Us.exe")]
-    [BepInPlugin(GUID, Name, Version)]
-    public class ModPlugin : BasePlugin
+    [BepInDependency(ReactorPlugin.Id)]
+    [BepInDependency(LaboratoryPlugin.Id)]
+    public partial class ModPlugin : BasePlugin
     {
-        public const string GUID = "Mods";
-        public const string Name = "Mods";
-        public const string Version = "0.0.0";
+        public static ModPlugin Instance => PluginSingleton<ModPlugin>.Instance;
+
+        public Harmony Harmony { get; } = new(Id);
 
         public ModPlugin()
         {
             PlayerComponentAttribute.Initialize();
         }
-        
-        public static ModPlugin Instance => PluginSingleton<ModPlugin>.Instance;
-        
+
         public override void Load()
         {
-            Harmony.CreateAndPatchAll(GetType().Assembly);
+            Harmony.PatchAll();
             
             MapLoader.Instance = AddComponent<MapLoader>();
 
