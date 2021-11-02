@@ -1,4 +1,5 @@
 # Laboratory
+[![CI](https://github.com/Among-Us-Modding/Laboratory/workflows/CI/badge.svg)](https://github.com/Among-Us-Modding/Laboratory/actions)
 
 Among Us modding framework used mostly for creating mods for the GameToons Gaming channel
 
