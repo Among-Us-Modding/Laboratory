@@ -1,19 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
-
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     
     <Import Project="../Laboratory.props" />
-
-    <Target Name="PackTaskDependencies" BeforeTargets="GenerateNuspec">
-        <ItemGroup>
-            <_PackageFiles Include="$(SolutionDir)Laboratory.Mods\bin\$(Configuration)\*\Laboratory.Mods.dll">
-                <PackagePath>lib%(RecursiveDir)</PackagePath>
-                <Visible>false</Visible>
-                <BuildAction>Content</BuildAction>
-            </_PackageFiles>
-        </ItemGroup>
-    </Target>
 </Project>

@@ -48,3 +48,8 @@ jobs:
         run: dotnet nuget push Laboratory/bin/Release/Laboratory.*.nupkg --source https://nuget.pkg.github.com/Among-Us-Moding/index.json --api-key ${GITHUB_TOKEN}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push
+        run: dotnet nuget push Laboratory.Mods/bin/Release/Laboratory.Mods*.nupkg --source https://nuget.pkg.github.com/Among-Us-Moding/index.json --api-key ${GITHUB_TOKEN}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
