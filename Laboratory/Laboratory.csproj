@@ -4,16 +4,16 @@
 
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
-
-    <PropertyGroup>
-        <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    </PropertyGroup>
-
-    <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
-        <ItemGroup>
-            <BuildOutputInPackage Include="$(SolutionDir)Laboratory.Mods\bin\$(Configuration)\*\*.dll;" />
-        </ItemGroup>
-    </Target>
     
     <Import Project="../Laboratory.props" />
+
+    <Target Name="PackTaskDependencies" BeforeTargets="GenerateNuspec">
+        <ItemGroup>
+            <_PackageFiles Include="$(SolutionDir)*\bin\$(Configuration)\*\*.dll">
+                <PackagePath>lib%(RecursiveDir)</PackagePath>
+                <Visible>false</Visible>
+                <BuildAction>Content</BuildAction>
+            </_PackageFiles>
+        </ItemGroup>
+    </Target>
 </Project>
