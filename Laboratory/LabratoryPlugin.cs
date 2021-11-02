@@ -8,6 +8,7 @@ using Laboratory.Debugging;
 using Laboratory.Utils;
 using Reactor;
 using Reactor.Patches;
+using System.Reflection;
 using UnityEngine.SceneManagement;
 
 namespace Laboratory
@@ -47,7 +48,7 @@ namespace Laboratory
             AddComponent<UnityEvents>();
 
             DebugWindow.Instance = AddComponent<DebugWindow>();
-            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory Loaded";
+            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + GetType().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;;
         }
         
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

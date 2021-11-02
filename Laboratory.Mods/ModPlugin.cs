@@ -5,6 +5,7 @@ using Laboratory.Mods.Player.Attributes;
 using Laboratory.Mods.Utils;
 using Reactor;
 using Reactor.Patches;
+using System.Reflection;
 
 namespace Laboratory.Mods
 {
@@ -28,8 +29,7 @@ namespace Laboratory.Mods
             Harmony.PatchAll();
             
             MapLoader.Instance = AddComponent<MapLoader>();
-
-            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory.Mods Loaded";
+            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory.Mods " + GetType().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;;
         }
     }
 }
