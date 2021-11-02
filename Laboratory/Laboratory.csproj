@@ -9,7 +9,7 @@
 
     <Target Name="PackTaskDependencies" BeforeTargets="GenerateNuspec">
         <ItemGroup>
-            <_PackageFiles Include="$(SolutionDir)*\bin\$(Configuration)\*\*.dll">
+            <_PackageFiles Include="$(SolutionDir)Laboratory.Mods\bin\$(Configuration)\*\Laboratory.Mods.dll">
                 <PackagePath>lib%(RecursiveDir)</PackagePath>
                 <Visible>false</Visible>
                 <BuildAction>Content</BuildAction>
