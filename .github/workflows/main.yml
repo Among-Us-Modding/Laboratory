@@ -45,4 +45,4 @@ jobs:
           path: Laboratory/bin/Release/Laboratory.*.nupkg
 
       - name: Push
-        run: dotnet nuget push **/*.nupkg --source https://nuget.pkg.github.com/Among-Us-Moding/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push **/bin/Release/*.nupkg --source https://nuget.pkg.github.com/Among-Us-Moding/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
