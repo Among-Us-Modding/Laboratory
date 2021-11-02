@@ -48,7 +48,7 @@ namespace Laboratory
             AddComponent<UnityEvents>();
 
             DebugWindow.Instance = AddComponent<DebugWindow>();
-            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + GetType().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;;
+            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + Version;
         }
         
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

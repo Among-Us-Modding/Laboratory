@@ -29,7 +29,7 @@ namespace Laboratory.Mods
             Harmony.PatchAll();
             
             MapLoader.Instance = AddComponent<MapLoader>();
-            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory.Mods " + GetType().Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;;
+            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory.Mods " + Version;
         }
     }
 }
