@@ -10,9 +10,9 @@
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "rQUxf9ds83egTM/IM2V0VchMc6kosgF7D1SYPU4VOve/QbDYGD9daGeDvHX2yN2Kj+cPesnKZl5eBBKrTVhJHg=="
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "G4YpTHG9rtkDJof+ld7Er4E+sCOlgsjG4bJ1itx1ub7dgff6qqHLy9ksX1ehgO0AdBOPVyVl/GKJg9o7iNl8HA=="
       },
       "BepInEx.IL2CPP": {
         "type": "Direct",
@@ -40,9 +40,9 @@
       },
       "Reactor": {
         "type": "Direct",
-        "requested": "[1.1.0-ci.98, )",
-        "resolved": "1.1.0-ci.98",
-        "contentHash": "gHSjb2u5sZGtvN5LVVprHakQz087swqbkPESRQQsX8GHK3iCk/1vrOYfm+8XYHUGEKvlzT3Kv6AhvIWmG81unQ==",
+        "requested": "[1.1.0-ci.102, )",
+        "resolved": "1.1.0-ci.102",
+        "contentHash": "B49isazJD6RAGupheuuzZXiwOzOqwb3x8JFTqAqbsWvN7gMS8sQRQXadW6M16S0nMssANltB2SCUXUS4OdpElA==",
         "dependencies": {
           "BepInEx.IL2CPP": "6.0.0-be.508"
         }
@@ -481,7 +481,7 @@
         "type": "Project",
         "dependencies": {
           "BepInEx.IL2CPP": "6.0.0-be.508",
-          "Reactor": "1.1.0-ci.98"
+          "Reactor": "1.1.0-ci.102"
         }
       }
     }

@@ -120,13 +120,14 @@ namespace Laboratory.Utils
         public T? LoadAsset<T>(string name) where T : Object
         {
             if (ObjectCache.TryGetValue(name, out Object result)) return result.TryCast<T>();
-            
-            T asset = Bundle.LoadAsset<T>(name);
+            if (Bundle == null) throw new NullReferenceException();
+            T? asset = Bundle.LoadAsset<T>(name);
             if (!asset) return null;
-            
+
+            if (asset == null) return asset;
             asset.DontUnload();
             ObjectCache[name] = asset;
-            
+
             return asset;
         }
 
