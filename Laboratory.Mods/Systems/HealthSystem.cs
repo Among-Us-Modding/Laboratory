@@ -97,14 +97,6 @@ namespace Laboratory.Mods.Systems
 
         public void Serialize(MessageWriter writer, bool initialState)
         {
-            if (initialState)
-            {
-                foreach (GameData.PlayerInfo playerInfo in GameData.Instance.AllPlayers)
-                {
-                    if (!PlayerHealths.ContainsKey(playerInfo.PlayerId)) PlayerHealths[playerInfo.PlayerId] = MaxHealth;
-                }
-            }
-
             writer.Write((byte) PlayerHealths.Count);
             foreach ((byte playerId, int health) in PlayerHealths)
             {

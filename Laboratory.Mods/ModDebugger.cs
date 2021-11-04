@@ -32,7 +32,7 @@ namespace Laboratory.Mods
             if (AmongUsClient.Instance.AmHost && ShipStatus.Instance)
             {
                 List<(byte playerId, int newHealth)> list = new();
-                HealthSystem system = ShipStatus.Instance.Systems[CustomSystemTypes.HealthSystem].TryCast<HealthSystem>();
+                HealthSystem system = HealthSystem.Instance!;
                 foreach ((byte pid, int health) in system.PlayerHealths)
                 {
                     GUILayout.Label(GameData.Instance.GetPlayerById(pid).PlayerName, DebugWindow.EmptyOptions);

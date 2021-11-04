@@ -1,6 +1,8 @@
 using System;
 using HarmonyLib;
+using Laboratory.Mods.Enums;
 using Laboratory.Mods.Player.Attributes;
+using Laboratory.Mods.Systems;
 using UnhollowerRuntimeLib;
 
 namespace Laboratory.Mods.Player.Patches
@@ -60,6 +62,21 @@ namespace Laboratory.Mods.Player.Patches
             Moveable.CanMoveables.Remove(__instance.GetHashCode());
             Visible.Visibles.Remove(__instance.GetHashCode());
             Visible.SetVisibles.Remove(__instance.GetHashCode());
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetInfected))]
+    public static class PlayerControl_SetInfected_Patch
+    {
+        public static void Postfix()
+        {
+            HealthSystem? system = HealthSystem.Instance;
+            if (system == null) return;
+            foreach (GameData.PlayerInfo playerInfo in GameData.Instance.AllPlayers)
+            {
+                if (!system.PlayerHealths.ContainsKey(playerInfo.PlayerId)) 
+                    system.SetHealth(playerInfo.PlayerId, HealthSystem.MaxHealth);
+            }
         }
     }
 }

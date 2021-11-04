@@ -5,6 +5,7 @@ using System.Reflection;
 using HarmonyLib;
 using Laboratory.Extensions;
 using Reactor.Extensions;
+using UnhollowerBaseLib;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -75,10 +76,11 @@ namespace Laboratory.Mods.CustomMap.Patches
             if (!__state) return;
 
             HashSet<SystemTypes> allTypes = SystemTypeHelpers.AllTypes.ToHashSet();
+            var castMethod = AccessTools.Method(typeof(Il2CppObjectBase), nameof(Il2CppObjectBase.TryCast));
             foreach (var customSystem in MapConfig.CustomSystems)
             {
                 allTypes.Add(customSystem.Key);
-                __instance.Systems[customSystem.Key] = ((Il2CppSystem.Object) Activator.CreateInstance(customSystem.Value)).Cast<ISystemType>();
+                __instance.Systems[customSystem.Key] = (ISystemType) castMethod.MakeGenericMethod(typeof(ISystemType)).Invoke(Activator.CreateInstance(customSystem.Value), Array.Empty<object>());
             }
 
             SystemTypeHelpers.AllTypes = allTypes.ToArray();
