@@ -79,29 +79,11 @@ namespace Laboratory.Mods.Player.Patches
         }
     }
 
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
-    public static class PCFI_Patch
-    {
-        public static bool[] States = new bool[150];
-
-        public static bool Prefix(PlayerControl __instance)
-        {
-            var pid = __instance.PlayerId;
-            return States[pid] = !States[pid];
-        }
-    }
-    
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
     public static class PlayerPhysics_HandleAnimation_Patch
     {
-        public static bool[] States = new bool[150];
-        
         public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] bool amDead)
         {
-            var pid = __instance.myPlayer.PlayerId;
-            var res = States[pid] = !States[pid];
-            if (!res) return false;
-            if (!GameData.Instance) return false;
             IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) return true;
 
@@ -151,7 +133,7 @@ namespace Laboratory.Mods.Player.Patches
         }
     }
 
-    // [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.LateUpdate))]
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.LateUpdate))]
     public static class PlayerPhysics_LateUpdate_Patch
     {
         [HarmonyPostfix]
