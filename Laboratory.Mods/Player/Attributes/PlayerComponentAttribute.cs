@@ -23,7 +23,6 @@ namespace Laboratory.Mods.Player.Attributes
             {
                 if (type.GetCustomAttribute<PlayerComponentAttribute>() is not null)
                 {
-                    Logger<ModPlugin>.Message(type.FullName);
                     PlayerComponentTypes.Add(type);
                 }
             }
