@@ -35,7 +35,7 @@ namespace Laboratory.Mods.Buttons
                 yield return null;
             }
 
-            float duration = Effect.Timer;
+            var duration = Effect.Timer;
 
             while (Effect is { Timer: > 0 })
             {

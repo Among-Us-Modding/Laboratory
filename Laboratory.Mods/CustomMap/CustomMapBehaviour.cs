@@ -24,21 +24,21 @@ namespace Laboratory.Mods.CustomMap
         
         public void ShowAllPlayers()
         {
-            foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
+            foreach ((var _, var value) in HerePoints)
             {
                 Destroy(value.gameObject);
             }
             HerePoints.Clear();
             if (Parent == null) return;
-            foreach (GameData.PlayerInfo player in GameData.Instance.AllPlayers)
+            foreach (var player in GameData.Instance.AllPlayers)
             {
                 if (player.Disconnected) continue;
-                Transform hereTransform = Parent.HerePoint.transform;
+                var hereTransform = Parent.HerePoint.transform;
 
-                GameObject newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
+                var newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
                 newHerePoint.transform.localScale = hereTransform.localScale;
                 
-                SpriteRenderer newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
+                var newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
                 if (player.Object) player.Object.SetPlayerMaterialColors(newHerePointRend);
                 HerePoints[player] = newHerePointRend;
             }
@@ -63,15 +63,15 @@ namespace Laboratory.Mods.CustomMap
                 PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
                 map.ColorControl.SetColor(mapColor);
                 DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-                CustomMapBehaviour customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
+                var customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
                 customMapBehaviour.ShowAllPlayers();
 
                 // sketchy hack to remove the delegate when done
-                MouseClickEvent[] clicks = new MouseClickEvent[2];
+                var clicks = new MouseClickEvent[2];
                 customMapBehaviour.MouseUpEvent += clicks[0] = mouseUpEvent;
                 customMapBehaviour.MouseUpEvent += clicks[1] = delegate(CustomMapBehaviour instance, int _, Vector2 _)
                 {
-                    foreach (MouseClickEvent mouseClickEvent in clicks)
+                    foreach (var mouseClickEvent in clicks)
                     {
                         instance.MouseUpEvent -= mouseClickEvent;
                     }
@@ -87,7 +87,7 @@ namespace Laboratory.Mods.CustomMap
 
             if (Parent == null) return default;
             
-            Vector2 offset = ShipStatus.Instance.Type switch
+            var offset = ShipStatus.Instance.Type switch
             {
                 ShipStatus.MapType.Ship => new Vector2(-2.3f, -5.4f),
                 ShipStatus.MapType.Hq => new Vector2(9.1f, 11.1f),
@@ -115,7 +115,7 @@ namespace Laboratory.Mods.CustomMap
                 return;
             }
 
-            foreach ((GameData.PlayerInfo data, SpriteRenderer rend) in HerePoints)
+            foreach ((var data, var rend) in HerePoints)
             {
                 if (data == null || !data.Object || data.IsDead || data.Disconnected)
                 {
@@ -123,7 +123,7 @@ namespace Laboratory.Mods.CustomMap
                     continue;
                 }
                 rend.enabled = true;
-                Vector3 vector = data.Object.transform.position;
+                var vector = data.Object.transform.position;
                 vector /= ShipStatus.Instance.MapScale;
                 vector.x *= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
                 vector.z = -1f;
@@ -133,8 +133,8 @@ namespace Laboratory.Mods.CustomMap
         
         private void Update()
         {
-            Vector2 mapPosition = Vector2.zero;
-            bool mapPositionSet = false;
+            var mapPosition = Vector2.zero;
+            var mapPositionSet = false;
             if (MouseDownEvent != null)
             {
                 if (Input.GetMouseButtonDown(0)) MouseDownEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
@@ -159,7 +159,7 @@ namespace Laboratory.Mods.CustomMap
         
         private void OnDisable()
         {
-            foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
+            foreach ((var _, var value) in HerePoints)
             {
                 Destroy(value.gameObject);
             }

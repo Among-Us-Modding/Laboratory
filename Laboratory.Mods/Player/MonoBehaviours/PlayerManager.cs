@@ -57,7 +57,7 @@ namespace Laboratory.Mods.Player.MonoBehaviours
         {
             if (AnimationController == null || MyPlayer == null || MyPhysics == null) return;
 
-            GameData.PlayerInfo? data = MyPlayer.Data;
+            var data = MyPlayer.Data;
             if (data == null) return;
             MyPlayer.nameText.enabled = !AnimationController.HideName;
             MyPhysics.Skin.gameObject.SetActive(!AnimationController.HideCosmetics & MyPlayer.Visible);

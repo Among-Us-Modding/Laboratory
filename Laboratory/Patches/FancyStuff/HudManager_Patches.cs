@@ -18,15 +18,15 @@ namespace Laboratory.Patches.FancyStuff
         [HarmonyPostfix]
         public static void Postfix(HudManager __instance)
         {
-            int screenWidth = Screen.width;
-            int screenHeight = Screen.height;
+            var screenWidth = Screen.width;
+            var screenHeight = Screen.height;
             if (screenWidth != PreviousResolution.width || screenHeight != PreviousResolution.height)
             {
-                Camera shadowCamera = __instance.PlayerCam.GetComponentInChildren<ShadowCamera>().GetComponent<Camera>();
+                var shadowCamera = __instance.PlayerCam.GetComponentInChildren<ShadowCamera>().GetComponent<Camera>();
 
                 if (!shadowCamera) return;
                 
-                int res = Mathf.Max(Screen.width, Screen.height);
+                var res = Mathf.Max(Screen.width, Screen.height);
                 RenderTexture highResTexture = new(res, res, 0) {antiAliasing = 4};
         
                 shadowCamera.targetTexture = highResTexture;

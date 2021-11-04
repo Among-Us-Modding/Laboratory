@@ -56,10 +56,10 @@ namespace Laboratory.Debugging
 
             PrimaryWindow.OnGUI();
 
-            bool anyActive = false;
-            for (int index = 0; index < Debugger.Tabs.Count; index++)
+            var anyActive = false;
+            for (var index = 0; index < Debugger.Tabs.Count; index++)
             {
-                DebugTab debugTab = Debugger.Tabs[index];
+                var debugTab = Debugger.Tabs[index];
                 if (debugTab.Visible != null && !debugTab.Visible()) continue;
                 anyActive = SelectedTab == index;
             }
@@ -74,11 +74,11 @@ namespace Laboratory.Debugging
             {
                 GUILayout.BeginVertical(EmptyOptions);
 
-                bool anyActive = false;
+                var anyActive = false;
                 GUILayout.BeginHorizontal(EmptyOptions);
-                for (int index = 0; index < Debugger.Tabs.Count; index++)
+                for (var index = 0; index < Debugger.Tabs.Count; index++)
                 {
-                    DebugTab debugTab = Debugger.Tabs[index];
+                    var debugTab = Debugger.Tabs[index];
                     if (debugTab.Visible != null && !debugTab.Visible()) continue;
                     if (GUILayout.Toggle(SelectedTab == index, debugTab.TabName, GUI.skin.button, EmptyOptions)) SelectedTab = index;
                     anyActive = true;

@@ -21,15 +21,15 @@ namespace Laboratory.Mods.CustomMap.Patches
             {
                 HudManager.Instance.ShadowQuad.material.color = Color.clear;
                     
-                foreach (Collider2D collider2D in Object.FindObjectsOfType<Collider2D>())
+                foreach (var collider2D in Object.FindObjectsOfType<Collider2D>())
                 {
                     if (collider2D.gameObject.layer == 10) collider2D.isTrigger = true;
                 }
 
                 Material newMat = new(Shader.Find("Sprites/Default"));
-                foreach (NoShadowBehaviour shadow in Object.FindObjectsOfType<NoShadowBehaviour>())
+                foreach (var shadow in Object.FindObjectsOfType<NoShadowBehaviour>())
                 {
-                    SpriteRenderer rend = shadow.GetComponent<SpriteRenderer>();
+                    var rend = shadow.GetComponent<SpriteRenderer>();
                     shadow.Destroy();
                     rend.material = newMat;
                 }
@@ -37,9 +37,9 @@ namespace Laboratory.Mods.CustomMap.Patches
             
             if (MapConfig.DisableRoomTracker) HudManager.Instance.roomTracker.text.renderer.enabled = false;
 
-            foreach (AssetBundle textureSwapBundle in MapConfig.TextureSwapBundles)
+            foreach (var textureSwapBundle in MapConfig.TextureSwapBundles)
             {
-                List<Sprite> sprites = textureSwapBundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList();
+                var sprites = textureSwapBundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList();
                 SpriteSwapper.Swap(__instance.gameObject, sprites);
             }
             
@@ -75,7 +75,7 @@ namespace Laboratory.Mods.CustomMap.Patches
         {
             if (!__state) return;
 
-            HashSet<SystemTypes> allTypes = SystemTypeHelpers.AllTypes.ToHashSet();
+            var allTypes = SystemTypeHelpers.AllTypes.ToHashSet();
             var castMethod = AccessTools.Method(typeof(Il2CppObjectBase), nameof(Il2CppObjectBase.TryCast));
             foreach (var customSystem in MapConfig.CustomSystems)
             {

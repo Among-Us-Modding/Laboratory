@@ -17,10 +17,10 @@ namespace Laboratory.Mods.CustomMap
             // Argument checking
             if (replacedColors.Length != 5) throw new InvalidOperationException("Bro u need a replacement color for all of them");
             
-            Sprite blankSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
+            var blankSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
             
             // Not actually needed, just for reference back to image provided to artists
-            Color32[] artistReferenceColors = new[]
+            var artistReferenceColors = new[]
             {
                 new Color32(255, 0, 0, 255),
                 new Color32(255, 170, 170, 255),
@@ -33,20 +33,20 @@ namespace Laboratory.Mods.CustomMap
             GameObject.Find("BubbleParent")?.SetActive(false);
 
             // Get lava
-            MeshAnimator meshAnimator = GameObject.Find("LavaOrange").GetComponent<MeshAnimator>();
+            var meshAnimator = GameObject.Find("LavaOrange").GetComponent<MeshAnimator>();
             
             Il2CppSystem.Collections.Generic.List<Color32> color32s = new();
             List<Color32> newColors = new();
             // Swap colors in frames
-            foreach (Mesh mesh in meshAnimator.Frames)
+            foreach (var mesh in meshAnimator.Frames)
             {
                 color32s.Clear();
                 mesh.GetColors(color32s);
-                Il2CppStructArray<Color32> newColor32s = new Il2CppStructArray<Color32>(color32s.Count);
+                var newColor32s = new Il2CppStructArray<Color32>(color32s.Count);
 
-                int i = 0;
+                var i = 0;
                 // Replace colors with ones from replacement colors array
-                foreach (Color32 current in color32s)
+                foreach (var current in color32s)
                 {
                     if (!newColors.Contains(current)) newColors.Add(current);
 
@@ -68,7 +68,7 @@ namespace Laboratory.Mods.CustomMap
             }
             
             // Makes a sprite to go under the clear part of the lava
-            SpriteRenderer blankSpriteObj = new GameObject{layer = 9}.AddComponent<SpriteRenderer>();
+            var blankSpriteObj = new GameObject{layer = 9}.AddComponent<SpriteRenderer>();
             blankSpriteObj.sprite = blankSprite;
             blankSpriteObj.drawMode = SpriteDrawMode.Sliced;
             blankSpriteObj.size = new Vector2(8.63f, 1.28f);

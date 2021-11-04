@@ -9,10 +9,10 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
     {
         public static bool Prefix(GUILayout __instance, ref string __result, string text, int maxLength, bool multiline, GUIStyle style, Il2CppReferenceArray<GUILayoutOption> options)
         {
-            int controlId = GUIUtility.GetControlID(FocusType.Keyboard);
+            var controlId = GUIUtility.GetControlID(FocusType.Keyboard);
             GUIContent.Temp(text);
-            GUIContent content = GUIUtility.keyboardControl == controlId ? GUIContent.Temp(text + GUIUtility.compositionString) : GUIContent.Temp(text);
-            Rect rect = GUILayoutUtility.GetRect(content, style, options);
+            var content = GUIUtility.keyboardControl == controlId ? GUIContent.Temp(text + GUIUtility.compositionString) : GUIContent.Temp(text);
+            var rect = GUILayoutUtility.GetRect(content, style, options);
             if (GUIUtility.keyboardControl == controlId) content = GUIContent.Temp(text);
             GUI.DoTextField(rect, controlId, content, multiline, maxLength, style);
             __result = content.text;

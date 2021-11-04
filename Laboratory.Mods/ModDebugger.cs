@@ -32,15 +32,15 @@ namespace Laboratory.Mods
             if (AmongUsClient.Instance.AmHost && ShipStatus.Instance)
             {
                 List<(byte playerId, int newHealth)> list = new();
-                HealthSystem system = HealthSystem.Instance!;
-                foreach ((byte pid, int health) in system.PlayerHealths)
+                var system = HealthSystem.Instance!;
+                foreach ((var pid, var health) in system.PlayerHealths)
                 {
                     GUILayout.Label(GameData.Instance.GetPlayerById(pid).PlayerName, DebugWindow.EmptyOptions);
-                    int newHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(health, 0, HealthSystem.MaxHealth, DebugWindow.EmptyOptions));
+                    var newHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(health, 0, HealthSystem.MaxHealth, DebugWindow.EmptyOptions));
                     if (newHealth != health) list.Add((pid, newHealth));
                 }
 
-                foreach ((byte playerId, int newHealth) in list)
+                foreach ((var playerId, var newHealth) in list)
                 {
                     system.SetHealth(playerId, newHealth);
                 }

@@ -88,7 +88,7 @@ namespace Laboratory.Attributes
                 }
             }
             
-            foreach (int mouseButton in Mousebinds.Keys)
+            foreach (var mouseButton in Mousebinds.Keys)
             {
                 if (Input.GetMouseButtonDown(mouseButton))
                 {

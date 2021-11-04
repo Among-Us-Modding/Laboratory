@@ -9,13 +9,13 @@ namespace Laboratory.Mods.CustomMap
     {
         public static void Swap(GameObject gameObject, List<Sprite> replacementSprites)
         {
-            Il2CppArrayBase<SpriteRenderer> rends = gameObject.GetComponentsInChildren<SpriteRenderer>();
+            var rends = gameObject.GetComponentsInChildren<SpriteRenderer>();
 
-            foreach (SpriteRenderer rend in rends)
+            foreach (var rend in rends)
             {
-                Sprite rendSprite = rend.sprite;
+                var rendSprite = rend.sprite;
                 if (!rendSprite) continue;
-                Sprite swap = replacementSprites.FirstOrDefault(s => s.name == rendSprite.name && s.texture.name == rendSprite.texture.name);
+                var swap = replacementSprites.FirstOrDefault(s => s.name == rendSprite.name && s.texture.name == rendSprite.texture.name);
 
                 if (swap)
                 {

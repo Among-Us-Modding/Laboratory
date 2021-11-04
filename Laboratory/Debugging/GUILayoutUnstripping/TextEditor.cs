@@ -73,7 +73,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             get { return m_CursorIndex; }
             set
             {
-                int oldCursorIndex = m_CursorIndex;
+                var oldCursorIndex = m_CursorIndex;
                 m_CursorIndex = value;
                 EnsureValidCodePointIndex(ref m_CursorIndex);
 
@@ -90,7 +90,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             get { return m_SelectIndex; }
             set
             {
-                int oldSelectIndex = m_SelectIndex;
+                var oldSelectIndex = m_SelectIndex;
                 m_SelectIndex = value;
                 EnsureValidCodePointIndex(ref m_SelectIndex);
 
@@ -154,21 +154,21 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         internal bool HandleKeyEvent(Event e, bool textIsReadOnly)
         {
             InitKeyActions();
-            EventModifiers m = e.modifiers;
+            var m = e.modifiers;
             e.modifiers &= ~EventModifiers.CapsLock;
             if (s_Keyactions!.ContainsKey(e))
             {
                 Logger<LaboratoryPlugin>.Message($"Event 2: {e.ToString()}");
-                TextEditOp op = s_Keyactions[e];
+                var op = s_Keyactions[e];
                 PerformOperation(op, textIsReadOnly);
                 e.modifiers = m;
                 return true;
             }
             
-            (Event, TextEditOp) keyEvent = s_Keyactions2.FirstOrDefault(a => a.Item1.Equals(e));
+            var keyEvent = s_Keyactions2.FirstOrDefault(a => a.Item1.Equals(e));
             if (keyEvent != default)
             {
-                TextEditOp op = keyEvent.Item2;
+                var op = keyEvent.Item2;
                 PerformOperation(op, textIsReadOnly);
                 e.modifiers = m;
                 return true;
@@ -186,8 +186,8 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                 DeleteSelection();
                 return true;
             }
-            int p = cursorIndex;
-            int i = p;
+            var p = cursorIndex;
+            var i = p;
             while (i-- != 0)
                 if (text[i] == '\n')
                 {
@@ -214,7 +214,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                 return true;
             }
 
-            int prevWordEnd = FindEndOfPreviousWord(cursorIndex);
+            var prevWordEnd = FindEndOfPreviousWord(cursorIndex);
             if (cursorIndex != prevWordEnd)
             {
                 m_Content.text = text.Remove(prevWordEnd, cursorIndex - prevWordEnd);
@@ -233,7 +233,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                 return true;
             }
 
-            int nextWordStart = FindStartOfNextWord(cursorIndex);
+            var nextWordStart = FindStartOfNextWord(cursorIndex);
             if (cursorIndex < text.Length)
             {
                 m_Content.text = text.Remove(cursorIndex, nextWordStart - cursorIndex);
@@ -275,7 +275,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
             if (cursorIndex > 0)
             {
-                int startIndex = PreviousCodePointIndex(cursorIndex);
+                var startIndex = PreviousCodePointIndex(cursorIndex);
                 m_Content.text = text.Remove(startIndex, cursorIndex - startIndex);
                 selectIndex = cursorIndex = startIndex;
                 ClearCursorPos();
@@ -354,8 +354,8 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         {
             if (m_iAltCursorPos == -1)
                 return;
-            int p = m_iAltCursorPos;
-            string tmp = SelectedText;
+            var p = m_iAltCursorPos;
+            var tmp = SelectedText;
             m_Content.text = text.Insert(p, tmp);
 
             if (p < cursorIndex)
@@ -439,9 +439,9 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void MoveLineStart()
         {
             // we start from the left-most selected character
-            int p = selectIndex < cursorIndex ? selectIndex : cursorIndex;
+            var p = selectIndex < cursorIndex ? selectIndex : cursorIndex;
             // then we scan back to find the first newline
-            int i = p;
+            var i = p;
             while (i-- != 0)
                 if (text[i] == '\n')
                 {
@@ -455,10 +455,10 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void MoveLineEnd()
         {
             // we start from the right-most selected character
-            int p = selectIndex > cursorIndex ? selectIndex : cursorIndex;
+            var p = selectIndex > cursorIndex ? selectIndex : cursorIndex;
             // then we scan forward to find the first newline
-            int i = p;
-            int strlen = text.Length;
+            var i = p;
+            var strlen = text.Length;
             while (i < strlen)
             {
                 if (text[i] == '\n')
@@ -497,7 +497,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         private int IndexOfEndOfLine(int startIndex)
         {
-            int index = text.IndexOf('\n', startIndex);
+            var index = text.IndexOf('\n', startIndex);
             return (index != -1 ? index : text.Length);
         }
 
@@ -546,14 +546,14 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         public void MoveAltCursorToPosition(Vector2 cursorPosition)
         {
-            int index = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
+            var index = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
             m_iAltCursorPos = Mathf.Min(text.Length, index);
             DetectFocusChange();
         }
 
         public bool IsOverSelection(Vector2 cursorPosition)
         {
-            int p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
+            var p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
             return ((p < Mathf.Max(cursorIndex, selectIndex)) && (p > Mathf.Min(cursorIndex, selectIndex)));
         }
 
@@ -564,7 +564,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                 cursorIndex = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
             else // snap to words/paragraphs
             {
-                int p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
+                var p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
 
                 EnsureValidCodePointIndex(ref p);
                 EnsureValidCodePointIndex(ref m_DblClickInitPos);
@@ -614,7 +614,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             if (m_bJustSelected)
                 if (cursorIndex > selectIndex)
                 { // swap
-                    int tmp = cursorIndex;
+                    var tmp = cursorIndex;
                     cursorIndex = selectIndex;
                     selectIndex = tmp;
                 }
@@ -628,7 +628,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             if (m_bJustSelected)
                 if (cursorIndex < selectIndex)
                 { // swap
-                    int tmp = cursorIndex;
+                    var tmp = cursorIndex;
                     cursorIndex = selectIndex;
                     selectIndex = tmp;
                 }
@@ -681,7 +681,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         int GetGraphicalLineStart(int p)
         {
-            Vector2 point = style.GetCursorPixelPosition(localPosition, m_Content, p);
+            var point = style.GetCursorPixelPosition(localPosition, m_Content, p);
             point.y += 1.0f / GUIUtility.pixelsPerPoint; // we make sure no floating point errors can make us land on another line
             point.x = localPosition.x;
             return style.GetCursorStringIndex(localPosition, m_Content, point);
@@ -689,7 +689,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         int GetGraphicalLineEnd(int p)
         {
-            Vector2 point = style.GetCursorPixelPosition(localPosition, m_Content, p);
+            var point = style.GetCursorPixelPosition(localPosition, m_Content, p);
             point.y += 1.0f / GUIUtility.pixelsPerPoint; // we make sure no floating point errors can make us land on another line
             point.x += 5000;
             return style.GetCursorStringIndex(localPosition, m_Content, point);
@@ -697,7 +697,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         int FindNextSeperator(int startPos)
         {
-            int textLen = text.Length;
+            var textLen = text.Length;
             while (startPos < textLen && ClassifyChar(startPos) != CharacterType.LetterLike)
                 startPos = NextCodePointIndex(startPos);
             while (startPos < textLen && ClassifyChar(startPos) == CharacterType.LetterLike)
@@ -791,12 +791,12 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         /// If the cursor is over an punctuation mark, it's moved forward ''till it a letter or a space of a punctuation mark. If the stopping character is a space, this is skipped as well
         public int FindStartOfNextWord(int p)
         {
-            int textLen = text.Length;
+            var textLen = text.Length;
             if (p == textLen)
                 return p;
 
             // Find out which char type we're at...
-            CharacterType t = ClassifyChar(p);
+            var t = ClassifyChar(p);
             if (t != CharacterType.WhiteSpace)
             {
                 p = NextCodePointIndex(p);
@@ -835,7 +835,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             while (p > 0 && text[p] == ' ')
                 p = PreviousCodePointIndex(p);
 
-            CharacterType t = ClassifyChar(p);
+            var t = ClassifyChar(p);
             if (t != CharacterType.WhiteSpace)
             {
                 while (p >  0 && ClassifyChar(PreviousCodePointIndex(p)) == t)
@@ -854,7 +854,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void SelectWordRight()
         {
             ClearCursorPos();
-            int cachedPos = selectIndex;
+            var cachedPos = selectIndex;
             if (cursorIndex < selectIndex)
             {
                 selectIndex = cursorIndex;
@@ -871,7 +871,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void SelectWordLeft()
         {
             ClearCursorPos();
-            int cachedPos = selectIndex;
+            var cachedPos = selectIndex;
             if (cursorIndex > selectIndex)
             {
                 selectIndex = cursorIndex;
@@ -894,7 +894,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                 cursorIndex = GetGraphicalLineStart(cursorIndex);
             else
             {
-                int temp = cursorIndex;
+                var temp = cursorIndex;
                 cursorIndex = GetGraphicalLineStart(selectIndex);
                 selectIndex = temp;
             }
@@ -909,7 +909,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                 cursorIndex = GetGraphicalLineEnd(cursorIndex);
             else
             {
-                int temp = cursorIndex;
+                var temp = cursorIndex;
                 cursorIndex = GetGraphicalLineEnd(selectIndex);
                 selectIndex = temp;
             }
@@ -934,7 +934,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void SelectParagraphForward()
         {
             ClearCursorPos();
-            bool wasBehind = cursorIndex < selectIndex;
+            var wasBehind = cursorIndex < selectIndex;
             if (cursorIndex < text.Length)
             {
                 cursorIndex = IndexOfEndOfLine(cursorIndex + 1);
@@ -946,7 +946,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void SelectParagraphBackward()
         {
             ClearCursorPos();
-            bool wasInFront = cursorIndex > selectIndex;
+            var wasInFront = cursorIndex > selectIndex;
             if (cursorIndex > 1)
             {
                 cursorIndex = text.LastIndexOf('\n', cursorIndex - 2) + 1;
@@ -960,7 +960,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         /// Select the word under the cursor
         public void SelectCurrentWord()
         {
-            int index = cursorIndex;
+            var index = cursorIndex;
             if (cursorIndex < selectIndex)
             {
                 cursorIndex = FindEndOfClassification(index, Direction.Backward);
@@ -990,7 +990,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             if (p == text.Length)
                 p = PreviousCodePointIndex(p);
 
-            CharacterType t = ClassifyChar(p);
+            var t = ClassifyChar(p);
             do
             {
                 switch (dir)
@@ -1018,7 +1018,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public void SelectCurrentParagraph()
         {
             ClearCursorPos();
-            int textLen = text.Length;
+            var textLen = text.Length;
 
             if (cursorIndex < textLen)
             {
@@ -1038,14 +1038,14 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         internal void UpdateScrollOffset()
         {
-            int cursorPos = cursorIndex;
+            var cursorPos = cursorIndex;
             graphicalCursorPos = style.GetCursorPixelPosition(new Rect(0, 0, position.width, position.height), m_Content, cursorPos);
 
             // The rectangle inside which the text is displayed.
-            Rect viewRect = style.padding.Remove(position);
+            var viewRect = style.padding.Remove(position);
 
             // Position of the cursor in the viewRect coordinate system.
-            Vector2 localGraphicalCursorPos = graphicalCursorPos;
+            var localGraphicalCursorPos = graphicalCursorPos;
             localGraphicalCursorPos.x -= style.padding.left;
             localGraphicalCursorPos.y -= style.padding.top;
 
@@ -1100,8 +1100,8 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         
         public void DrawCursor(string newText)
         {
-            string realText = text;
-            int cursorPos = cursorIndex;
+            var realText = text;
+            var cursorPos = cursorIndex;
             if (GUIUtility.compositionString.Length > 0)
             {
                 m_Content.text = newText.Substring(0, cursorIndex) + GUIUtility.compositionString + newText.Substring(selectIndex);
@@ -1114,7 +1114,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
             //Debug.Log("Cursor pos: " + graphicalCursorPos);
 
-            Vector2 originalContentOffset = style.contentOffset;
+            var originalContentOffset = style.contentOffset;
             style.contentOffset -= scrollOffset;
             style.Internal_clipOffset = scrollOffset;
 
@@ -1267,7 +1267,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             if (isPasswordField)
                 return;
 
-            string selectedRenderedText = style.Internal_GetSelectedRenderedText(localPosition, m_Content, selectIndex, cursorIndex);
+            var selectedRenderedText = style.Internal_GetSelectedRenderedText(localPosition, m_Content, selectIndex, cursorIndex);
 
             GUIUtility.systemCopyBuffer = selectedRenderedText;
         }
@@ -1290,7 +1290,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         public bool Paste()
         {
             //Debug.Log ("Paste");
-            string pasteval = GUIUtility.systemCopyBuffer;
+            var pasteval = GUIUtility.systemCopyBuffer;
             if (pasteval != "")
             {
                 if (!multiline)
@@ -1419,7 +1419,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             }
 
             s_Keyactions2 = new List<(Event, TextEditOp)>();
-            foreach (KeyValuePair<Event, TextEditOp> pair in s_Keyactions)
+            foreach (var pair in s_Keyactions)
             {
                 s_Keyactions2.Add((pair.Key, pair.Value));
             }

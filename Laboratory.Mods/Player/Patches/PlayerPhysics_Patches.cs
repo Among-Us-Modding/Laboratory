@@ -16,7 +16,7 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] bool down)
         {
-            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) return true;
             __instance.rend.flipX = false;
             __instance.Skin.Flipped = false;
@@ -34,7 +34,7 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance, uint skinId)
         {
-            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) return true;
             __instance.Skin.SetSkin(skinId, __instance.rend.flipX);
             if (__instance.Animator.IsPlaying(anim.SpawnAnim))
@@ -51,13 +51,13 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance)
         {
-            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) return true;
 
             __instance.myPlayer.FootSteps.Stop();
             __instance.myPlayer.FootSteps.loop = false;
             __instance.myPlayer.HatRenderer.SetIdleAnim();
-            GameData.PlayerInfo data = __instance.myPlayer.Data;
+            var data = __instance.myPlayer.Data;
             if (data != null)
             {
                 __instance.myPlayer.HatRenderer.SetColor(__instance.myPlayer.Data.ColorId);
@@ -84,20 +84,20 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] bool amDead)
         {
-            IAnimationController? anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+            var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) return true;
 
             if (__instance.Animator.IsPlaying(anim.SpawnAnim)) return false;
 
-            Vector2 velocity = __instance.body.velocity;
-            AnimationClip currentAnimation = __instance.Animator.GetCurrentAnimation();
+            var velocity = __instance.body.velocity;
+            var currentAnimation = __instance.Animator.GetCurrentAnimation();
             if (anim.PlayingCustomAnimation(currentAnimation, __instance.Animator)) return false;
             
             if (!amDead)
             {
                 if (velocity.sqrMagnitude >= 0.05f)
                 {
-                    bool flipX = __instance.rend.flipX;
+                    var flipX = __instance.rend.flipX;
                     if (velocity.x < -0.01f) __instance.rend.flipX = true;
                     else if (velocity.x > 0.01f) __instance.rend.flipX = false;
                     
@@ -151,9 +151,9 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static IEnumerator CoEnterVent(PlayerPhysics playerPhysics, int id)
         {
-            IAnimationController? anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
+            var anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) yield break;
-            Vent vent = ShipStatus.Instance.AllVents.First(v => v.Id == id);
+            var vent = ShipStatus.Instance.AllVents.First(v => v.Id == id);
             if (playerPhysics.myPlayer.AmOwner)
             {
                 playerPhysics.inputHandler.enabled = true;
@@ -177,9 +177,9 @@ namespace Laboratory.Mods.Player.Patches
 
         public static IEnumerator CoExitVent(PlayerPhysics playerPhysics, int id)
         {
-            IAnimationController? anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
+            var anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) yield break;
-            Vent vent = ShipStatus.Instance.AllVents.First(v => v.Id == id);
+            var vent = ShipStatus.Instance.AllVents.First(v => v.Id == id);
             if (playerPhysics.myPlayer.AmOwner)
             {
                 playerPhysics.inputHandler.enabled = true;
@@ -215,14 +215,14 @@ namespace Laboratory.Mods.Player.Patches
             {
                 case RpcCalls.EnterVent:
                 {
-                    int id = reader.ReadPackedInt32();
+                    var id = reader.ReadPackedInt32();
                     __instance.StopAllCoroutines();
                     __instance.StartCoroutine(PlayerPhysics_Coroutines.CoEnterVent(__instance, id));
                     return false;
                 }
                 case RpcCalls.ExitVent:
                 {
-                    int id = reader.ReadPackedInt32();
+                    var id = reader.ReadPackedInt32();
                     __instance.StopAllCoroutines();
                     __instance.StartCoroutine(PlayerPhysics_Coroutines.CoEnterVent(__instance, id));
                     return false;
@@ -244,7 +244,7 @@ namespace Laboratory.Mods.Player.Patches
                 __instance.StartCoroutine(PlayerPhysics_Coroutines.CoEnterVent(__instance, id));
             }
 
-            MessageWriter messageWriter = AmongUsClient.Instance.StartRpc(__instance.NetId, (byte) RpcCalls.EnterVent, SendOption.Reliable);
+            var messageWriter = AmongUsClient.Instance.StartRpc(__instance.NetId, (byte) RpcCalls.EnterVent, SendOption.Reliable);
             messageWriter.WritePacked(id);
             messageWriter.EndMessage();
             return false;
@@ -262,7 +262,7 @@ namespace Laboratory.Mods.Player.Patches
                 __instance.StartCoroutine(PlayerPhysics_Coroutines.CoExitVent(__instance, id));
             }
 
-            MessageWriter messageWriter = AmongUsClient.Instance.StartRpc(__instance.NetId, (byte) RpcCalls.ExitVent, SendOption.Reliable);
+            var messageWriter = AmongUsClient.Instance.StartRpc(__instance.NetId, (byte) RpcCalls.ExitVent, SendOption.Reliable);
             messageWriter.WritePacked(id);
             messageWriter.EndMessage();
             return false;
@@ -279,7 +279,7 @@ namespace Laboratory.Mods.Player.Patches
                 __instance.BootFromVent(ventId);
             }
 
-            MessageWriter messageWriter = AmongUsClient.Instance.StartRpc(__instance.NetId, (byte) RpcCalls.BootFromVent, SendOption.Reliable);
+            var messageWriter = AmongUsClient.Instance.StartRpc(__instance.NetId, (byte) RpcCalls.BootFromVent, SendOption.Reliable);
             messageWriter.WritePacked(ventId);
             messageWriter.EndMessage();
             return false;
@@ -292,9 +292,9 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static bool Prefix(PlayerPhysics._CoSpawnPlayer_d__41 __instance, ref bool __result)
         {
-            int num = __instance.__1__state;
+            var num = __instance.__1__state;
             if (num != 1) return true;
-            PlayerPhysics playerPhysics = __instance.__4__this;
+            var playerPhysics = __instance.__4__this;
             var anim = playerPhysics.GetPlayerComponent<PlayerManager>().AnimationController;
             if (anim == null) return true;
             __instance.__1__state = -1;

@@ -16,12 +16,12 @@ namespace Laboratory.Mods.Buttons
         public virtual PlayerControl? GetClosest()
         {
             PlayerControl? current = null;
-            float maxDistance = TargetRange();
-            Vector2 myPosition = PlayerControl.LocalPlayer.GetTruePosition();
-            foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+            var maxDistance = TargetRange();
+            var myPosition = PlayerControl.LocalPlayer.GetTruePosition();
+            foreach (var player in PlayerControl.AllPlayerControls)
             {
                 if (player.AmOwner || player.Data.IsDead) continue;
-                float distance = Vector2.Distance(myPosition, player.GetTruePosition());
+                var distance = Vector2.Distance(myPosition, player.GetTruePosition());
                 if (distance <= maxDistance)
                 {
                     current = player;

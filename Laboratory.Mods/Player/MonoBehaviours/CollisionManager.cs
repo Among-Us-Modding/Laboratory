@@ -18,13 +18,13 @@ namespace Laboratory.Mods.Player.MonoBehaviours
         
         public virtual void Awake()
         {
-            for (int i = 8; i <= 11; i += 3)
+            for (var i = 8; i <= 11; i += 3)
             {
                 GameObject obj = new(nameof(CollisionDetector) + LayerMask.LayerToName(i)) {layer = i};
-                CollisionDetector detector = obj.AddComponent<CollisionDetector>();
-                Transform detectorTransform = obj.transform;
-                BoxCollider2D box = obj.AddComponent<BoxCollider2D>();
-                Rigidbody2D body = obj.AddComponent<Rigidbody2D>();
+                var detector = obj.AddComponent<CollisionDetector>();
+                var detectorTransform = obj.transform;
+                var box = obj.AddComponent<BoxCollider2D>();
+                var body = obj.AddComponent<Rigidbody2D>();
 
                 body.gravityScale = 0f;
                 body.isKinematic = true;

@@ -10,13 +10,13 @@ namespace Laboratory.Mods.Utils
         {
             void PointSoundFunc(AudioSource source, float dt)
             {
-                float distance = Vector2.Distance(point, PlayerControl.LocalPlayer.GetTruePosition());
-                int maxDist = 4;
+                var distance = Vector2.Distance(point, PlayerControl.LocalPlayer.GetTruePosition());
+                var maxDist = 4;
                 if (distance > maxDist)
                 {
                     source.volume = 0f;
                 }
-                float modVol = 1f - Mathf.Clamp01(distance / maxDist);
+                var modVol = 1f - Mathf.Clamp01(distance / maxDist);
                 source.volume = Mathf.Lerp(source.volume, volume * modVol, dt);
             }
 
@@ -28,13 +28,13 @@ namespace Laboratory.Mods.Utils
         {
             void PointSoundFunc(AudioSource source, float dt)
             {
-                float distance = Vector2.Distance(trns.position, PlayerControl.LocalPlayer.GetTruePosition());
-                int maxDist = 4;
+                var distance = Vector2.Distance(trns.position, PlayerControl.LocalPlayer.GetTruePosition());
+                var maxDist = 4;
                 if (distance > maxDist)
                 {
                     source.volume = 0f;
                 }
-                float modVol = 1f - Mathf.Clamp01(distance / maxDist);
+                var modVol = 1f - Mathf.Clamp01(distance / maxDist);
                 source.volume = Mathf.Lerp(source.volume, volume * modVol, dt);
             }
 

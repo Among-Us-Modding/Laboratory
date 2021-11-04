@@ -58,10 +58,10 @@ namespace Laboratory.Mods.Utils
             if (LoadDleks) ToLoad.Add(3);
             if (LoadAirship) ToLoad.Add(4);
 
-            foreach (int i in ToLoad)
+            foreach (var i in ToLoad)
             {
-                AssetReference shipPrefab = AmongUsClient.Instance.ShipPrefabs.ToArray()[i];
-                AsyncOperationHandle<GameObject> shipAsset = shipPrefab.LoadAsset<GameObject>();
+                var shipPrefab = AmongUsClient.Instance.ShipPrefabs.ToArray()[i];
+                var shipAsset = shipPrefab.LoadAsset<GameObject>();
                 while (!shipAsset.IsDone) yield return null;
                 Maps[i] = shipAsset.Result.GetComponent<ShipStatus>();
                 shipAsset.Result.DontUnload();

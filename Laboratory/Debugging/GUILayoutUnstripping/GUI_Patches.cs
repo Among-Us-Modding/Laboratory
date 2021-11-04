@@ -11,7 +11,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         private static TextEditor GetStateObject(int controlID)
         {
-            if (!StateObjects.TryGetValue(controlID, out TextEditor instance))
+            if (!StateObjects.TryGetValue(controlID, out var instance))
             {
                 instance = new TextEditor();
                 StateObjects[controlID] = instance;
@@ -21,8 +21,8 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
 
         private static void HandleTextFieldEventForDesktop(Rect position, int id, GUIContent content, bool multiline, int maxLength, GUIStyle style, TextEditor editor)
         {
-            Event current = Event.current;
-            bool flag = false;
+            var current = Event.current;
+            var flag = false;
             switch (current.type)
             {
                 case EventType.MouseDown:
@@ -81,9 +81,9 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
                     }
 
                     if (current.keyCode == KeyCode.Tab || current.character == '\t') return;
-                    char character = current.character;
+                    var character = current.character;
                     if (character == '\n' && !multiline && !current.alt) return;
-                    Font font = style.font;
+                    var font = style.font;
                     if (!(bool) (Object) font) font = GUI.skin.font;
                     if (font.HasCharacter(character) || character == '\n')
                     {
@@ -127,7 +127,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
         {
             GUIUtility.CheckOnGUI();
             if (maxLength >= 0 && content.text.Length > maxLength) content.text = content.text.Substring(0, maxLength);
-            TextEditor editor = GetStateObject(id);
+            var editor = GetStateObject(id);
             editor.text = content.text;
             editor.SaveBackup();
             editor.position = position;

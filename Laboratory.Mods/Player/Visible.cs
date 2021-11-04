@@ -9,13 +9,13 @@ namespace Laboratory.Mods.Player
 
         public static bool AnyVisibles(PlayerControl player)
         {
-            int playerHashCode = player.GetHashCode();
+            var playerHashCode = player.GetHashCode();
             return !SetVisibles[playerHashCode] || Visibles[playerHashCode].Count > 0;
         }
 
         public static void AddVisible(PlayerControl player, string name)
         {
-            Visibles.TryGetValue(player.GetHashCode(), out List<string> strs);
+            Visibles.TryGetValue(player.GetHashCode(), out var strs);
             if (strs != null && strs.Contains(name)) return;
             strs?.Add(name);
             UpdateVisible(player);
@@ -34,7 +34,7 @@ namespace Laboratory.Mods.Player
 
         public static void UpdateVisible(PlayerControl player)
         {
-            bool shouldBeVisible = !AnyVisibles(player);
+            var shouldBeVisible = !AnyVisibles(player);
             player.myRend.enabled = shouldBeVisible;
             player.MyPhysics.Skin.Visible = shouldBeVisible;
             player.HatRenderer.gameObject.SetActive(shouldBeVisible);

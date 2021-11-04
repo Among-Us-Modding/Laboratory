@@ -70,23 +70,23 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
 
         private void FixedUpdate()
         {
-            foreach (IEffect effect in Effects) effect.FixedUpdate();
+            foreach (var effect in Effects) effect.FixedUpdate();
         }
         
         private void Update()
         {
-            foreach (IEffect effect in Effects) effect.Update();
+            foreach (var effect in Effects) effect.Update();
         }
 
         private void LateUpdate()
         {
             List<IEffect> effects = new();
-            foreach (IEffect effect in Effects)
+            foreach (var effect in Effects)
             {
                 effect.LateUpdate();
                 if (effect.Timer < 0) effects.Add(effect);
             }
-            foreach (IEffect effect in effects)
+            foreach (var effect in effects)
             {
                 RemoveEffect(effect);
             }
@@ -94,7 +94,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
 
         private void OnDestroy()
         {
-            foreach (IEffect effect in Effects) effect.Cancel();
+            foreach (var effect in Effects) effect.Cancel();
         }
     }
 }

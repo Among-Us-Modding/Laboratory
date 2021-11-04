@@ -30,14 +30,14 @@ namespace Laboratory.Utils
                 AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : 
                 new[] {assembly};
             
-            for (int i = 0; i < assemblies.Length; i++)
+            for (var i = 0; i < assemblies.Length; i++)
             {
                 var asm = assemblies[i];
-                string? match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
+                var match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
                 if (match == null) continue;
                 
                 if (CachedEmbeddedSprites.ContainsKey(match)) return CachedEmbeddedSprites[match];
-                byte[]? buffer = ReadAll(asm?.GetManifestResourceStream(match));
+                var buffer = ReadAll(asm?.GetManifestResourceStream(match));
                 if (buffer == null) return null;
 
                 Texture2D tex = new(2, 2, TextureFormat.ARGB32, false);
@@ -65,11 +65,11 @@ namespace Laboratory.Utils
             for (var i = 0; i < assemblies.Length; i++)
             {
                 var asm = assemblies[i];
-                string? match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
+                var match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
                 if (match == null) continue;
                 
                 if (CachedEmbeddedBundles.ContainsKey(match)) return CachedEmbeddedBundles[match];
-                byte[]? buffer = ReadAll(asm?.GetManifestResourceStream(match));
+                var buffer = ReadAll(asm?.GetManifestResourceStream(match));
                 if (buffer == null) return null;
 
                 return CachedEmbeddedBundles[match] = AssetBundle.LoadFromMemory(buffer).DontUnload();
@@ -119,9 +119,9 @@ namespace Laboratory.Utils
         /// </summary>
         public T? LoadAsset<T>(string name) where T : Object
         {
-            if (ObjectCache.TryGetValue(name, out Object result)) return result.TryCast<T>();
+            if (ObjectCache.TryGetValue(name, out var result)) return result.TryCast<T>();
             if (Bundle == null) throw new NullReferenceException();
-            T? asset = Bundle.LoadAsset<T>(name);
+            var asset = Bundle.LoadAsset<T>(name);
             if (!asset) return null;
 
             if (asset == null) return asset;
@@ -138,8 +138,8 @@ namespace Laboratory.Utils
         public Object[]? LoadAllAssets()
         {
             if (Bundle == null) return null;
-            Il2CppReferenceArray<Object> assets = Bundle.LoadAllAssets();
-            foreach (Object asset in assets) asset.DontUnload();
+            var assets = Bundle.LoadAllAssets();
+            foreach (var asset in assets) asset.DontUnload();
             return assets;
         }
     }

@@ -22,7 +22,7 @@ namespace Laboratory.Extensions
         public static I.List<T> ToIl2CppList<T>(this System.Collections.Generic.List<T> systemList)
         {
             I.List<T> iList = new();
-            foreach (T item in systemList) iList.Add(item);
+            foreach (var item in systemList) iList.Add(item);
             return iList;
         }
         
@@ -32,9 +32,9 @@ namespace Laboratory.Extensions
         public static System.Collections.Generic.IList<T> Shuffle<T>(this System.Collections.Generic.IList<T> self)
         {
             var random = new System.Random();
-            for (int i = self.Count - 1; i > 0; i--)
+            for (var i = self.Count - 1; i > 0; i--)
             {
-                int j = random.Next(i + 1);
+                var j = random.Next(i + 1);
                 (self[i], self[j]) = (self[j], self[i]);
             }
             return self;
@@ -46,9 +46,9 @@ namespace Laboratory.Extensions
         public static System.Collections.Generic.IList<T> SeededShuffle<T>(this System.Collections.Generic.IList<T> self, int seed)
         {
             var random = new System.Random(seed);
-            for (int i = self.Count - 1; i > 0; i--)
+            for (var i = self.Count - 1; i > 0; i--)
             {
-                int j = random.Next(i + 1);
+                var j = random.Next(i + 1);
                 (self[i], self[j]) = (self[j], self[i]);
             }
             return self;
@@ -78,7 +78,7 @@ namespace Laboratory.Extensions
         /// </summary>
         public static System.Collections.Generic.IEnumerable<T> OfIl2CppType<T>(this IEnumerable source) where T : Il2CppObjectBase
         {
-            foreach (object obj in source)
+            foreach (var obj in source)
             {
                 if (obj is Il2CppObjectBase il2cppObject)
                 {

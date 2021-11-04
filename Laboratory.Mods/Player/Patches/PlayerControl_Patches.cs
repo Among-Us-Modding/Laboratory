@@ -13,9 +13,9 @@ namespace Laboratory.Mods.Player.Patches
         public static void Postfix(PlayerControl __instance)
         {
             if (__instance.notRealPlayer) return;
-            foreach (Type playerComponentType in PlayerComponentAttribute.PlayerComponentTypes)
+            foreach (var playerComponentType in PlayerComponentAttribute.PlayerComponentTypes)
             {
-                Il2CppSystem.Type il2cppType = Il2CppType.From(playerComponentType);
+                var il2cppType = Il2CppType.From(playerComponentType);
                 if (!__instance.GetComponent(il2cppType)) __instance.gameObject.AddComponent(il2cppType);
             }
             
@@ -70,9 +70,9 @@ namespace Laboratory.Mods.Player.Patches
     {
         public static void Postfix()
         {
-            HealthSystem? system = HealthSystem.Instance;
+            var system = HealthSystem.Instance;
             if (system == null) return;
-            foreach (GameData.PlayerInfo playerInfo in GameData.Instance.AllPlayers)
+            foreach (var playerInfo in GameData.Instance.AllPlayers)
             {
                 if (!system.PlayerHealths.ContainsKey(playerInfo.PlayerId)) 
                     system.SetHealth(playerInfo.PlayerId, HealthSystem.MaxHealth);

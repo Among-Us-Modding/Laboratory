@@ -12,7 +12,7 @@ namespace Laboratory.Patches.Misc
         [HarmonyPrefix]
         public static void Prefix(ShipStatus __instance)
         {
-            AirshipStatus airship = __instance.TryCast<AirshipStatus>();
+            var airship = __instance.TryCast<AirshipStatus>();
             if (airship) airship.Type = (ShipStatus.MapType) 3;
         }
     }

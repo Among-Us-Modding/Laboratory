@@ -23,9 +23,9 @@ namespace Laboratory.Debugging
 
         private static void Register(Assembly asm)
         {
-            foreach (Type type in asm.GetTypes().Where(t => t.IsSubclassOf(typeof(Debugger))))
+            foreach (var type in asm.GetTypes().Where(t => t.IsSubclassOf(typeof(Debugger))))
             {
-                Debugger debugger = (Debugger) Activator.CreateInstance(type);
+                var debugger = (Debugger) Activator.CreateInstance(type);
                 Tabs.AddRange(debugger.DebugTabs());
             }
         }

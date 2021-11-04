@@ -11,7 +11,7 @@ namespace Laboratory.Mods.Player
 
         public static void AddMoveable(PlayerControl player, string name)
         {
-            CanMoveables.TryGetValue(player.GetHashCode(), out List<string> strs);
+            CanMoveables.TryGetValue(player.GetHashCode(), out var strs);
             if (strs != null && strs.Contains(name)) return;
             strs?.Add(name);
             player.MyPhysics.body.velocity = Vector2.zero;

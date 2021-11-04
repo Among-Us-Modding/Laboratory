@@ -59,10 +59,10 @@ namespace Laboratory.Mods.Systems
         /// <param name="newHealth">The new amount of heath to set the player with</param>
         public void SetHealth(byte playerId, int newHealth)
         {
-            int playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
+            var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
             IsDirty = true;
 
-            GameData.PlayerInfo ownerData = GameData.Instance.GetPlayerById(playerId);
+            var ownerData = GameData.Instance.GetPlayerById(playerId);
             if (ownerData != null && ownerData.Object)
             {
                 ownerData.Object.nameText.text = $"<color=#{Palette.PlayerColors[(ownerData.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{ownerData.PlayerName}";
@@ -86,10 +86,10 @@ namespace Laboratory.Mods.Systems
 
         public void Deserialize(MessageReader reader, bool initialState)
         {
-            byte length = reader.ReadByte();
-            for (int i = 0; i < length; i++)
+            var length = reader.ReadByte();
+            for (var i = 0; i < length; i++)
             {
-                bool dirty = IsDirty;
+                var dirty = IsDirty;
                 SetHealth(reader.ReadByte(), reader.ReadInt32());
                 IsDirty = dirty;
             }
@@ -98,7 +98,7 @@ namespace Laboratory.Mods.Systems
         public void Serialize(MessageWriter writer, bool initialState)
         {
             writer.Write((byte) PlayerHealths.Count);
-            foreach ((byte playerId, int health) in PlayerHealths)
+            foreach ((var playerId, var health) in PlayerHealths)
             {
                 writer.Write(playerId);
                 writer.Write(health);

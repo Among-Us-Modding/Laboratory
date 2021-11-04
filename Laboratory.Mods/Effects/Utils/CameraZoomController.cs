@@ -68,9 +68,9 @@ namespace Laboratory.Mods.Effects.Utils
             
             HudManager.Instance.FullScreen.transform.localScale *= 50;
 
-            Camera mainCam = Camera.main!;
+            var mainCam = Camera.main!;
             GameObject newCamObj = new("ZoomCamera");
-            Transform newCamTransform = newCamObj.transform;
+            var newCamTransform = newCamObj.transform;
             newCamTransform.parent = mainCam.transform;
             newCamTransform.localPosition = new Vector3(0, 0, 0);
             newCamTransform.localScale = new Vector3(1, 1, 1);
@@ -83,7 +83,7 @@ namespace Laboratory.Mods.Effects.Utils
         
         private void Update()
         {
-            Camera mainCam = Camera.main!;
+            var mainCam = Camera.main!;
             if (!mainCam) return;
             
             Cam!.backgroundColor = mainCam.backgroundColor;
