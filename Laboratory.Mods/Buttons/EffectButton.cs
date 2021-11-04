@@ -21,11 +21,16 @@ namespace Laboratory.Mods.Buttons
 
             CurrentTime = int.MaxValue;
             StopAllCoroutines();
-            
+            Effect = null;
             EffectRoutine = StartCoroutine(new CoroutineWrapper(ShowEffectDuration()));
             OnClickAction?.Invoke();
         }
-        
+
+        public override bool CanUse()
+        {
+            return EffectRoutine == null && base.CanUse();
+        }
+
         [HideFromIl2Cpp]
         public IEnumerator ShowEffectDuration()
         {

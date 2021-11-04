@@ -66,7 +66,7 @@ namespace Laboratory.Mods.Buttons
             Button.OnMouseOut = Button.OnMouseOver = new Button.ButtonClickedEvent();
             Button.Colliders = new[] { buttonColl };
             Button.OnClick = new Button.ButtonClickedEvent();
-            Button.OnClick.AddListener((Action) PerformClick);
+            Button.OnClick.AddListener((Action) InvokePerformClick);
             
             SetPosition(AspectPosition.EdgeAlignments.LeftBottom);
         }
@@ -174,6 +174,11 @@ namespace Laboratory.Mods.Buttons
             return true;
         }
 
+        public void InvokePerformClick()
+        {
+            this.PerformClick();
+        }
+        
         public virtual void PerformClick()
         {
             if (!ShouldCooldown() || !ShouldBeVisible() || !CanUse()) return;
