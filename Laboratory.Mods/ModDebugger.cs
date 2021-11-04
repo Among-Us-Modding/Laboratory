@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Laboratory.Debugging;
+using Laboratory.Mods.Buttons;
 using Laboratory.Mods.Effects.Utils;
 using Laboratory.Mods.Enums;
 using Laboratory.Mods.Systems;
 using Laboratory.Utils;
+using Reactor;
 using UnityEngine;
 
 namespace Laboratory.Mods
@@ -27,6 +29,11 @@ namespace Laboratory.Mods
             CustomGUILayout.Button("Load Unity Explorer", () =>
             {
                 RuntimePluginLoader.DownloadPlugin("UnityExplorer");
+            });
+
+            CustomGUILayout.Button("Test Button", () =>
+            {
+                CooldownButton.Create<EffectButton>().OnClickAction += () => Logger<ModPlugin>.Warning("TEST WARNING");
             });
             
             if (AmongUsClient.Instance.AmHost && ShipStatus.Instance)

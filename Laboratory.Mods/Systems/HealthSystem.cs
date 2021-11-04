@@ -25,9 +25,9 @@ namespace Laboratory.Mods.Systems
         /// <summary>
         /// The current instance of the health system
         /// </summary>
-        public static HealthSystem? Instance => ShipStatus.Instance ? m_Instance : null;
+        public static HealthSystem? Instance => ShipStatus.Instance ? _instance : null;
 
-        private static HealthSystem m_Instance;
+        private static HealthSystem? _instance;
         /// <summary>
         /// Changes the damage of a specified player
         /// </summary>
@@ -48,7 +48,7 @@ namespace Laboratory.Mods.Systems
         public HealthSystem() : base(ClassInjector.DerivedConstructorPointer<HealthSystem>())
         {
             ClassInjector.DerivedConstructorBody(this);
-            m_Instance = this;
+            _instance = this;
         }
 
         internal Dictionary<byte, int> PlayerHealths { [HideFromIl2Cpp] get; } = new();
