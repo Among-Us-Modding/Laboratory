@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Reactor;
 using Reactor.Extensions;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -43,6 +44,7 @@ namespace Laboratory.Mods.Utils
             this.StartCoroutine(CoLoadMaps());
         }
 
+        [HideFromIl2Cpp]
         public IEnumerator CoLoadMaps()
         {
             Maps = new ShipStatus[5];
