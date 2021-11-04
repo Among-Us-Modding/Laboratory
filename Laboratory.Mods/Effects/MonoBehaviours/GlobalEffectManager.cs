@@ -15,11 +15,11 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
 
         public static GlobalEffectManager? Instance { get; set; }
 
-        private IEffect? m_PrimaryEffect;
+        private IEffect? _primaryEffect;
         
         public IEffect? PrimaryEffect
         {
-            [HideFromIl2Cpp] get => m_PrimaryEffect;
+            [HideFromIl2Cpp] get => _primaryEffect;
             [HideFromIl2Cpp] set
             {
                 var current = PrimaryEffect;
@@ -28,7 +28,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
                     current.Cancel();
                     RemoveEffect(current);
                 }
-                m_PrimaryEffect = value;
+                _primaryEffect = value;
             }
         }
         
@@ -55,7 +55,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         [HideFromIl2Cpp]
         public void RemoveEffect(IEffect effect)
         {
-            if (m_PrimaryEffect == effect) m_PrimaryEffect = null;
+            if (_primaryEffect == effect) _primaryEffect = null;
             Effects.Remove(effect);
             effect.OnDestroy();
         }

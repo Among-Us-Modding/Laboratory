@@ -19,13 +19,13 @@ namespace Laboratory.Mods.Player.MonoBehaviours
         public PlayerPhysics? MyPhysics { get; set; }
         public CustomNetworkTransform? MyNetTransform { get; set; }
         
-        private IAnimationController? m_AnimationController;
+        private IAnimationController? _animationController;
         public IAnimationController? AnimationController
         {
-            [HideFromIl2Cpp] get => m_AnimationController;
+            [HideFromIl2Cpp] get => _animationController;
             [HideFromIl2Cpp] set
             {
-                m_AnimationController = value;
+                _animationController = value;
                 value?.Initialize(this);
             }
         }

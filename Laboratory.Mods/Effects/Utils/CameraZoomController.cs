@@ -30,11 +30,11 @@ namespace Laboratory.Mods.Effects.Utils
         /// </summary>
         public float OrthographicSize
         {
-            [HideFromIl2Cpp] get => m_OrthographicSize;
+            [HideFromIl2Cpp] get => _orthographicSize;
             [HideFromIl2Cpp] set
             {
                 ShadowCollab!.ShadowCamera.aspect = Cam!.aspect;
-                ShadowCollab.ShadowCamera.orthographicSize = Cam.orthographicSize = m_OrthographicSize = value;
+                ShadowCollab.ShadowCamera.orthographicSize = Cam.orthographicSize = _orthographicSize = value;
                 ShadowCollab.ShadowQuad.transform.localScale = new Vector3(value * Cam.aspect, value) * 2f;
             }
         }
@@ -44,20 +44,20 @@ namespace Laboratory.Mods.Effects.Utils
         /// </summary>
         public float Aspect
         {
-            [HideFromIl2Cpp] get => m_Aspect;
+            [HideFromIl2Cpp] get => _aspect;
             [HideFromIl2Cpp] set
             {
-                if (Math.Abs(m_Aspect - value) > 0.05f)
+                if (Math.Abs(_aspect - value) > 0.05f)
                 {
-                    m_Aspect = value;
+                    _aspect = value;
                     Cam!.aspect = value;
                     OrthographicSize = OrthographicSize;
                 }
             }
         }
         
-        private float m_OrthographicSize = 3;
-        private float m_Aspect;
+        private float _orthographicSize = 3;
+        private float _aspect;
         
         private void Awake()
         {
@@ -77,7 +77,7 @@ namespace Laboratory.Mods.Effects.Utils
             Cam = newCamObj.AddComponent<Camera>();
             Cam.CopyFrom(mainCam);
             Cam.depth += 1;
-            m_Aspect = mainCam.aspect;
+            _aspect = mainCam.aspect;
             mainCam.ResetReplacementShader(); // TODO Review This
         }
         

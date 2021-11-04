@@ -15,22 +15,22 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
     {
         public PlayerEffectManager(IntPtr ptr) : base(ptr) { }
 
-        private PlayerManager? m_MyManager;
-        private IEffect? m_PrimaryEffect;
+        private PlayerManager? _myManager;
+        private IEffect? _primaryEffect;
         
         public IEffect? PrimaryEffect
         {
-            [HideFromIl2Cpp] get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? m_PrimaryEffect : m_PrimaryEffect;
+            [HideFromIl2Cpp] get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? _primaryEffect : _primaryEffect;
             [HideFromIl2Cpp] set
             {
                 var current = PrimaryEffect;
                 if (current is not null)
                 {
-                    if (current.Owner != m_MyManager) throw new InvalidOperationException("You cannot set a player's effect during a primary global effect");
+                    if (current.Owner != _myManager) throw new InvalidOperationException("You cannot set a player's effect during a primary global effect");
                     current.Cancel();
                     RemoveEffect(current);
                 }
-                m_PrimaryEffect = value;
+                _primaryEffect = value;
             }
         }
 
@@ -39,7 +39,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         [HideFromIl2Cpp]
         public void RpcAddEffect(IEffect effect, bool primary = false)
         {
-            Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(m_MyManager!.MyPlayer, effect, primary), true);
+            Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(_myManager!.MyPlayer, effect, primary), true);
         }
         
         [HideFromIl2Cpp]
@@ -47,7 +47,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         {
             if (effect != null)
             {
-                effect.Owner = m_MyManager!;
+                effect.Owner = _myManager!;
                 effect.Awake();
                 Effects.Add(effect);
             }
@@ -58,14 +58,14 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
         [HideFromIl2Cpp]
         public void RemoveEffect(IEffect effect)
         {
-            if (m_PrimaryEffect == effect) m_PrimaryEffect = null;
+            if (_primaryEffect == effect) _primaryEffect = null;
             Effects.Remove(effect);
             effect.OnDestroy();
         }
 
         private void Start()
         {
-            m_MyManager = GetComponent<PlayerManager>();
+            _myManager = GetComponent<PlayerManager>();
         }
 
         private void FixedUpdate()

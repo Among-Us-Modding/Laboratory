@@ -91,7 +91,7 @@ namespace Laboratory.Utils
         /// <param name="bundleName">Name of the embedded resource being used</param>
         public AssetManager(string bundleName)
         {
-            m_Name = bundleName;
+            _name = bundleName;
             LoadAllAssets();
         }
 
@@ -101,18 +101,18 @@ namespace Laboratory.Utils
         /// <param name="bundle">Bundle to create manager with</param>
         public AssetManager(AssetBundle bundle)
         {
-            m_Bundle = bundle;
+            _bundle = bundle;
             LoadAllAssets();
         }
 
         private Dictionary<string, Object> ObjectCache { get; } = new();
-        private AssetBundle? m_Bundle;
-        private string? m_Name;
+        private AssetBundle? _bundle;
+        private string? _name;
         
         /// <summary>
         /// AssetManager's primary AssetBundle
         /// </summary>
-        public AssetBundle? Bundle => m_Bundle ??= LoadBundle(m_Name);
+        public AssetBundle? Bundle => _bundle ??= LoadBundle(_name);
         
         /// <summary>
         /// Load asset of a given name from the manager's bundle
