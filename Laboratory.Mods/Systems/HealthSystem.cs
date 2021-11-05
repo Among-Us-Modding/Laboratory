@@ -1,12 +1,15 @@
-using System;
 using System.Collections.Generic;
 using Hazel;
+using Il2CppSystem;
 using Laboratory.Mods.Enums;
 using Reactor;
 using Reactor.Extensions;
 using Reactor.Networking.MethodRpc;
 using UnhollowerBaseLib.Attributes;
 using UnhollowerRuntimeLib;
+using IntPtr = System.IntPtr;
+using Math = System.Math;
+using NotImplementedException = System.NotImplementedException;
 
 namespace Laboratory.Mods.Systems
 {
@@ -15,7 +18,7 @@ namespace Laboratory.Mods.Systems
     /// Generic system to manage player healths
     /// </summary>
     [RegisterInIl2Cpp(typeof(ISystemType))]
-    public class HealthSystem : Il2CppSystem.Object, ICustomSystemType
+    public class HealthSystem : Object, ICustomSystemType
     {
         /// <summary>
         /// The starting and maximum health of each player

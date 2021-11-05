@@ -176,7 +176,7 @@ namespace Laboratory.Mods.Buttons
 
         public void InvokePerformClick()
         {
-            this.PerformClick();
+            PerformClick();
         }
         
         public virtual void PerformClick()
