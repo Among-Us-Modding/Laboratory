@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Laboratory.Mods.Buttons
 {
     [RegisterInIl2Cpp]
-    public class TargetButton : CooldownButton
+    public abstract class TargetButton : CooldownButton
     {
         public TargetButton(IntPtr ptr) : base(ptr) { }
         

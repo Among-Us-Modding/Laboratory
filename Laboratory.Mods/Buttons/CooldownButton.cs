@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace Laboratory.Mods.Buttons
 {
     [RegisterInIl2Cpp]
-    public class CooldownButton : MonoBehaviour
+    public abstract class CooldownButton : MonoBehaviour
     {
         public static float XDistFromEdge = 1.1f;
         public static float YDistFromEdge = 1.1f;

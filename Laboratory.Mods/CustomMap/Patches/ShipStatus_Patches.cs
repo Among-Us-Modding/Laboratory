@@ -80,7 +80,8 @@ namespace Laboratory.Mods.CustomMap.Patches
             foreach (var customSystem in MapConfig.CustomSystems)
             {
                 allTypes.Add(customSystem.Key);
-                __instance.Systems[customSystem.Key] = (ISystemType) castMethod.MakeGenericMethod(typeof(ISystemType)).Invoke(Activator.CreateInstance(customSystem.Value), Array.Empty<object>());
+                // __instance.Systems[customSystem.Key] = (ISystemType) castMethod.MakeGenericMethod(typeof(ISystemType)).Invoke(Activator.CreateInstance(customSystem.Value), Array.Empty<object>());
+                __instance.Systems[customSystem.Key] = ((Il2CppObjectBase) Activator.CreateInstance(customSystem.Value)).TryCast<ISystemType>();
             }
 
             SystemTypeHelpers.AllTypes = allTypes.ToArray();

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Laboratory.Mods.Buttons
 {
     [RegisterInIl2Cpp]
-    public class TargetEffectButton : EffectButton
+    public abstract class TargetEffectButton : EffectButton
     {
         public TargetEffectButton(IntPtr ptr) : base(ptr) { }
         
