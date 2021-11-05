@@ -1,6 +1,4 @@
-using System;
 using HarmonyLib;
-using Laboratory.Mods.Enums;
 using Laboratory.Mods.Player.Attributes;
 using Laboratory.Mods.Systems;
 using UnhollowerRuntimeLib;

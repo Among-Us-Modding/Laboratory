@@ -8,7 +8,6 @@ using Laboratory.Debugging;
 using Laboratory.Utils;
 using Reactor;
 using Reactor.Patches;
-using System.Reflection;
 using UnityEngine.SceneManagement;
 
 namespace Laboratory

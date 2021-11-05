@@ -2,7 +2,6 @@ using System;
 using Laboratory.Mods.Player.AnimationControllers;
 using Laboratory.Mods.Player.Attributes;
 using Laboratory.Mods.Player.Interfaces;
-using Laboratory.Mods.Systems;
 using Reactor;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
