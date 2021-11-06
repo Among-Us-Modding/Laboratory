@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Laboratory.Mods.Buttons
 {
     [RegisterInIl2Cpp]
-    public abstract class EffectButton : CooldownButton
+    public class EffectButton : CooldownButton
     {
         public EffectButton(IntPtr ptr) : base(ptr) { }
 
