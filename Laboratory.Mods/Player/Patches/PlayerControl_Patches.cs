@@ -70,10 +70,9 @@ namespace Laboratory.Mods.Player.Patches
         {
             var system = HealthSystem.Instance;
             if (system == null) return;
-            foreach (var playerInfo in GameData.Instance.AllPlayers)
+            foreach (var playerInfo in PlayerControl.AllPlayerControls)
             {
-                if (!system.PlayerHealths.ContainsKey(playerInfo.PlayerId)) 
-                    system.SetHealth(playerInfo.PlayerId, HealthSystem.MaxHealth);
+                system.SetHealth(playerInfo.PlayerId, HealthSystem.MaxHealth);                    
             }
         }
     }

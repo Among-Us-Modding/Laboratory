@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using UnhollowerBaseLib;
 using I = Il2CppSystem.Collections.Generic;
 

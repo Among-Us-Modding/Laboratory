@@ -5,6 +5,7 @@ using Reactor;
 
 namespace Laboratory.Mods.Player.Attributes
 {
+    [AttributeUsage(AttributeTargets.Class)]
     public class PlayerComponentAttribute : Attribute
     {
         internal static readonly HashSet<Type> PlayerComponentTypes = new();
@@ -14,10 +15,8 @@ namespace Laboratory.Mods.Player.Attributes
             ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
         }
         
-        private static void Register(Assembly? assembly = null)
+        private static void Register(Assembly assembly)
         {
-            assembly ??= Assembly.GetCallingAssembly();
-
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
