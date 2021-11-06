@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using BepInEx.IL2CPP.Utils;
 using HarmonyLib;
 using Hazel;
 using Laboratory.Mods.Extensions;

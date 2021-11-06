@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using BepInEx.IL2CPP.Utils.Collections;
 using Laboratory.Mods.Effects.Interfaces;
 using Reactor;
 using UnhollowerBaseLib.Attributes;
@@ -22,7 +23,7 @@ namespace Laboratory.Mods.Buttons
             CurrentTime = int.MaxValue;
             StopAllCoroutines();
             Effect = null;
-            EffectRoutine = StartCoroutine(new CoroutineWrapper(ShowEffectDuration()));
+            EffectRoutine = StartCoroutine(ShowEffectDuration().WrapToIl2Cpp());
             OnClickAction?.Invoke();
         }
 

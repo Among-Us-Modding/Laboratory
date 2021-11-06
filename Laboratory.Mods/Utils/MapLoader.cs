@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BepInEx.IL2CPP.Utils;
 using Reactor;
 using Reactor.Extensions;
 using UnhollowerBaseLib.Attributes;
