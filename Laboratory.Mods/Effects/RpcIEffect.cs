@@ -55,7 +55,7 @@ namespace Laboratory.Mods.Effects
 
         public override EffectInfo Read(MessageReader reader)
         {
-            var player = MessageExtensions.ReadNetObject<PlayerControl>(reader);
+            var player = reader.ReadNetObject<PlayerControl>();
             var primary = reader.ReadBoolean();
             return new EffectInfo(player, reader.ReadString(), primary);
         }

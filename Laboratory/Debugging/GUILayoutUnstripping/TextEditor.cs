@@ -158,7 +158,7 @@ namespace Laboratory.Debugging.GUILayoutUnstripping
             e.modifiers &= ~EventModifiers.CapsLock;
             if (s_Keyactions!.ContainsKey(e))
             {
-                Logger<LaboratoryPlugin>.Message($"Event 2: {e.ToString()}");
+                Logger<LaboratoryPlugin>.Message($"Event 2: {e}");
                 var op = s_Keyactions[e];
                 PerformOperation(op, textIsReadOnly);
                 e.modifiers = m;

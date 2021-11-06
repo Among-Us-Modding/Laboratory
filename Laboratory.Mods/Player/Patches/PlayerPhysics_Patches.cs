@@ -4,7 +4,6 @@ using BepInEx.IL2CPP.Utils;
 using HarmonyLib;
 using Hazel;
 using Laboratory.Mods.Extensions;
-using Laboratory.Mods.Player.Interfaces;
 using Laboratory.Mods.Player.MonoBehaviours;
 using PowerTools;
 using Reactor;

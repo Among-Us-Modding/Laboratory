@@ -59,8 +59,8 @@ namespace Laboratory.Attributes
                     var attribute = method.GetCustomAttribute<KeybindAttribute>();
                     if (attribute != null && method.IsStatic)
                     {
-                        attribute.Keys.ForEach(k => AddKey(k, method));
-                        attribute.MouseButtons.ForEach(m => AddMouse(m, method));
+                        attribute.Keys.Do(k => AddKey(k, method));
+                        attribute.MouseButtons.Do(m => AddMouse(m, method));
                     }
                 }
             }

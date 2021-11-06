@@ -9,7 +9,7 @@ namespace Laboratory.Patches.FancyStuff
         /// <summary>
         /// The last resolution set by the shadow camera patch
         /// </summary>
-        public static Resolution PreviousResolution = new Resolution();
+        public static Resolution PreviousResolution;
 
         /// <summary>
         /// Sets shadow camera render texture to be far higher quality

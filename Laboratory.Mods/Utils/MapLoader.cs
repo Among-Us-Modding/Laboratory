@@ -6,8 +6,6 @@ using Reactor;
 using Reactor.Extensions;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Laboratory.Mods.Utils
 {

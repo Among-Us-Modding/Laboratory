@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Il2CppSystem.Collections.Generic;
 using UnhollowerBaseLib;
 using UnityEngine;
 
@@ -35,8 +35,8 @@ namespace Laboratory.Mods.CustomMap
             // Get lava
             var meshAnimator = GameObject.Find("LavaOrange").GetComponent<MeshAnimator>();
             
-            Il2CppSystem.Collections.Generic.List<Color32> color32s = new();
-            List<Color32> newColors = new();
+            List<Color32> color32s = new();
+            System.Collections.Generic.List<Color32> newColors = new();
             // Swap colors in frames
             foreach (var mesh in meshAnimator.Frames)
             {

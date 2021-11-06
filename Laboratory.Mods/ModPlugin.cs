@@ -5,7 +5,6 @@ using Laboratory.Mods.Player.Attributes;
 using Laboratory.Mods.Utils;
 using Reactor;
 using Reactor.Patches;
-using System.Reflection;
 
 namespace Laboratory.Mods
 {

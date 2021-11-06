@@ -44,8 +44,7 @@ namespace Laboratory.Mods.CustomMap
         /// <summary>
         /// Blue / Water color scheme for lava colors
         /// </summary>
-        public static Color32[] LavaColors_Blue { get; } = new[]
-        {
+        public static Color32[] LavaColors_Blue { get; } = {
             new Color32(17, 111, 137, 255),
             new Color32(33, 143, 173, 255),
             new Color32(24, 79, 94, 255),

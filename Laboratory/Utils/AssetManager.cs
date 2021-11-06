@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Reactor.Extensions;
-using UnhollowerBaseLib;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
