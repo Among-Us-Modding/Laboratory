@@ -64,7 +64,7 @@ namespace Laboratory.Mods.Player.MonoBehaviours
             if (MyPlayer.CurrentPet) MyPlayer.CurrentPet.gameObject.SetActive(!AnimationController.HideCosmetics & MyPlayer.Visible);
 
             MyPlayer.Collider.offset = new Vector2(0, AnimationController.ColliderOffset);
-            MyPlayer.myRend.transform.localPosition = new Vector3(0, AnimationController.RendOffset, 0);
+            MyPlayer.myRend.transform.localPosition = new Vector3(AnimationController.RendererXOffset * (MyPlayer.myRend.flipX ? -1 : 1), AnimationController.RendererYOffset, 0);
         }
     }
 }

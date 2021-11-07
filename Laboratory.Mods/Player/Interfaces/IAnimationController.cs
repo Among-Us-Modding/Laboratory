@@ -18,7 +18,8 @@ namespace Laboratory.Mods.Player.Interfaces
         public bool HideCosmetics { get; }
         public bool HideName { get; }
 
-        public float RendOffset => 0;
+        public float RendererYOffset => 0;
+        public float RendererXOffset => 0;
         public float ColliderOffset => -0.3636f;
         
         public virtual float ZOffset => 0;
