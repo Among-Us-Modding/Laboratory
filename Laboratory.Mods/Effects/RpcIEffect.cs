@@ -9,7 +9,7 @@ using Reactor.Networking;
 
 namespace Laboratory.Mods.Effects
 {
-    [RegisterCustomRpc(CustomRpcIds.RpcIEffect)]
+    [RegisterCustomRpc((uint)CustomRpcs.RpcIEffect)]
     public class RpcIEffect : PlayerCustomRpc<ModPlugin, RpcIEffect.EffectInfo>
     {
         public RpcIEffect(ModPlugin plugin, uint id) : base(plugin, id)

@@ -36,7 +36,7 @@ namespace Laboratory.Mods.Systems
         /// </summary>
         /// <param name="player">The player to change the health of</param>
         /// <param name="change">The amount of health to be added to a player (can be negative)</param>
-        [MethodRpc(CustomRpcIds.ChangeHealth)]
+        [MethodRpc((uint)CustomRpcs.ChangeHealth)]
         public static void RpcChangeDamage(PlayerControl player, int change)
         {
             if (AmongUsClient.Instance.AmHost && Instance is not null)
