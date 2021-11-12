@@ -11,11 +11,6 @@ namespace Laboratory.Debugging
     public class DebugWindow : MonoBehaviour
     {
         /// <summary>
-        /// Default empty GUILayoutOptions array
-        /// </summary>
-        public static Il2CppReferenceArray<GUILayoutOption> EmptyOptions { get; } = new(0);
-
-        /// <summary>
         /// Current Instance of the debug window
         /// </summary>
         public static DebugWindow? Instance { get; set; }
@@ -72,15 +67,15 @@ namespace Laboratory.Debugging
         {
             try
             {
-                GUILayout.BeginVertical(EmptyOptions);
+                GUILayout.BeginVertical();
 
                 var anyActive = false;
-                GUILayout.BeginHorizontal(EmptyOptions);
+                GUILayout.BeginHorizontal();
                 for (var index = 0; index < Debugger.Tabs.Count; index++)
                 {
                     var debugTab = Debugger.Tabs[index];
                     if (debugTab.Visible != null && !debugTab.Visible()) continue;
-                    if (GUILayout.Toggle(SelectedTab == index, debugTab.TabName, GUI.skin.button, EmptyOptions)) SelectedTab = index;
+                    if (GUILayout.Toggle(SelectedTab == index, debugTab.TabName, GUI.skin.button)) SelectedTab = index;
                     anyActive = true;
                 }
 
