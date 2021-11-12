@@ -34,7 +34,7 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             }
         }
 
-        private List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
+        public List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
 
         [HideFromIl2Cpp]
         public void RpcAddEffect(IEffect effect, bool primary = false)
@@ -61,6 +61,14 @@ namespace Laboratory.Mods.Effects.MonoBehaviours
             if (_primaryEffect == effect) _primaryEffect = null;
             Effects.Remove(effect);
             effect.OnDestroy();
+        }
+
+        public void ClearEffects()
+        {
+            foreach (var effect in Effects)
+            {
+                RemoveEffect(effect);
+            }
         }
 
         private void Start()
