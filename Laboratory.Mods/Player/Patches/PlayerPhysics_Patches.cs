@@ -137,11 +137,17 @@ namespace Laboratory.Mods.Player.Patches
     public static class PlayerPhysics_LateUpdate_Patch
     {
         [HarmonyPostfix]
-        public static void Postfix(PlayerPhysics __instance)
+        public static bool Prefix(PlayerPhysics __instance)
         {
             var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
-            if (anim == null) return;
-            __instance.transform.position += new Vector3(0, 0, anim.ZOffset);
+            if (anim == null) return true;
+
+            var transform = __instance.transform;
+            var position = transform.position;
+            position.z = (position.y - anim.RendererYOffset) / 1000f + anim.ZOffset;
+            transform.position = position;
+
+            return false;
         }
     }
     
