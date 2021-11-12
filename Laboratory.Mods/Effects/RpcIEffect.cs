@@ -28,12 +28,12 @@ namespace Laboratory.Mods.Effects
             {
                 Primary = primary;
                 EffectType = effect?.GetType();
-                FullName = (effect == null || EffectType == null ? "" : EffectType.FullName) ?? string.Empty;
+                FullName = (effect == null || EffectType == null ? "" : EffectType.AssemblyQualifiedName) ?? string.Empty;
                 TargetPlayer = targetPlayer;
                 Effect = effect;
             }
 
-            public EffectInfo(PlayerControl targetPlayer, string fullName, bool primary)
+            public EffectInfo(PlayerControl? targetPlayer, string fullName, bool primary)
             {
                 Primary = primary;
                 FullName = fullName;
@@ -48,14 +48,16 @@ namespace Laboratory.Mods.Effects
 
         public override void Write(MessageWriter writer, EffectInfo effectInfo)
         {
-            writer.Write((InnerNetObject?) effectInfo.TargetPlayer);
+            writer.Write(effectInfo.TargetPlayer != null);
+            if (effectInfo.TargetPlayer != null)
+                writer.WriteNetObject(effectInfo.TargetPlayer);
             writer.Write(effectInfo.Primary);
             writer.Write(effectInfo.FullName);
         }
 
         public override EffectInfo Read(MessageReader reader)
         {
-            var player = reader.ReadNetObject<PlayerControl>();
+            var player = reader.ReadBoolean() ? reader.ReadNetObject<PlayerControl>() : null;
             var primary = reader.ReadBoolean();
             return new EffectInfo(player, reader.ReadString(), primary);
         }
