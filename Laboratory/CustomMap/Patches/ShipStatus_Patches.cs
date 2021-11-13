@@ -56,7 +56,6 @@ public static class ShipStatus_Awake_Patch
 [HarmonyPatch]
 public static class ShipStatus_OnEnable_Patch
 {
-    [HarmonyTargetMethods]
     public static IEnumerable<MethodBase> TargetMethods()
     {
         yield return AccessTools.Method(typeof(ShipStatus), nameof(ShipStatus.OnEnable));
@@ -64,26 +63,18 @@ public static class ShipStatus_OnEnable_Patch
         yield return AccessTools.Method(typeof(AirshipStatus), nameof(AirshipStatus.OnEnable));
     }
 
-    [HarmonyPrefix]
     public static void Prefix(ShipStatus __instance, out bool __state)
     {
-        __state = __instance.Systems == null && MapConfig.CustomSystems != default;
+        __state = __instance.Systems == null;
     }
 
-    [HarmonyPostfix]
     public static void Postfix(ShipStatus __instance, bool __state)
     {
         if (!__state) return;
 
-        var allTypes = SystemTypeHelpers.AllTypes.ToHashSet();
-        var castMethod = AccessTools.Method(typeof(Il2CppObjectBase), nameof(Il2CppObjectBase.TryCast));
-        foreach (var customSystem in MapConfig.CustomSystems)
+        foreach (var customSystemType in CustomSystemType.List)
         {
-            allTypes.Add(customSystem.Key);
-            // __instance.Systems[customSystem.Key] = (ISystemType) castMethod.MakeGenericMethod(typeof(ISystemType)).Invoke(Activator.CreateInstance(customSystem.Value), Array.Empty<object>());
-            __instance.Systems[customSystem.Key] = ((Il2CppObjectBase)Activator.CreateInstance(customSystem.Value)).TryCast<ISystemType>();
+            __instance.Systems[customSystemType] = ((Il2CppObjectBase)Activator.CreateInstance(customSystemType.Value)).TryCast<ISystemType>();
         }
-
-        SystemTypeHelpers.AllTypes = allTypes.ToArray();
     }
 }

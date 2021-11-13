@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using HarmonyLib;
 using Hazel;
 using Il2CppSystem;
+using Laboratory.CustomMap;
 using Laboratory.Enums;
 using Reactor;
 using Reactor.Extensions;
@@ -21,6 +22,8 @@ namespace Laboratory.Systems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class HealthSystem : Object, ICustomSystemType
 {
+    public static CustomSystemType SystemType { get; } = CustomSystemType.Register<HealthSystem>();
+
     /// <summary>
     /// The starting and maximum health of each player
     /// </summary>

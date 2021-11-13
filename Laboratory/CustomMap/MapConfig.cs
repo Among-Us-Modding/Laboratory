@@ -22,15 +22,6 @@ public static class MapConfig
     public static bool DisableRoomTracker { get; set; }
 
     /// <summary>
-    /// Custom Systems that will be added to the map
-    /// Type must be able to be cast into ISystemType
-    /// </summary>
-    public static Dictionary<SystemTypes, Type> CustomSystems { get; set; } = new()
-    {
-        { CustomSystemTypes.HealthSystem, typeof(HealthSystem) }
-    };
-
-    /// <summary>
     /// Removes the snow particles on polus
     /// </summary>
     public static bool DisableSnow { get; set; }
