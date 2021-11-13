@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Laboratory.Effects.Interfaces;
+using Laboratory.Extensions;
 using Laboratory.Player.Attributes;
 using Laboratory.Player.Managers;
 using Reactor;
@@ -13,15 +14,19 @@ namespace Laboratory.Effects.MonoBehaviours;
 [RegisterInIl2Cpp, PlayerComponent]
 public class PlayerEffectManager : MonoBehaviour
 {
-    public PlayerEffectManager(IntPtr ptr) : base(ptr) { }
+    public PlayerEffectManager(IntPtr ptr) : base(ptr)
+    {
+    }
 
     private PlayerManager? _myManager;
     private IEffect? _primaryEffect;
-        
+
     public IEffect? PrimaryEffect
     {
-        [HideFromIl2Cpp] get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? _primaryEffect : _primaryEffect;
-        [HideFromIl2Cpp] set
+        [HideFromIl2Cpp]
+        get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? _primaryEffect : _primaryEffect;
+        [HideFromIl2Cpp]
+        set
         {
             var current = PrimaryEffect;
             if (current is not null)
@@ -30,18 +35,23 @@ public class PlayerEffectManager : MonoBehaviour
                 current.Cancel();
                 RemoveEffect(current);
             }
+
             _primaryEffect = value;
         }
     }
 
-    public List<IEffect> Effects { [HideFromIl2Cpp] get; } = new();
+    public List<IEffect> Effects
+    {
+        [HideFromIl2Cpp]
+        get;
+    } = new();
 
     [HideFromIl2Cpp]
     public void RpcAddEffect(IEffect effect, bool primary = false)
     {
         Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(_myManager!.Player, effect, primary), true);
     }
-        
+
     [HideFromIl2Cpp]
     public void AddEffect(IEffect? effect, bool primary)
     {
@@ -54,7 +64,7 @@ public class PlayerEffectManager : MonoBehaviour
 
         if (primary) PrimaryEffect = effect;
     }
-        
+
     [HideFromIl2Cpp]
     public void RemoveEffect(IEffect effect)
     {
@@ -73,14 +83,14 @@ public class PlayerEffectManager : MonoBehaviour
 
     private void Start()
     {
-        _myManager = GetComponent<PlayerManager>();
+        _myManager = this.GetPlayerManager();
     }
 
     private void FixedUpdate()
     {
         foreach (var effect in Effects) effect.FixedUpdate();
     }
-        
+
     private void Update()
     {
         foreach (var effect in Effects) effect.Update();
@@ -94,6 +104,7 @@ public class PlayerEffectManager : MonoBehaviour
             effect.LateUpdate();
             if (effect.Timer < 0) effects.Add(effect);
         }
+
         foreach (var effect in effects)
         {
             RemoveEffect(effect);

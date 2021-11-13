@@ -1,5 +1,6 @@
 using System;
 using Laboratory.Effects.MonoBehaviours;
+using Laboratory.Extensions;
 using Reactor;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ public class CollisionManager : MonoBehaviour
 
     public PlayerControl Player { get; private set; } = null!;
     public PlayerManager Manager { get; private set; } = null!;
-    public PlayerEffectManager EffectsManager { get; private set; } = null!;
+    public PlayerEffectManager EffectManager { get; private set; } = null!;
 
     public bool AmOwner => Player.AmOwner;
 
@@ -45,8 +46,8 @@ public class CollisionManager : MonoBehaviour
     public virtual void Start()
     {
         Player = GetComponent<PlayerControl>();
-        Manager = GetComponent<PlayerManager>();
-        EffectsManager = GetComponent<PlayerEffectManager>();
+        Manager = this.GetPlayerManager();
+        EffectManager = this.GetEffectManager();
     }
 
     public virtual void OnCollision(Collider2D other)

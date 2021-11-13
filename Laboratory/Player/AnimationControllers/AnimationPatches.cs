@@ -1,6 +1,5 @@
 using HarmonyLib;
 using Laboratory.Extensions;
-using Laboratory.Player.Managers;
 using PowerTools;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ internal static class AnimationSwapPatch
         var parent = __instance.transform.parent;
         if (!parent) return;
 
-        var playerManager = parent.GetPlayerComponent<PlayerManager>();
+        var playerManager = parent.GetPlayerManager();
         if (!playerManager) return;
 
         var animationController = playerManager.AnimationController;
@@ -65,7 +64,7 @@ internal static class HandleAnimationPatch
 {
     public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] bool amDead)
     {
-        var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+        var anim = __instance.GetPlayerManager().AnimationController;
         if (anim == null) return true;
 
         if (__instance.Animator.IsPlaying(anim.SpawnAnim)) return false;
@@ -120,7 +119,7 @@ internal static class ZOffsetPatch
     [HarmonyPostfix]
     public static bool Prefix(PlayerPhysics __instance)
     {
-        var anim = __instance.GetPlayerComponent<PlayerManager>().AnimationController;
+        var anim = __instance.myPlayer.GetPlayerManager().AnimationController;
         if (anim == null) return true;
 
         var transform = __instance.transform;

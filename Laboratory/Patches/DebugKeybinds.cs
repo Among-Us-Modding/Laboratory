@@ -6,6 +6,7 @@ using Laboratory.CustomMap;
 using Laboratory.Effects.MonoBehaviours;
 using Laboratory.Effects.Utils;
 using Laboratory.Enums;
+using Laboratory.Extensions;
 using Laboratory.Player;
 using Reactor.Extensions;
 using Reactor.Networking.MethodRpc;
@@ -28,7 +29,7 @@ public static class KeyboardJoystick_Update_Patch
             HudManager.Instance.PlayerCam.Target = player;
         }
 
-        var playerEffectManager = player.GetComponent<PlayerEffectManager>();
+        var playerEffectManager = player.GetEffectManager();
         playerEffectManager.ClearEffects();
         Moveable.Clear(player);
         Visible.Clear(player);

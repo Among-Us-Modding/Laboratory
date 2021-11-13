@@ -4,6 +4,7 @@ using InnerNet;
 using Laboratory.Effects.Interfaces;
 using Laboratory.Effects.MonoBehaviours;
 using Laboratory.Enums;
+using Laboratory.Extensions;
 using Reactor;
 using Reactor.Networking;
 
@@ -67,7 +68,7 @@ public class RpcIEffect : PlayerCustomRpc<LaboratoryPlugin, RpcIEffect.EffectInf
         var effect = effectInfo.Effect ?? (effectInfo.EffectType == null ? null : (IEffect) Activator.CreateInstance(effectInfo.EffectType));
         if (effectInfo.TargetPlayer != null)
         {
-            effectInfo.TargetPlayer.GetComponent<PlayerEffectManager>().AddEffect(effect, effectInfo.Primary);
+            effectInfo.TargetPlayer.GetEffectManager().AddEffect(effect, effectInfo.Primary);
         }
         else
         {
