@@ -4,10 +4,10 @@
         <VersionSuffix>dev</VersionSuffix>
         <Description>Among Us modding framework built for GameToons Gaming</Description>
         <Authors>Among-Us-Modding</Authors>
-        
+
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/Among-Us-Modding/Laboratory.git</RepositoryUrl>
-        
+
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
@@ -25,7 +25,7 @@
 
     <ItemGroup>
         <PackageReference Include="Reactor" Version="1.1.0-dev" />
-        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.513" />
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.518" />
         <PackageReference Include="AmongUs.GameLibs.Steam" Version="2021.6.30" PrivateAssets="all" />
 
         <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.1" PrivateAssets="all" />

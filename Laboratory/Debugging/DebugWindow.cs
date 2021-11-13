@@ -1,99 +1,97 @@
 ﻿using System;
+using System.Collections.Generic;
+using Laboratory.Extensions;
 using Reactor;
 using Reactor.Extensions;
-using UnhollowerBaseLib;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace Laboratory.Debugging
+namespace Laboratory.Debugging;
+
+[RegisterInIl2Cpp]
+public class DebugWindow : MonoBehaviour
 {
-    [RegisterInIl2Cpp]
-    public class DebugWindow : MonoBehaviour
+    /// <summary>
+    /// Current Instance of the debug window
+    /// </summary>
+    public static DebugWindow? Instance { get; set; }
+
+    /// <summary>
+    /// List of tabs in the debug window
+    /// </summary>
+    public static List<BaseDebugTab> Tabs { get; } = new();
+
+    /// <summary>
+    /// If the debug window is enabled
+    /// </summary>
+    [HideFromIl2Cpp]
+    public bool Enabled { get; set; }
+
+    /// <summary>
+    /// Index into the tabs array which is currently active
+    /// </summary>
+    [HideFromIl2Cpp]
+    public BaseDebugTab? SelectedTab { get; set; }
+
+    /// <summary>
+    /// Draw window used to draw debug components
+    /// </summary>
+    [HideFromIl2Cpp]
+    private DragWindow Window { get; }
+
+    public DebugWindow(IntPtr ptr) : base(ptr)
     {
-        /// <summary>
-        /// Current Instance of the debug window
-        /// </summary>
-        public static DebugWindow? Instance { get; set; }
+        Window = new DragWindow(new Rect(20, 20, 100, 100), "Debug", BuildWindow);
+    }
 
-        public DebugWindow(IntPtr ptr) : base(ptr)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1)) Enabled = !Enabled;
+    }
+
+    private void OnGUI()
+    {
+        if (!Enabled) return;
+
+        Window.OnGUI();
+
+        if (SelectedTab is { IsVisible: true })
         {
-            PrimaryWindow = new(PrimaryRect, "Debug", BuildPrimaryWindow);
+            SelectedTab.OnGUI();
         }
+    }
 
-        /// <summary>
-        /// If the debug window is enabled
-        /// </summary>
-        public bool Enabled { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-
-        /// <summary>
-        /// Index into the tabs array which is currently active
-        /// </summary>
-        public int SelectedTab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-
-        /// <summary>
-        /// Rect of the debug window
-        /// </summary>
-        private Rect PrimaryRect { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; } = new(20, 20, 100, 100);
-
-        /// <summary>
-        /// Draw window used to draw debug components
-        /// </summary>
-        private DragWindow PrimaryWindow { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-
-        private void Update()
+    [HideFromIl2Cpp]
+    private void BuildWindow()
+    {
+        try
         {
-            if (Input.GetKeyDown(KeyCode.F1)) Enabled = !Enabled;
-        }
+            GUILayout.BeginVertical();
 
-        private void OnGUI()
-        {
-            if (!Enabled) return;
+            GUILayout.BeginHorizontal();
 
-            PrimaryWindow.OnGUI();
-
-            var anyActive = false;
-            for (var index = 0; index < Debugger.Tabs.Count; index++)
+            foreach (var tab in Tabs)
             {
-                var debugTab = Debugger.Tabs[index];
-                if (debugTab.Visible != null && !debugTab.Visible()) continue;
-                anyActive = SelectedTab == index;
-            }
-
-            if (anyActive) Debugger.Tabs[SelectedTab].OnGUI?.Invoke();
-        }
-
-        [HideFromIl2Cpp]
-        private void BuildPrimaryWindow(int windowId)
-        {
-            try
-            {
-                GUILayout.BeginVertical();
-
-                var anyActive = false;
-                GUILayout.BeginHorizontal();
-                for (var index = 0; index < Debugger.Tabs.Count; index++)
+                if (GUILayout.Toggle(SelectedTab == tab, tab.Name, GUI.skin.button))
                 {
-                    var debugTab = Debugger.Tabs[index];
-                    if (debugTab.Visible != null && !debugTab.Visible()) continue;
-                    if (GUILayout.Toggle(SelectedTab == index, debugTab.TabName, GUI.skin.button)) SelectedTab = index;
-                    anyActive = true;
+                    SelectedTab = tab;
                 }
-
-                GUILayout.EndHorizontal();
-
-                if (anyActive)
-                {
-                    CustomGUILayout.Divider();
-                    Debugger.Tabs[SelectedTab].BuildUI?.Invoke();
-                }
-
-                GUILayout.EndVertical();
-                GUI.DragWindow();
             }
-            catch (Exception e)
+
+            GUILayout.EndHorizontal();
+
+
+            if (SelectedTab is { IsVisible: true })
             {
-                Logger<LaboratoryPlugin>.Error(e);
+                GUILayoutExtensions.Divider();
+                SelectedTab?.BuildUI();
             }
+
+            GUILayout.EndVertical();
+        }
+        catch (Exception e)
+        {
+            Logger<LaboratoryPlugin>.Error(e);
         }
     }
 }

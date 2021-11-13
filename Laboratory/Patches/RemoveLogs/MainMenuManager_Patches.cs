@@ -1,13 +1,12 @@
 using HarmonyLib;
 
-namespace Laboratory.Patches.RemoveLogs
+namespace Laboratory.Patches.RemoveLogs;
+
+[HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.LateUpdate))]
+public static class MainMenuManager_LateUpdate_Patch
 {
-    [HarmonyPatch(typeof(MainMenuManager), nameof(MainMenuManager.LateUpdate))]
-    public static class MainMenuManager_LateUpdate_Patch
+    public static bool Prefix()
     {
-        public static bool Prefix()
-        {
-            return false;
-        }
+        return false;
     }
 }

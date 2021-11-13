@@ -1,155 +1,140 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Laboratory.Extensions
+namespace Laboratory.Extensions;
+
+public static class TransformExtensions
 {
-    public static class TransformExtensions
+    /// <summary>
+    /// Sets the world X position of a transform
+    /// </summary>
+    public static Transform SetX(this Transform transform, float x)
     {
-        /// <summary>
-        /// Sets the world X position of a transform
-        /// </summary>
-        public static Transform SetXPos(this Transform transform, float x)
+        var vector = transform.position;
+        vector.x = x;
+        transform.position = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the world Y position of a transform
+    /// </summary>
+    public static Transform SetY(this Transform transform, float y)
+    {
+        var vector = transform.position;
+        vector.y = y;
+        transform.position = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the world Z position of a transform
+    /// </summary>
+    public static Transform SetZ(this Transform transform, float z)
+    {
+        var vector = transform.position;
+        vector.z = z;
+        transform.position = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the local X position of a transform
+    /// </summary>
+    public static Transform SetLocalX(this Transform transform, float x)
+    {
+        var vector = transform.localPosition;
+        vector.x = x;
+        transform.localPosition = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the local Y position of a transform
+    /// </summary>
+    public static Transform SetLocalY(this Transform transform, float y)
+    {
+        var vector = transform.localPosition;
+        vector.y = y;
+        transform.localPosition = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the local Z position of a transform
+    /// </summary>
+    public static Transform SetLocalZ(this Transform transform, float z)
+    {
+        var vector = transform.localPosition;
+        vector.z = z;
+        transform.localPosition = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the local X scale of a transform
+    /// </summary>
+    public static Transform SetScaleX(this Transform transform, float x)
+    {
+        var vector = transform.localScale;
+        vector.x = x;
+        transform.localScale = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the local Y scale of a transform
+    /// </summary>
+    public static Transform SetScaleY(this Transform transform, float y)
+    {
+        var vector = transform.localScale;
+        vector.y = y;
+        transform.localScale = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Sets the local Z scale of a transform
+    /// </summary>
+    public static Transform SetScaleZ(this Transform transform, float z)
+    {
+        var vector = transform.localScale;
+        vector.z = z;
+        transform.localScale = vector;
+
+        return transform;
+    }
+
+    /// <summary>
+    /// Performs an action on every child of a transform with its sibling index
+    /// </summary>
+    public static void ForeachChildIdx(this Transform transform, Action<int, Transform> action)
+    {
+        for (var i = 0; i < transform.childCount; i++)
         {
-            var vector = transform.position;
-            vector.x = x;
-            transform.position = vector;
-            
-            return transform;
+            action(i, transform.GetChild(i));
         }
-        
-        /// <summary>
-        /// Sets the world Y position of a transform
-        /// </summary>
-        public static Transform SetYPos(this Transform transform, float y)
+    }
+
+    /// <summary>
+    /// Get all the children of a transform
+    /// </summary>
+    public static Transform[] GetChildren(this Transform transform)
+    {
+        var children = new Transform[transform.childCount];
+        for (var i = 0; i < children.Length; i++)
         {
-            var vector = transform.position;
-            vector.y = y;
-            transform.position = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Sets the world Z position of a transform
-        /// </summary>
-        public static Transform SetZPos(this Transform transform, float z)
-        {
-            var vector = transform.position;
-            vector.z = z;
-            transform.position = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Sets the local X position of a transform
-        /// </summary>
-        public static Transform SetXLocalPos(this Transform transform, float x)
-        {
-            var vector = transform.localPosition;
-            vector.x = x;
-            transform.localPosition = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Sets the local Y position of a transform
-        /// </summary>
-        public static Transform SetYLocalPos(this Transform transform, float y)
-        {
-            var vector = transform.localPosition;
-            vector.y = y;
-            transform.localPosition = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Sets the local Z position of a transform
-        /// </summary>
-        public static Transform SetZLocalPos(this Transform transform, float z)
-        {
-            var vector = transform.localPosition;
-            vector.z = z;
-            transform.localPosition = vector;
-            
-            return transform;
+            children[i] = transform.GetChild(i);
         }
 
-        /// <summary>
-        /// Sets the local X scale of a transform
-        /// </summary>
-        public static Transform SetXScale(this Transform transform, float x)
-        {
-            var vector = transform.localScale;
-            vector.x = x;
-            transform.localScale = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Sets the local Y scale of a transform
-        /// </summary>
-        public static Transform SetYScale(this Transform transform, float y)
-        {
-            var vector = transform.localScale;
-            vector.y = y;
-            transform.localScale = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Sets the local Z scale of a transform
-        /// </summary>
-        public static Transform SetZScale(this Transform transform, float z)
-        {
-            var vector = transform.localScale;
-            vector.z = z;
-            transform.localScale = vector;
-            
-            return transform;
-        }
-        
-        /// <summary>
-        /// Performs an action on every child of a transform
-        /// </summary>
-        public static void ForeachChild(this Transform transform, Action<Transform> action)
-        {
-            foreach (var child in transform.GetChildren())
-            {
-                action(child);
-            }
-        }
-    
-        /// <summary>
-        /// Performs an action on every child of a transform with its sibling index
-        /// </summary>
-        /// <param name="transform"></param>
-        /// <param name="action"></param>
-        public static void ForeachChildIdx(this Transform transform, Action<int, Transform> action)
-        {
-            for (var i = 0; i < transform.childCount; i++)
-            {
-                action(i, transform.GetChild(i));
-            }
-        }
-
-        /// <summary>
-        /// Get all the children of a transform
-        /// </summary>
-        public static Transform[] GetChildren(this Transform transform)
-        {
-            var childCount = transform.childCount;
-            var children = new Transform[childCount];
-            for (var i = 0; i < transform.childCount; i++)
-            {
-                children[i] = transform.GetChild(i);
-            }
-
-            return children;
-        }
+        return children;
     }
 }

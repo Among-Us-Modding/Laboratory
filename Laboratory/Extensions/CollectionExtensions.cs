@@ -1,93 +1,63 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
 using UnhollowerBaseLib;
 using I = Il2CppSystem.Collections.Generic;
 
-namespace Laboratory.Extensions
+namespace Laboratory.Extensions;
+
+public static class CollectionExtensions
 {
-    public static class CollectionExtensions
+    /// <summary>
+    /// Convert a System List to an Il2Cpp List
+    /// </summary>
+    public static I.List<T> ToIl2CppList<T>(this List<T> systemList)
     {
-        /// <summary>
-        /// Convert an Il2Cpp List to a System List
-        /// </summary>
-        public static List<T> ToSystemList<T>(this I.List<T> iList)
+        I.List<T> iList = new();
+        foreach (var item in systemList) iList.Add(item);
+        return iList;
+    }
+
+    /// <summary>
+    /// Shuffle a list with the fisher-yeats algorithm with Unity random
+    /// </summary>
+    public static IList<T> Shuffle<T>(this IList<T> self)
+    {
+        for (var i = self.Count - 1; i > 0; i--)
         {
-            return iList.ToArray().ToList();
-        }
-        
-        /// <summary>
-        /// Convert a System List to an Il2Cpp List
-        /// </summary>
-        public static I.List<T> ToIl2CppList<T>(this List<T> systemList)
-        {
-            I.List<T> iList = new();
-            foreach (var item in systemList) iList.Add(item);
-            return iList;
-        }
-        
-        /// <summary>
-        /// Shuffle a list with the fisher-yeats algorithm
-        /// </summary>
-        public static IList<T> Shuffle<T>(this IList<T> self)
-        {
-            var random = new Random();
-            for (var i = self.Count - 1; i > 0; i--)
-            {
-                var j = random.Next(i + 1);
-                (self[i], self[j]) = (self[j], self[i]);
-            }
-            return self;
+            var j = UnityEngine.Random.Range(0, i + 1);
+            (self[i], self[j]) = (self[j], self[i]);
         }
 
-        /// <summary>
-        /// Shuffle a list with the fisher-yeats algorithm with a given seed
-        /// </summary>
-        public static IList<T> SeededShuffle<T>(this IList<T> self, int seed)
+        return self;
+    }
+
+    /// <summary>
+    /// Shuffle a list with the fisher-yeats algorithm with a given random
+    /// </summary>
+    public static IList<T> Shuffle<T>(this IList<T> self, Random random)
+    {
+        for (var i = self.Count - 1; i > 0; i--)
         {
-            var random = new Random(seed);
-            for (var i = self.Count - 1; i > 0; i--)
-            {
-                var j = random.Next(i + 1);
-                (self[i], self[j]) = (self[j], self[i]);
-            }
-            return self;
+            var j = random.Next(i + 1);
+            (self[i], self[j]) = (self[j], self[i]);
         }
 
-        /// <summary>
-        /// Get a random item from a list
-        /// </summary>
-        public static T? Random<T>(this IList<T> self)
+        return self;
+    }
+
+    /// <summary>
+    /// Filters the elements of an <see cref="T:System.Collections.IEnumerable" /> based on a specified IL2CPP type.
+    /// </summary>
+    public static IEnumerable<T> OfIl2CppType<T>(this IEnumerable source) where T : Il2CppObjectBase
+    {
+        foreach (var obj in source)
         {
-            return self.Count > 0 ? self[UnityEngine.Random.Range(0, self.Count)] : default(T);
-        }
-        
-        /// <summary>
-        /// Perform an action on every member of a list
-        /// </summary>
-        public static void ForEach<T>(this IList<T> self, Action<T> todo)
-        {
-            foreach (var t in self)
+            if (obj is Il2CppObjectBase il2CppObject)
             {
-                todo(t);
-            }
-        }
-        
-        /// <summary>
-        /// Get all items in a collection which are of a particular il2cpptype
-        /// </summary>
-        public static IEnumerable<T> OfIl2CppType<T>(this IEnumerable source) where T : Il2CppObjectBase
-        {
-            foreach (var obj in source)
-            {
-                if (obj is Il2CppObjectBase il2cppObject)
+                if (il2CppObject.TryCast<T>() is { } newObject)
                 {
-                    if (il2cppObject.TryCast<T>() is { } newObject)
-                    {
-                        yield return newObject;
-                    }
+                    yield return newObject;
                 }
             }
         }

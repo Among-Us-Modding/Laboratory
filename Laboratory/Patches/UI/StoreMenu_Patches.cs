@@ -1,17 +1,16 @@
 ﻿using HarmonyLib;
 
-namespace Laboratory.Patches.UI
+namespace Laboratory.Patches.UI;
+
+[HarmonyPatch(typeof(StoreMenu), nameof(StoreMenu.Open))]
+public static class StoreMenu_Open_Patch
 {
-    [HarmonyPatch(typeof(StoreMenu), nameof(StoreMenu.Open))]
-    public static class StoreMenu_Open_Patch
+    /// <summary>
+    /// Disables the store
+    /// </summary>
+    [HarmonyPrefix]
+    public static bool Prefix()
     {
-        /// <summary>
-        /// Disables the store
-        /// </summary>
-        [HarmonyPrefix]
-        public static bool Prefix()
-        {
-            return false;
-        }
+        return false;
     }
 }

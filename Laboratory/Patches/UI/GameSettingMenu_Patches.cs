@@ -2,19 +2,18 @@
 using UnhollowerBaseLib;
 using UnityEngine;
 
-namespace Laboratory.Patches.UI
+namespace Laboratory.Patches.UI;
+
+[HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
+public static class GameSettingMenu_OnEnable_Patch
 {
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
-    public static class GameSettingMenu_OnEnable_Patch
+    /// <summary>
+    /// Shows map and impostor selectors in game options menu
+    /// </summary>
+    /// <param name="__instance"></param>
+    [HarmonyPrefix]
+    public static void Prefix(GameSettingMenu __instance)
     {
-        /// <summary>
-        /// Shows map and impostor selectors in game options menu
-        /// </summary>
-        /// <param name="__instance"></param>
-        [HarmonyPrefix]
-        public static void Prefix(GameSettingMenu __instance)
-        {
-            __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
-        }
+        __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
     }
 }

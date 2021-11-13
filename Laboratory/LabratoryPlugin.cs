@@ -5,60 +5,62 @@ using BepInEx.IL2CPP;
 using HarmonyLib;
 using Laboratory.Attributes;
 using Laboratory.Debugging;
+using Laboratory.Player.Attributes;
 using Laboratory.Utils;
 using Reactor;
 using Reactor.Patches;
 using UnityEngine.SceneManagement;
 
-namespace Laboratory
+namespace Laboratory;
+
+[BepInAutoPlugin]
+[BepInProcess("Among Us.exe")]
+[BepInDependency(ReactorPlugin.Id)]
+public partial class LaboratoryPlugin : BasePlugin
 {
-    [BepInAutoPlugin]
-    [BepInProcess("Among Us.exe")]
-    [BepInDependency(ReactorPlugin.Id)]
-    public partial class LaboratoryPlugin : BasePlugin
+    public Harmony Harmony { get; } = new(Id);
+
+    /// <summary>
+    /// The name of the subfolder used for appdata
+    /// </summary>
+    public string AppDataSubFolderName { get; set; } = "Laboratory";
+
+    /// <summary>
+    /// Custom regions which will be added
+    /// </summary>
+    public List<ServerInfo> Regions { get; } = new()
     {
-        public Harmony Harmony { get; } = new(Id);
+        new ServerInfo("Modded", "3.80.231.147", 22023),
+    };
 
-        /// <summary>
-        /// The name of the subfolder used for appdata
-        /// </summary>
-        public string AppDataSubFolderName { get; set; } = "Laboratory";
-        
-        /// <summary>
-        /// Custom regions which will be added
-        /// </summary>
-        public List<ServerInfo> Regions { get; } = new()
-        {
-            new ServerInfo("Modded", "3.80.231.147", 22023),
-        };
-        
-        public static LaboratoryPlugin Instance => PluginSingleton<LaboratoryPlugin>.Instance;
+    public static LaboratoryPlugin Instance => PluginSingleton<LaboratoryPlugin>.Instance;
 
-        public LaboratoryPlugin()
-        {
-            KeybindAttribute.Initialize();
-            Debugger.Initialize();
-        }
-        
-        public override void Load()
-        {
-            Harmony.PatchAll();
-            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) OnSceneLoaded);
-            AddComponent<UnityEvents>();
+    public LaboratoryPlugin()
+    {
+        KeybindAttribute.Initialize();
+        BaseDebugTab.Initialize();
+        PlayerComponentAttribute.Initialize();
+    }
 
-            DebugWindow.Instance = AddComponent<DebugWindow>();
-            ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + Version;
-        }
-        
-        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    public override void Load()
+    {
+        Harmony.PatchAll();
+        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)OnSceneLoaded);
+        AddComponent<UnityEvents>();
+
+        DebugWindow.Instance = AddComponent<DebugWindow>();
+        AddComponent<MapLoader>();
+        ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + Version;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        switch (scene.name)
         {
-            switch (scene.name)
-            {
-                // Starts account login process
-                case "MainMenu":
-                    EOSManager.Instance.InitializePlatformInterface();
-                    break;
-            }
+            // Starts account login process
+            case "MainMenu":
+                EOSManager.Instance.InitializePlatformInterface();
+                break;
         }
     }
 }

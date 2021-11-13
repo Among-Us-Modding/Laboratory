@@ -1,145 +1,131 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Reactor.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Laboratory.Utils
+namespace Laboratory.Utils;
+
+/// <summary>
+/// Utilities for managing assets
+/// </summary>
+public sealed class AssetManager
 {
+    private static readonly Dictionary<string, Sprite> _cachedEmbeddedSprites = new();
+    private static readonly Dictionary<string, AssetBundle> _cachedEmbeddedBundles = new();
+
     /// <summary>
-    /// Utilities for managing assets
+    /// Create a Sprite from a named embedded resource
     /// </summary>
-    public sealed class AssetManager
+    /// <param name="spriteName">Name of the embedded resource</param>
+    /// <param name="ppu">pixels per unit of the sprite</param>
+    /// <param name="assembly">Assembly containing the sprite - defaults to searching all loaded assemblies</param>
+    public static Sprite? LoadSprite(string spriteName, float ppu = 100f, Assembly? assembly = null)
     {
-        public static readonly Dictionary<string, Sprite> CachedEmbeddedSprites = new();
-        public static readonly Dictionary<string, AssetBundle> CachedEmbeddedBundles = new();
+        var assemblies = assembly == null ? AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : new[] { assembly };
 
-        /// <summary>
-        /// Create a Sprite from a named embedded resource
-        /// </summary>
-        /// <param name="spriteName">Name of the embedded resource</param>
-        /// <param name="ppu">pixels per unit of the sprite</param>
-        /// <param name="assembly">Assembly containing the sprite - defaults to searching all loaded assemblies</param>
-        public static Sprite? LoadSprite(string spriteName, float ppu = 100f, Assembly? assembly = null)
+        foreach (var ass in assemblies)
         {
-            var assemblies = assembly == null ? 
-                AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : 
-                new[] {assembly};
-            
-            for (var i = 0; i < assemblies.Length; i++)
-            {
-                var asm = assemblies[i];
-                var match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
-                if (match == null) continue;
-                
-                if (CachedEmbeddedSprites.ContainsKey(match)) return CachedEmbeddedSprites[match];
-                var buffer = ReadAll(asm?.GetManifestResourceStream(match));
-                if (buffer == null) return null;
+            var match = ass?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
+            if (match == null) continue;
 
-                Texture2D tex = new(2, 2, TextureFormat.ARGB32, false);
-                ImageConversion.LoadImage(tex, buffer, false);
+            if (_cachedEmbeddedSprites.ContainsKey(match)) return _cachedEmbeddedSprites[match];
+            var buffer = ass?.GetManifestResourceStream(match)!.ReadFully();
+            if (buffer == null) return null;
 
-                return CachedEmbeddedSprites[match] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), ppu).DontDestroy();
-            }
-            return null;
+            Texture2D tex = new(2, 2, TextureFormat.ARGB32, false);
+            ImageConversion.LoadImage(tex, buffer, false);
+
+            return _cachedEmbeddedSprites[match] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), ppu).DontDestroy();
         }
 
-        /// <summary>
-        /// Load an AssetBundle from an assemblies embedded resources
-        /// </summary>
-        /// <param name="bundleName">Name of the embedded resource</param>
-        /// <param name="assembly">Assembly containing the bundle - defaults to searching all loaded assemblies</param>
-        /// <returns></returns>
-        public static AssetBundle? LoadBundle(string? bundleName, Assembly? assembly = null)
+        return null;
+    }
+
+    /// <summary>
+    /// Load an AssetBundle from an assemblies embedded resources
+    /// </summary>
+    /// <param name="bundleName">Name of the embedded resource</param>
+    /// <param name="assembly">Assembly containing the bundle - defaults to searching all loaded assemblies</param>
+    /// <returns></returns>
+    public static AssetBundle? LoadBundle(string? bundleName, Assembly? assembly = null)
+    {
+        if (bundleName == null) return null;
+
+        var assemblies = assembly == null ? AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : new[] { assembly };
+
+        foreach (var asm in assemblies)
         {
-            if (bundleName == null) return null;
+            var match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
+            if (match == null) continue;
 
-            var assemblies = assembly == null ? 
-                AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : 
-                new[] {assembly};
-            
-            for (var i = 0; i < assemblies.Length; i++)
-            {
-                var asm = assemblies[i];
-                var match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
-                if (match == null) continue;
-                
-                if (CachedEmbeddedBundles.ContainsKey(match)) return CachedEmbeddedBundles[match];
-                var buffer = ReadAll(asm?.GetManifestResourceStream(match));
-                if (buffer == null) return null;
+            if (_cachedEmbeddedBundles.ContainsKey(match)) return _cachedEmbeddedBundles[match];
+            var buffer = asm?.GetManifestResourceStream(match)!.ReadFully();
+            if (buffer == null) return null;
 
-                return CachedEmbeddedBundles[match] = AssetBundle.LoadFromMemory(buffer).DontUnload();
-            }
-            return null;
+            return _cachedEmbeddedBundles[match] = AssetBundle.LoadFromMemory(buffer).DontUnload();
         }
 
-        private static byte[]? ReadAll(Stream? stream)
-        {
-            using MemoryStream ms = new();
-            
-            stream?.CopyTo(ms);
-            return stream != null ? ms.ToArray() : null;
-        }
+        return null;
+    }
 
-        /// <summary>
-        /// Creates AssetManager by getting bundle from embedded resources
-        /// </summary>
-        /// <param name="bundleName">Name of the embedded resource being used</param>
-        public AssetManager(string bundleName)
-        {
-            _name = bundleName;
-            LoadAllAssets();
-        }
+    /// <summary>
+    /// Creates AssetManager by getting bundle from embedded resources
+    /// </summary>
+    /// <param name="bundleName">Name of the embedded resource being used</param>
+    public AssetManager(string bundleName)
+    {
+        _name = bundleName;
+        LoadAllAssets();
+    }
 
-        /// <summary>
-        /// Creates AssetManager from an already existing AssetBundle
-        /// </summary>
-        /// <param name="bundle">Bundle to create manager with</param>
-        public AssetManager(AssetBundle bundle)
-        {
-            _bundle = bundle;
-            LoadAllAssets();
-        }
+    /// <summary>
+    /// Creates AssetManager from an already existing AssetBundle
+    /// </summary>
+    /// <param name="bundle">Bundle to create manager with</param>
+    public AssetManager(AssetBundle bundle)
+    {
+        _bundle = bundle;
+        LoadAllAssets();
+    }
 
-        private Dictionary<string, Object> ObjectCache { get; } = new();
-        private AssetBundle? _bundle;
-        private string? _name;
-        
-        /// <summary>
-        /// AssetManager's primary AssetBundle
-        /// </summary>
-        public AssetBundle? Bundle => _bundle ??= LoadBundle(_name);
-        
-        /// <summary>
-        /// Load asset of a given name from the manager's bundle
-        /// </summary>
-        public T? LoadAsset<T>(string name) where T : Object
-        {
-            if (ObjectCache.TryGetValue(name, out var result)) return result.TryCast<T>();
-            if (Bundle == null) throw new NullReferenceException();
-            var asset = Bundle.LoadAsset<T>(name);
-            if (!asset) return null;
+    private Dictionary<string, Object> ObjectCache { get; } = new();
+    private AssetBundle? _bundle;
+    private readonly string? _name;
 
-            if (asset == null) return asset;
-            asset.DontUnload();
-            ObjectCache[name] = asset;
+    /// <summary>
+    /// AssetManager's primary AssetBundle
+    /// </summary>
+    public AssetBundle? Bundle => _bundle ??= LoadBundle(_name);
 
-            return asset;
-        }
+    /// <summary>
+    /// Load asset of a given name from the manager's bundle
+    /// </summary>
+    public T? LoadAsset<T>(string name) where T : Object
+    {
+        if (ObjectCache.TryGetValue(name, out var result)) return result.TryCast<T>();
+        if (Bundle == null) throw new NullReferenceException();
+        var asset = Bundle.LoadAsset<T>(name);
+        if (!asset) return null;
 
-        /// <summary>
-        /// Load all assets stored in the manager's bundle
-        /// </summary>
-        /// <returns></returns>
-        public Object[]? LoadAllAssets()
-        {
-            if (Bundle == null) return null;
-            var assets = Bundle.LoadAllAssets();
-            foreach (var asset in assets) asset.DontUnload();
-            return assets;
-        }
+        if (asset == null) return asset;
+        asset.DontUnload();
+        ObjectCache[name] = asset;
+
+        return asset;
+    }
+
+    /// <summary>
+    /// Load all assets stored in the manager's bundle
+    /// </summary>
+    /// <returns></returns>
+    public Object[]? LoadAllAssets()
+    {
+        if (Bundle == null) return null;
+        var assets = Bundle.LoadAllAssets();
+        foreach (var asset in assets) asset.DontUnload();
+        return assets;
     }
 }
