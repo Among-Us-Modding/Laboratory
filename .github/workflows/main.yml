@@ -16,6 +16,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
       - uses: actions/checkout@v2
+
         with:
           submodules: true
 
@@ -33,11 +34,6 @@ jobs:
         with:
           name: Laboratory.dll
           path: Laboratory/bin/Release/netstandard2.1/Laboratory.dll
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Laboratory.Mods.dll
-          path: Laboratory.Mods/bin/Release/netstandard2.1/Laboratory.Mods.dll
 
       - uses: actions/upload-artifact@v2
         with:
