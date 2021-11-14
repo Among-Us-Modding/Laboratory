@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using BepInEx.IL2CPP.Utils.Collections;
-using Laboratory.Effects.Interfaces;
+using Laboratory.Effects;
 using Reactor;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;

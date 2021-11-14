@@ -1,5 +1,5 @@
 using System;
-using Laboratory.Effects.MonoBehaviours;
+using Laboratory.Effects.Managers;
 using Laboratory.Extensions;
 using Reactor;
 using UnityEngine;

@@ -1,37 +1,32 @@
 using System;
 using System.Collections.Generic;
-using Laboratory.Effects.Interfaces;
-using Laboratory.Extensions;
-using Laboratory.Player.Attributes;
-using Laboratory.Player.Managers;
 using Reactor;
 using Reactor.Networking;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace Laboratory.Effects.MonoBehaviours;
+namespace Laboratory.Effects.Managers;
 
-[RegisterInIl2Cpp, PlayerComponent]
-public class PlayerEffectManager : MonoBehaviour
+[RegisterInIl2Cpp]
+public class GlobalEffectManager : MonoBehaviour, IEffectManager
 {
-    public PlayerEffectManager(IntPtr ptr) : base(ptr)
+    public GlobalEffectManager(IntPtr ptr) : base(ptr)
     {
     }
 
-    private PlayerManager? _myManager;
+    public static GlobalEffectManager? Instance { get; set; }
+
     private IEffect? _primaryEffect;
 
+    [HideFromIl2Cpp]
     public IEffect? PrimaryEffect
     {
-        [HideFromIl2Cpp]
-        get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? _primaryEffect : _primaryEffect;
-        [HideFromIl2Cpp]
+        get => _primaryEffect;
         set
         {
             var current = PrimaryEffect;
             if (current is not null)
             {
-                if (current.Owner != _myManager) throw new InvalidOperationException("You cannot set a player's effect during a primary global effect");
                 current.Cancel();
                 RemoveEffect(current);
             }
@@ -40,16 +35,13 @@ public class PlayerEffectManager : MonoBehaviour
         }
     }
 
-    public List<IEffect> Effects
-    {
-        [HideFromIl2Cpp]
-        get;
-    } = new();
+    [HideFromIl2Cpp]
+    public List<IEffect> Effects { get; } = new();
 
     [HideFromIl2Cpp]
     public void RpcAddEffect(IEffect effect, bool primary = false)
     {
-        Rpc<RpcIEffect>.Instance.Send(new RpcIEffect.EffectInfo(_myManager!.Player, effect, primary), true);
+        Rpc<RpcAddEffect>.Instance.Send(new RpcAddEffect.EffectInfo(this, effect, primary), true);
     }
 
     [HideFromIl2Cpp]
@@ -57,7 +49,6 @@ public class PlayerEffectManager : MonoBehaviour
     {
         if (effect != null)
         {
-            effect.Owner = _myManager!;
             effect.Awake();
             Effects.Add(effect);
         }
@@ -73,6 +64,7 @@ public class PlayerEffectManager : MonoBehaviour
         effect.OnDestroy();
     }
 
+    [HideFromIl2Cpp]
     public void ClearEffects()
     {
         foreach (var effect in Effects)
@@ -81,9 +73,9 @@ public class PlayerEffectManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
-        _myManager = this.GetPlayerManager();
+        Instance = this;
     }
 
     private void FixedUpdate()
@@ -114,5 +106,6 @@ public class PlayerEffectManager : MonoBehaviour
     private void OnDestroy()
     {
         foreach (var effect in Effects) effect.Cancel();
+        Instance = null;
     }
 }
