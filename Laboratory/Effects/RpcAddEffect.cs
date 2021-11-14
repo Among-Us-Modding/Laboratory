@@ -9,7 +9,7 @@ using Reactor.Networking;
 
 namespace Laboratory.Effects;
 
-[RegisterCustomRpc((uint)CustomRpcs.RpcAddEffect)]
+[RegisterCustomRpc((uint)CustomRpcs.AddEffect)]
 public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.EffectInfo>
 {
     public RpcAddEffect(LaboratoryPlugin plugin, uint id) : base(plugin, id)
