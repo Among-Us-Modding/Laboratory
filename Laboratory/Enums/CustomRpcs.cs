@@ -4,7 +4,7 @@ public enum CustomRpcs : uint
 {
     ChangeHealth,
     CustomMurder,
-    RpcAddEffect,
+    AddEffect,
     HardReset,
     ResetMovement,
     EndGame,
