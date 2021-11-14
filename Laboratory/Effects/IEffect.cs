@@ -1,10 +1,7 @@
-using Laboratory.Player.Managers;
-
-namespace Laboratory.Effects.Interfaces;
+namespace Laboratory.Effects;
 
 public interface IEffect
 {
-    public PlayerManager Owner { get; set; }
     public float Timer { get; set; }
         
     public virtual void Awake() { }

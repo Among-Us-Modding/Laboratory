@@ -1,5 +1,5 @@
 using HarmonyLib;
-using Laboratory.Effects.MonoBehaviours;
+using Laboratory.Effects.Managers;
 using UnityEngine;
 
 namespace Laboratory.Effects.Patches;

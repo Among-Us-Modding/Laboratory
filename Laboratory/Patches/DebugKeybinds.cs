@@ -3,7 +3,6 @@
 using System;
 using HarmonyLib;
 using Laboratory.CustomMap;
-using Laboratory.Effects.MonoBehaviours;
 using Laboratory.Effects.Utils;
 using Laboratory.Enums;
 using Laboratory.Extensions;

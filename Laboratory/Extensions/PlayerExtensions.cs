@@ -1,4 +1,4 @@
-using Laboratory.Effects.MonoBehaviours;
+using Laboratory.Effects.Managers;
 using Laboratory.Player.Managers;
 using UnityEngine;
 
