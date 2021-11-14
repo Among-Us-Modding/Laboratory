@@ -45,11 +45,12 @@ public partial class LaboratoryPlugin : BasePlugin
     public override void Load()
     {
         Harmony.PatchAll();
+        DebugWindow.Instance = AddComponent<DebugWindow>();
         SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)OnSceneLoaded);
+        
+        AddComponent<MapLoader>();
         AddComponent<UnityEvents>();
 
-        DebugWindow.Instance = AddComponent<DebugWindow>();
-        AddComponent<MapLoader>();
         ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + Version;
     }
 
