@@ -1,64 +1,188 @@
 using System;
 using HarmonyLib;
 using Laboratory.Extensions;
+using Laboratory.Player.Managers;
 using PowerTools;
 using UnityEngine;
 
-// TODO Cleanup
-
 namespace Laboratory.Player.AnimationControllers;
 
-[HarmonyPatch(typeof(SpriteAnim), nameof(SpriteAnim.Play))]
-internal static class AnimationSwapPatch
+[HarmonyPatch]
+internal static class AnimationPatches
 {
-    public static void Prefix(SpriteAnim __instance, ref AnimationClip? anim)
+    public static AnimationClip GetChangedClip(PlayerManager playerManager, AnimationClip original)
     {
+        var animationController = playerManager.AnimationController;
+        if (animationController == null) return original;
+
+        var playerPhysics = playerManager.Physics;
+        if (playerPhysics == null) return original;
+
+        if (original == playerPhysics.IdleAnim) return animationController.IdleAnim;
+        if (original == playerPhysics.GhostIdleAnim) return animationController.GhostIdleAnim;
+        if (original == playerPhysics.RunAnim) return animationController.RunAnim;
+        if (original == playerPhysics.EnterVentAnim) return animationController.EnterVentAnim;
+        if (original == playerPhysics.ExitVentAnim) return animationController.ExitVentAnim;
+        if (original == playerPhysics.SpawnAnim) return animationController.SpawnAnim;
+        if (original == playerPhysics.ClimbDownAnim) return animationController.ClimbDownAnim;
+        if (original == playerPhysics.ClimbAnim) return animationController.ClimbAnim;
+
+        return original;
+    }
+
+    public static AnimationClip GetOriginalClip(PlayerManager playerManager, AnimationClip changed)
+    {
+        if (!changed) return changed;
+
+        var animationController = playerManager.AnimationController;
+        if (animationController == null) return changed;
+
+        var playerPhysics = playerManager.Physics;
+        if (playerPhysics == null) return changed;
+        
+        if (changed == animationController.IdleAnim) return playerPhysics.IdleAnim;
+        if (changed == animationController.GhostIdleAnim) return playerPhysics.GhostIdleAnim;
+        if (changed == animationController.RunAnim) return playerPhysics.RunAnim;
+        if (changed == animationController.EnterVentAnim) return playerPhysics.EnterVentAnim;
+        if (changed == animationController.ExitVentAnim) return playerPhysics.ExitVentAnim;
+        if (changed == animationController.SpawnAnim) return playerPhysics.SpawnAnim;
+        if (changed == animationController.ClimbDownAnim) return playerPhysics.ClimbDownAnim;
+        if (changed == animationController.ClimbAnim) return playerPhysics.ClimbAnim;
+
+        return changed;
+    }
+
+    
+    // SpriteAnim.GetCurrentAnimation is too short to patch
+    // Imagine this is a prefix which is enabled before PlayerPhysics.HandleAnimation and disabled afterwards
+    // As such we will just call this in the reimplemented version of HandleAnimation as would be done in a postfix
+    public static void GetCurrentAnimationPatch(SpriteAnim __instance, ref AnimationClip __result)
+    {
+        if (__result == null) return;
+        
+        var parent = __instance.transform.parent;
+        if (!parent) return;
+        
+        var playerManager = parent.GetPlayerManager();
+        if (playerManager is not {AnimationController: { }}) return;
+        
+        __result = playerManager.AnimationController.IsPlayingCustomAnimation(__result, __instance) ? 
+            playerManager.Physics.ClimbAnim : 
+            GetOriginalClip(playerManager, __result);
+    }
+    
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
+    [HarmonyPrefix]
+    public static bool HandleAnimationReimplemented(PlayerPhysics __instance, [HarmonyArgument(0)] bool amDead)
+    {
+        if (__instance.Animator.IsPlaying(__instance.SpawnAnim) || !GameData.Instance)
+        {
+            return false;
+        }
+        Vector2 velocity = __instance.body.velocity;
+        AnimationClip currentAnimation = __instance.Animator.GetCurrentAnimation();
+        // PATCH START
+        // Here we image that we are running GetCurrentAnimationPatch as a postifx patch for GetCurrentAnimation
+        GetCurrentAnimationPatch(__instance.Animator, ref currentAnimation);
+        // PATCH END
+        if (currentAnimation == __instance.ClimbAnim || currentAnimation == __instance.ClimbDownAnim)
+        {
+            return false;
+        }
+        if (!amDead)
+        {
+            if (velocity.sqrMagnitude >= 0.05f)
+            {
+                bool flipX = __instance.rend.flipX;
+                if (velocity.x < -0.01f)
+                {
+                    __instance.rend.flipX = true;
+                }
+                else if (velocity.x > 0.01f)
+                {
+                    __instance.rend.flipX = false;
+                }
+                if (currentAnimation != __instance.RunAnim || flipX != __instance.rend.flipX)
+                {
+                    __instance.Animator.Play(__instance.RunAnim);
+                    __instance.Animator.Time = 11f / 24f;
+                    __instance.Skin.SetRun(__instance.rend.flipX);
+                }
+            }
+            else if (currentAnimation == __instance.RunAnim || currentAnimation == __instance.SpawnAnim || !currentAnimation)
+            {
+                __instance.Skin.SetIdle(__instance.rend.flipX);
+                __instance.Animator.Play(__instance.IdleAnim);
+                __instance.myPlayer.SetHatAlpha(1f);
+            }
+        }
+        else
+        {
+            __instance.Skin.SetGhost();
+            if (currentAnimation != __instance.GhostIdleAnim)
+            {
+                __instance.Animator.Play(__instance.GhostIdleAnim);
+                __instance.myPlayer.SetHatAlpha(0.5f);
+            }
+            if (velocity.x < -0.01f)
+            {
+                __instance.rend.flipX = true;
+            }
+            else if (velocity.x > 0.01f)
+            {
+                __instance.rend.flipX = false;
+            }
+        }
+        __instance.Skin.Flipped = __instance.rend.flipX;
+        
+        return false;
+    }
+    
+    [HarmonyPatch(typeof(SpriteAnim), nameof(SpriteAnim.Play))]
+    [HarmonyPrefix]
+    public static void PlayChangedClipPatch(SpriteAnim __instance, ref AnimationClip? anim)
+    {
+        if (anim == null) return;
+        
         var parent = __instance.transform.parent;
         if (!parent) return;
 
         var playerManager = parent.GetPlayerManager();
-        if (!playerManager) return;
+        if (playerManager is not {AnimationController: { }}) return;
+        
+        anim = GetChangedClip(playerManager, anim);
+    }
 
-        var animationController = playerManager.AnimationController;
-        if (animationController == null) return;
+    [HarmonyPatch(typeof(WaitForAnimationFinish), nameof(WaitForAnimationFinish.MoveNext))]
+    [HarmonyPrefix]
+    public static void WaitForChangedClipFinishPatch(WaitForAnimationFinish __instance)
+    {
+        if (!__instance.first) return;
+        
+        if (__instance.clip == null || __instance.animator == null) return;
+        
+        var parent = __instance.animator.transform.parent;
+        if (!parent) return;
 
-        var playerPhysics = playerManager.Physics;
-        if (playerPhysics == null) return;
+        var playerManager = parent.GetPlayerManager();
+        if (playerManager is not {AnimationController: { }}) return;
+        
+        __instance.clip = GetChangedClip(playerManager, __instance.clip);
+    }
+    
+    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.LateUpdate))]
+    [HarmonyPrefix]
+    public static bool AdjustOffsets(PlayerPhysics __instance)
+    {
+        var anim = __instance.myPlayer.GetPlayerManager().AnimationController;
+        if (anim == null) return true;
 
-        if (__instance != playerPhysics.Animator) return;
+        var transform = __instance.transform;
+        var position = transform.position;
+        position.z = (position.y - anim.RendererOffset.y) / 1000f + anim.ZOffset;
+        transform.position = position;
 
-        if (anim == playerPhysics.SpawnAnim)
-        {
-            anim = animationController.SpawnAnim;
-        }
-        else if (anim == playerPhysics.ClimbDownAnim)
-        {
-            anim = animationController.ClimbDownAnim;
-        }
-        else if (anim == playerPhysics.ClimbAnim)
-        {
-            anim = animationController.ClimbAnim;
-        }
-        else if (anim == playerPhysics.IdleAnim)
-        {
-            anim = animationController.IdleAnim;
-        }
-        else if (anim == playerPhysics.GhostIdleAnim)
-        {
-            anim = animationController.GhostIdleAnim;
-        }
-        else if (anim == playerPhysics.RunAnim)
-        {
-            anim = animationController.RunAnim;
-        }
-        else if (anim == playerPhysics.EnterVentAnim)
-        {
-            anim = animationController.EnterVentAnim;
-        }
-        else if (anim == playerPhysics.ExitVentAnim)
-        {
-            anim = animationController.ExitVentAnim;
-        }
+        return false;
     }
 }
 
@@ -66,7 +190,7 @@ internal static class AnimationSwapPatch
 /// This should allow SpriteAnimNodeSync components to default to the first node if it is trying to reference a missing node
 /// </summary>
 [HarmonyPatch(typeof(SpriteAnimNodeSync), nameof(SpriteAnimNodeSync.LateUpdate))]
-public static class SpriteAnimNodeSync_LateUpdate_Patch
+internal static class ForceSpriteAnimNodePatch
 {
     public static void Prefix(SpriteAnimNodeSync __instance, out int __state)
     {
@@ -87,74 +211,3 @@ public static class SpriteAnimNodeSync_LateUpdate_Patch
     }
 }
 
-[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
-internal static class HandleAnimationPatch
-{
-    public static bool Prefix(PlayerPhysics __instance, [HarmonyArgument(0)] bool amDead)
-    {
-        var anim = __instance.GetPlayerManager().AnimationController;
-        if (anim == null) return true;
-
-        if (__instance.Animator.IsPlaying(anim.SpawnAnim)) return false;
-
-        var velocity = __instance.body.velocity;
-        var currentAnimation = __instance.Animator.GetCurrentAnimation();
-        if (anim.IsPlayingCustomAnimation(currentAnimation, __instance.Animator)) return false;
-
-        if (!amDead)
-        {
-            if (velocity.sqrMagnitude >= 0.05f)
-            {
-                var flipX = __instance.rend.flipX;
-                if (velocity.x < -0.01f) __instance.rend.flipX = true;
-                else if (velocity.x > 0.01f) __instance.rend.flipX = false;
-
-                if (currentAnimation != anim.RunAnim || flipX != __instance.rend.flipX)
-                {
-                    __instance.Animator.Play(anim.RunAnim, 1f);
-                    __instance.Animator.Time = 0.45833334f;
-                    __instance.Skin.SetRun(__instance.rend.flipX);
-                }
-            }
-            else if (currentAnimation != anim.IdleAnim)
-            {
-                __instance.Skin.SetIdle(__instance.rend.flipX);
-                __instance.Animator.Play(anim.IdleAnim, 1f);
-                __instance.myPlayer.SetHatAlpha(1f);
-            }
-        }
-        else
-        {
-            __instance.Skin.SetGhost();
-            if (currentAnimation != anim.GhostIdleAnim)
-            {
-                __instance.Animator.Play(anim.GhostIdleAnim, 1f);
-                __instance.myPlayer.SetHatAlpha(0.5f);
-            }
-
-            if (velocity.x < -0.01f) __instance.rend.flipX = true;
-            else if (velocity.x > 0.01f) __instance.rend.flipX = false;
-        }
-
-        __instance.Skin.Flipped = __instance.rend.flipX;
-        return false;
-    }
-}
-
-[HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.LateUpdate))]
-internal static class ZOffsetPatch
-{
-    [HarmonyPostfix]
-    public static bool Prefix(PlayerPhysics __instance)
-    {
-        var anim = __instance.myPlayer.GetPlayerManager().AnimationController;
-        if (anim == null) return true;
-
-        var transform = __instance.transform;
-        var position = transform.position;
-        position.z = (position.y - anim.RendererOffset.y) / 1000f + anim.ZOffset;
-        transform.position = position;
-
-        return false;
-    }
-}
