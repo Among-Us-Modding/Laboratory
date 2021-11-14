@@ -8,7 +8,7 @@ using System.Linq;
 using Reactor;
 using UnityEngine;
 
-namespace Laboratory.Patches.Unstrip;
+namespace Laboratory.Patches.Unstripping;
 
 public class TextEditor
 {
