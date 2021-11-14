@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using HarmonyLib;
+using Reactor.Extensions;
 
 namespace Laboratory.Patches.AppData;
 
@@ -12,14 +13,16 @@ public static class ServerManager_LoadServers_Patch
     [HarmonyPrefix]
     public static bool Prefix(ServerManager __instance)
     {
-        ServerManager.DefaultRegions = LaboratoryPlugin.Instance.Regions.Select(s => {
+        var regions = ServerManager.DefaultRegions = __instance.AvailableRegions = LaboratoryPlugin.Instance.Regions.Select(s =>
+        {
             return new StaticRegionInfo(s.Name, StringNames.NoTranslation, s.Ip, new[]
             {
                 new ServerInfo(s.Name + "-Master-1", s.Ip, s.Port)
-            }).TryCast<IRegionInfo>();
+            }).Cast<IRegionInfo>();
         }).ToArray();
-            
-        __instance.StartCoroutine(__instance.ReselectRegionFromDefaults());
+
+        var currentRegion = __instance.CurrentRegion = regions.First();
+        __instance.CurrentServer = currentRegion.Servers.Random();
 
         return false;
     }
