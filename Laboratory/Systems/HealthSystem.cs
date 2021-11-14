@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
-using HarmonyLib;
 using Hazel;
-using Il2CppSystem;
 using Laboratory.CustomMap;
 using Laboratory.Enums;
+using Laboratory.Utils;
 using Reactor;
 using Reactor.Extensions;
 using Reactor.Networking.MethodRpc;
@@ -11,11 +11,10 @@ using UnhollowerBaseLib.Attributes;
 using UnhollowerRuntimeLib;
 using IntPtr = System.IntPtr;
 using Math = System.Math;
-using NotImplementedException = System.NotImplementedException;
+using Object = Il2CppSystem.Object;
 
 namespace Laboratory.Systems;
 
-// TODO Implement death
 /// <summary>
 /// Generic system to manage player healths
 /// </summary>
@@ -42,7 +41,7 @@ public class HealthSystem : Object, ICustomSystemType
     /// <param name="player">The player to change the health of</param>
     /// <param name="change">The amount of health to be added to a player (can be negative)</param>
     [MethodRpc((uint)CustomRpcs.ChangeHealth)]
-    public static void RpcChangeDamage(PlayerControl player, int change)
+    public static void CmdChangeHealth(PlayerControl player, int change)
     {
         if (AmongUsClient.Instance.AmHost && Instance is not null)
         {
@@ -59,13 +58,15 @@ public class HealthSystem : Object, ICustomSystemType
     {
         ClassInjector.DerivedConstructorBody(this);
         _instance = this;
+
+        foreach (var playerInfo in PlayerControl.AllPlayerControls)
+        {
+            SetHealth(playerInfo.PlayerId, MaxHealth);
+        }
     }
 
-    internal Dictionary<byte, int> PlayerHealths
-    {
-        [HideFromIl2Cpp]
-        get;
-    } = new();
+    [HideFromIl2Cpp]
+    internal Dictionary<byte, int> PlayerHealths { get; } = new();
 
     /// <summary>
     /// Sets the health of a player and updated their name
@@ -77,10 +78,16 @@ public class HealthSystem : Object, ICustomSystemType
         var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
         IsDirty = true;
 
-        var ownerData = GameData.Instance.GetPlayerById(playerId);
-        if (ownerData != null && ownerData.Object)
+        var data = GameData.Instance.GetPlayerById(playerId);
+        if (data != null && data.Object)
         {
-            ownerData.Object.nameText.text = $"<color=#{Palette.PlayerColors[(ownerData.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{ownerData.PlayerName}";
+            var player = data.Object;
+            player.nameText.text = $"<color=#{Palette.PlayerColors[(data.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{data.PlayerName}";
+
+            if (AmongUsClient.Instance.AmHost && playerHealth <= 0)
+            {
+                player.RpcCustomMurder(player, true);
+            }
         }
     }
 
@@ -128,28 +135,13 @@ public class HealthSystem : Object, ICustomSystemType
 
     public void UpdateSystem(PlayerControl player, MessageReader msgReader)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     public void RepairDamage(PlayerControl player, byte amount)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     #endregion
-
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetInfected))]
-    public static class SetInfectedPatch
-    {
-        public static void Postfix()
-        {
-            var system = Instance;
-            // if (system == null) return;
-
-            foreach (var playerInfo in PlayerControl.AllPlayerControls)
-            {
-                system.SetHealth(playerInfo.PlayerId, MaxHealth);
-            }
-        }
-    }
 }
