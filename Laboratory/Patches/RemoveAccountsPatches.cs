@@ -16,6 +16,14 @@ internal static class RemoveAccountsPatches
         __result = true;
         return false;
     }
+    
+    [HarmonyPatch(typeof(EOSManager), nameof(EOSManager.ProductUserId), MethodType.Getter)]
+    [HarmonyPrefix]
+    public static bool Prefix(out string __result)
+    {
+        __result = "Laboratory";
+        return false;
+    }
 
     [HarmonyPatch(typeof(AccountManager), nameof(AccountManager.Awake))]
     [HarmonyPrefix]
