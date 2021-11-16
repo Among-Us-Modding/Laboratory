@@ -30,4 +30,8 @@ public class DefaultController : IAnimationController
     {
         return false;
     }
+
+    public virtual void Update()
+    {
+    }
 }

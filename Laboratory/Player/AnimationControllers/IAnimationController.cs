@@ -24,7 +24,5 @@ public interface IAnimationController
 
     public bool IsPlayingCustomAnimation(AnimationClip animationClip, SpriteAnim anim);
 
-    public virtual void Update()
-    {
-    }
+    public void Update() { }
 }
