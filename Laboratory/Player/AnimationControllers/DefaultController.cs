@@ -25,7 +25,11 @@ public class DefaultController : IAnimationController
 
     public virtual bool HideCosmetics => false;
     public virtual bool HideName => false;
-
+    
+    public virtual Vector2 RendererOffset => Vector2.zero;
+    public virtual float ColliderYOffset => -0.3636f;
+    public virtual float ZOffset => 0;
+    
     public virtual bool IsPlayingCustomAnimation(AnimationClip animationClip, SpriteAnim anim)
     {
         return false;
