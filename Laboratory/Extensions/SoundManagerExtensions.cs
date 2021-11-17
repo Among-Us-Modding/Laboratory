@@ -6,7 +6,7 @@ namespace Laboratory.Extensions;
 
 public static class SoundManagerExtensions
 {
-    public static AudioSource PlaySoundAtPoint(this SoundManager soundManager, AudioClip audioClip, Vector2 point, float volume)
+    public static AudioSource PlaySoundAtPoint(this SoundManager soundManager, AudioClip audioClip, Vector2 point, float volume = 1f)
     {
         void PointSoundFunc(AudioSource source, float dt)
         {
@@ -25,7 +25,7 @@ public static class SoundManagerExtensions
         return soundManager.PlayDynamicSound(Random.RandomRangeInt(0, int.MaxValue).ToString(), audioClip, false, func, true);
     }
 
-    public static AudioSource PlaySoundAtTransform(this SoundManager soundManager, AudioClip audioClip, Transform trns, float volume)
+    public static AudioSource PlaySoundAtTransform(this SoundManager soundManager, AudioClip audioClip, Transform trns, float volume = 1f)
     {
         void PointSoundFunc(AudioSource source, float dt)
         {
