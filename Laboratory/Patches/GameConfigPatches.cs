@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 
 namespace Laboratory.Patches;
 
@@ -20,28 +19,38 @@ internal static class GameConfigPatches
     {
         __result = !GameConfig.DisableEndGame && __result;
     }
-    
+
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     [HarmonyPrefix]
     public static bool CmdReportDeadBodyPatch()
     {
         return !GameConfig.DisableMeetings;
     }
-    
+
     [HarmonyPatch(typeof(KillButtonManager), nameof(KillButtonManager.PerformKill))]
     [HarmonyPrefix]
     public static bool PerformKillPatch()
     {
         return !GameConfig.DisableKillButton;
     }
-    
+
     [HarmonyPatch(typeof(KillButtonManager), nameof(KillButtonManager.SetTarget))]
     [HarmonyPrefix]
     public static bool SetTargetPatch()
     {
         return !GameConfig.DisableKillButton;
     }
-    
+
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive))]
+    [HarmonyPostfix]
+    public static void HideKillButtonPatch(HudManager __instance)
+    {
+        if (GameConfig.DisableKillButton)
+        {
+            __instance.KillButton.gameObject.SetActive(false);
+        }
+    }
+
     [HarmonyPatch(typeof(ArrowBehaviour), nameof(ArrowBehaviour.Awake))]
     [HarmonyPostfix]
     public static void ArrowBehaviourAwakePatch(ArrowBehaviour __instance)
