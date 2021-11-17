@@ -12,20 +12,20 @@ public static class Moveable
 {
     private static readonly Dictionary<PlayerControl, HashSet<object>> _immovable = new(Il2CppEqualityComparer<PlayerControl>.Instance);
 
-    public static void SetMoveable(this PlayerControl player, bool value, object key)
+    public static void SetMoveable(this PlayerControl player, bool canMove, object key)
     {
         var set = _immovable[player];
-        var changed = value ? set.Remove(key) : set.Add(key);
+        var changed = canMove ? set.Remove(key) : set.Add(key);
 
-        if (changed && !value)
+        if (changed && !canMove)
         {
             player.MyPhysics.body.velocity = Vector2.zero;
         }
     }
 
-    public static void SetMoveable<T>(this PlayerControl player, bool value)
+    public static void SetMoveable<T>(this PlayerControl player, bool canMove)
     {
-        player.SetMoveable(value, typeof(T));
+        player.SetMoveable(canMove, typeof(T));
     }
 
     public static bool IsMoveable(this PlayerControl player, object key)

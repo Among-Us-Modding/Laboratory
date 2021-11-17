@@ -30,7 +30,8 @@ public static class ComponentExtensions
         }
 
         var component = gameObject.GetComponent<T>();
-
+        if (!component) return component;
+        
         var map = CachedComponentStore<T>.Map;
         map[gameObject] = component;
 
