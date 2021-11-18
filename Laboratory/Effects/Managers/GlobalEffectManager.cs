@@ -60,8 +60,8 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
     public void RemoveEffect(IEffect effect)
     {
         if (_primaryEffect == effect) _primaryEffect = null;
+        else effect.OnDestroy();
         Effects.Remove(effect);
-        effect.OnDestroy();
     }
 
     [HideFromIl2Cpp]
