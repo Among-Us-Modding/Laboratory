@@ -109,6 +109,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
 
         foreach (var effect in effects)
         {
+            if (_primaryEffect == effect) _primaryEffect = null;
             RemoveEffect(effect);
         }
     }
