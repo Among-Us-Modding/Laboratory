@@ -19,10 +19,10 @@ public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.Effec
     public readonly struct EffectInfo
     {
         public readonly IEffectManager EffectManager;
-        public readonly IEffect Effect;
+        public readonly IEffect? Effect;
         public readonly bool IsPrimary;
 
-        public EffectInfo(IEffectManager effectManager, IEffect effect, bool isPrimary)
+        public EffectInfo(IEffectManager effectManager, IEffect? effect, bool isPrimary)
         {
             EffectManager = effectManager;
             Effect = effect;
@@ -46,7 +46,7 @@ public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.Effec
                 break;
         }
 
-        writer.Write(effectInfo.Effect.GetType().AssemblyQualifiedName);
+        writer.Write(effectInfo.Effect is null ? "null" : effectInfo.Effect.GetType().AssemblyQualifiedName);
         writer.Write(effectInfo.IsPrimary);
     }
 
@@ -59,7 +59,9 @@ public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.Effec
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        var effect = (IEffect)Activator.CreateInstance(Type.GetType(reader.ReadString())!);
+        var effectName = reader.ReadString();
+        IEffect? effect = null;
+        if (effectName != "null") effect = (IEffect) Activator.CreateInstance(Type.GetType(effectName)!);
 
         var isPrimary = reader.ReadBoolean();
 

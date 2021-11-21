@@ -44,7 +44,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     public List<IEffect> Effects { get; } = new();
 
     [HideFromIl2Cpp]
-    public void RpcAddEffect(IEffect effect, bool primary = false)
+    public void RpcAddEffect(IEffect? effect, bool primary = false)
     {
         Rpc<RpcAddEffect>.Instance.Send(new RpcAddEffect.EffectInfo(this, effect, primary), true);
     }
