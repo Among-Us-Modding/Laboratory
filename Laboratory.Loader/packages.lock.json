@@ -83,6 +83,18 @@
           "MonoMod.Utils": "21.10.10.1"
         }
       },
+      "Material.Avalonia": {
+        "type": "Direct",
+        "requested": "[2.4.1, )",
+        "resolved": "2.4.1",
+        "contentHash": "x56CjYAUT6LTYMsR8P+LARd82UUvNJy9WuVy2Aw/Ue+3XfY+8nLUrzATRr1p8lKFfo5O5ZoyEP1iPQ0YfHpPgA==",
+        "dependencies": {
+          "Avalonia": "0.10.7",
+          "Avalonia.Controls.DataGrid": "0.10.1",
+          "Material.Icons": "1.0.8",
+          "Material.Icons.Avalonia": "1.0.2"
+        }
+      },
       "System.Runtime.InteropServices.RuntimeInformation": {
         "type": "Direct",
         "requested": "[4.3.0, )",
@@ -277,6 +289,23 @@
           "System.Runtime": "4.1.0"
         }
       },
+      "Material.Icons": {
+        "type": "Transitive",
+        "resolved": "1.0.8",
+        "contentHash": "RokMNxvpVAqF4uru0O4e9VxO6dJbdbOwi7Jjon4t6CnDCiNh5Z5B0CkTfkKNXTbs0qg9etdr45XkK0tUdD4EcQ==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
+      },
+      "Material.Icons.Avalonia": {
+        "type": "Transitive",
+        "resolved": "1.0.2",
+        "contentHash": "hK0MQm2XyPwjT+DiviDOBjrJVQe6V0u+XTDVbxohkq58hUBlq0XZXmHHZ27jUJU6ZVP9ybu44aXfWycbVjnY2A==",
+        "dependencies": {
+          "Avalonia": "0.10.0",
+          "Material.Icons": "1.0.2"
+        }
+      },
       "Microsoft.CodeAnalysis.Analyzers": {
         "type": "Transitive",
         "resolved": "2.9.6",
@@ -389,6 +418,11 @@
           "System.Reflection.Emit.Lightweight": "4.7.0",
           "System.Reflection.TypeExtensions": "4.7.0"
         }
+      },
+      "Newtonsoft.Json": {
+        "type": "Transitive",
+        "resolved": "12.0.3",
+        "contentHash": "6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg=="
       },
       "ReactiveUI": {
         "type": "Transitive",

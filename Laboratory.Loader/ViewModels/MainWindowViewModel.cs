@@ -2,5 +2,4 @@
 
 public class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting => "Welcome from BepInEx! :)";
 }
