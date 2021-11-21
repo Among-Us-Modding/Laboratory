@@ -8,6 +8,8 @@ ProjectSection(SolutionItems) = preProject
 	Directory.Build.props = Directory.Build.props
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laboratory.Loader", "Laboratory.Loader\Laboratory.Loader.csproj", "{9D4D75F7-DAA1-475E-A35B-978A06A32D1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{790E5540-7655-4F57-BBED-8D644A031BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{790E5540-7655-4F57-BBED-8D644A031BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{790E5540-7655-4F57-BBED-8D644A031BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D4D75F7-DAA1-475E-A35B-978A06A32D1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D4D75F7-DAA1-475E-A35B-978A06A32D1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D4D75F7-DAA1-475E-A35B-978A06A32D1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D4D75F7-DAA1-475E-A35B-978A06A32D1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
