@@ -78,7 +78,7 @@ public sealed class AssetManager
     public AssetManager(string bundleName)
     {
         _name = bundleName;
-        LoadAllAssets();
+        // LoadAllAssets();
     }
 
     /// <summary>
