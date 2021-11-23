@@ -23,7 +23,7 @@ public class CounterSystem : Object, ICustomSystemType
     }
 
     [MethodRpc((uint)CustomRpcs.SetCount)]
-    public static void SetCount(uint key, int value)
+    public static void SetCount(PlayerControl player, uint key, int value)
     {
         if (AmongUsClient.Instance.AmHost)
         {
@@ -33,11 +33,11 @@ public class CounterSystem : Object, ICustomSystemType
     }
 
     [MethodRpc((uint)CustomRpcs.ChangeCount)]
-    public static void ChangeCount(uint key, int change)
+    public static void ChangeCount(PlayerControl player, uint key, int change)
     {
         if (AmongUsClient.Instance.AmHost)
         {
-            SetCount(key, GetCount(key) + change);
+            SetCount(player, key, GetCount(key) + change);
         }
     }
     
