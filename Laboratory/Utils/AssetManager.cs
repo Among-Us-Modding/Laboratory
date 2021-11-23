@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
 using Reactor;
 using Reactor.Extensions;
 using UnityEngine;
@@ -14,6 +15,8 @@ namespace Laboratory.Utils;
 /// </summary>
 public sealed class AssetManager
 {
+    internal static readonly List<AssetManager> _managers = new();
+
     private static readonly Dictionary<string, Sprite> _cachedEmbeddedSprites = new();
     private static readonly Dictionary<string, AssetBundle> _cachedEmbeddedBundles = new();
 
@@ -79,7 +82,7 @@ public sealed class AssetManager
     public AssetManager(string bundleName)
     {
         _name = bundleName;
-        // LoadAllAssets();
+        _managers.Add(this);
     }
 
     /// <summary>
@@ -89,7 +92,7 @@ public sealed class AssetManager
     public AssetManager(AssetBundle bundle)
     {
         _bundle = bundle;
-        LoadAllAssets();
+        _managers.Add(this);
     }
 
     private Dictionary<string, Object> ObjectCache { get; } = new();
@@ -132,5 +135,18 @@ public sealed class AssetManager
         var assets = Bundle.LoadAllAssets();
         foreach (var asset in assets) asset.DontUnload();
         return assets;
+    }
+}
+
+[HarmonyPatch]
+internal static class AssetManagerPatches
+{
+    [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.Awake))]
+    public static void AmongUsClientAwakePatch()
+    {
+        foreach (var manager in AssetManager._managers)
+        {
+            manager.Bundle!.LoadAllAssetsAsync<Object>();
+        }
     }
 }
