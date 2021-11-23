@@ -73,7 +73,7 @@ public class CooldownButton : MonoBehaviour
         
     public virtual void Update()
     {
-        Renderer!.enabled = TimerText!.enabled = ShouldBeVisible();
+        Button!.enabled = Renderer!.enabled = TimerText!.enabled = ShouldBeVisible();
         // ReSharper disable once CompareOfFloatsByEqualityOperator -> Its set to this value manually
         if (CurrentTime == int.MaxValue) return;
         if (MeetingHud.Instance || ExileController.Instance) CurrentTime = Cooldown;
