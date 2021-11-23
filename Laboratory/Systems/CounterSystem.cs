@@ -44,13 +44,13 @@ public class CounterSystem : Object, ICustomSystemType
     private static CounterSystem? _instance;
     public static CounterSystem? Instance => ShipStatus.Instance ? _instance : null;
     
-    public static CustomSystemType SystemType { get; } = CustomSystemType.Register<ProgressSystem>();
+    public static CustomSystemType SystemType { get; } = CustomSystemType.Register<CounterSystem>();
 
     public CounterSystem(IntPtr ptr) : base(ptr)
     {
     }
 
-    public CounterSystem() : base(ClassInjector.DerivedConstructorPointer<ProgressSystem>())
+    public CounterSystem() : base(ClassInjector.DerivedConstructorPointer<CounterSystem>())
     {
         ClassInjector.DerivedConstructorBody(this);
         _instance = this;
