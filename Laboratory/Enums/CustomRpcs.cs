@@ -8,4 +8,6 @@ public enum CustomRpcs : uint
     HardReset,
     ResetMovement,
     EndGame,
+    SetCount,
+    ChangeCount,
 }
