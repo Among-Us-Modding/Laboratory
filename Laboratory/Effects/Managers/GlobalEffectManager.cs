@@ -61,6 +61,7 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
     {
         if (_primaryEffect == effect) _primaryEffect = null;
         else effect.OnDestroy();
+        effect.Timer = -1;
         Effects.Remove(effect);
     }
 
