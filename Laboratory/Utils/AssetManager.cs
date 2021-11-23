@@ -5,6 +5,7 @@ using System.Reflection;
 using HarmonyLib;
 using Reactor;
 using Reactor.Extensions;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -142,11 +143,12 @@ public sealed class AssetManager
 internal static class AssetManagerPatches
 {
     [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.Awake))]
+    [HarmonyPostfix]
     public static void AmongUsClientAwakePatch()
     {
         foreach (var manager in AssetManager._managers)
         {
-            manager.Bundle!.LoadAllAssetsAsync<Object>();
+            manager.Bundle!.LoadAllAssetsAsync(Il2CppType.Of<Object>());
         }
     }
 }
