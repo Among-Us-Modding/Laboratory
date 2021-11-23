@@ -16,7 +16,7 @@ public class ProgressSystem : Object, ICustomSystemType
     private static ProgressSystem? _instance;
     public static ProgressSystem? Instance => ShipStatus.Instance ? _instance : null;
     public static CustomSystemType SystemType { get; } = CustomSystemType.Register<ProgressSystem>();
-    public static float[] Stages { get; } = {
+    public static float[] Stages { get; set; } = {
         60f,
         60f,
         60f,
