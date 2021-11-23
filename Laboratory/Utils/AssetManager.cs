@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Reactor;
 using Reactor.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -108,7 +109,11 @@ public sealed class AssetManager
         if (ObjectCache.TryGetValue(name, out var result)) return result.TryCast<T>();
         if (Bundle == null) throw new NullReferenceException();
         var asset = Bundle.LoadAsset<T>(name);
-        if (!asset) return null;
+        if (!asset)
+        {
+            Logger<LaboratoryPlugin>.Message($"Null Asset: {name}");
+            return null;
+        }
 
         if (asset == null) return asset;
         asset.DontUnload();
