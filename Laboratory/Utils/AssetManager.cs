@@ -93,6 +93,7 @@ public sealed class AssetManager
     public AssetManager(AssetBundle bundle)
     {
         _bundle = bundle;
+        _bundle.DontUnload();
         _managers.Add(this);
     }
 
