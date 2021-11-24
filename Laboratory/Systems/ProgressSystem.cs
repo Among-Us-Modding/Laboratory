@@ -68,7 +68,7 @@ public class ProgressSystem : Object, ICustomSystemType
     public void Detoriorate(float deltaTime)
     {
         Timer += deltaTime;
-        Timer = Mathf.Clamp(Timer + deltaTime, 0, TotalTime);
+        Timer = Mathf.Clamp(Timer, 0, TotalTime);
         if (!AmongUsClient.Instance.AmHost) return;
         float sum = 0;
         int stage = 0;
