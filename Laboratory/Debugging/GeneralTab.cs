@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Laboratory.Effects.Utils;
+using Laboratory.Extensions;
 using Laboratory.Systems;
 using Laboratory.Utils;
 using UnityEngine;
@@ -22,21 +24,47 @@ public class GeneralTab : BaseDebugTab
         {
             RuntimePluginLoader.DownloadPlugin("UnityExplorer");
         }
-
-        if (AmongUsClient.Instance.AmHost && ShipStatus.Instance)
+        
+        if (ProgressSystem.Instance != null)
         {
-            List<(byte playerId, int newHealth)> list = new();
-            var system = HealthSystem.Instance!;
-            foreach (var (pid, health) in system.PlayerHealths)
+            GUILayout.Label("Mod Phase: " + ProgressSystem.Instance.Stage);
+            if (AmongUsClient.Instance.AmHost)
             {
-                GUILayout.Label(GameData.Instance.GetPlayerById(pid).PlayerName);
-                var newHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(health, 0, HealthSystem.MaxHealth));
-                if (newHealth != health) list.Add((pid, newHealth));
+                var timer = GUILayout.HorizontalSlider(ProgressSystem.Instance.Timer, 0, ProgressSystem.Instance.TotalTime + 0.0001f);
+                if (Math.Abs(timer - ProgressSystem.Instance.Timer) > 0.001f)
+                {
+                    ProgressSystem.Instance.Timer = timer;
+                    ProgressSystem.Instance.IsDirty = true;
+                }
             }
-
-            foreach (var (playerId, newHealth) in list)
+        }
+        
+        if (HealthSystem.Instance != null)
+        {
+            GUILayout.Label("Max Health: " + HealthSystem.MaxHealth);
+            if (AmongUsClient.Instance.AmHost)
             {
-                system.SetHealth(playerId, newHealth);
+                var maxHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(HealthSystem.MaxHealth/10f, 0, 25)) * 10;
+                if (maxHealth != HealthSystem.MaxHealth)
+                {
+                    HealthSystem.MaxHealth = maxHealth;
+                }
+                
+                GUILayoutExtensions.Divider();
+
+                List<(byte playerId, int newHealth)> list = new();
+                var system = HealthSystem.Instance!;
+                foreach (var (pid, health) in system.PlayerHealths)
+                {
+                    GUILayout.Label(GameData.Instance.GetPlayerById(pid).PlayerName);
+                    var newHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(health, 0, HealthSystem.MaxHealth));
+                    if (newHealth != health) list.Add((pid, newHealth));
+                }
+
+                foreach (var (playerId, newHealth) in list)
+                {
+                    system.SetHealth(playerId, newHealth);
+                }
             }
         }
     }
