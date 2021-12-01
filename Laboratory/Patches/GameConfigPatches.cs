@@ -58,4 +58,17 @@ internal static class GameConfigPatches
         if (!GameConfig.DisableTaskArrows || !__instance.image) return;
         __instance.image.sprite = null;
     }
+
+    [HarmonyPatch(typeof(TaskPanelBehaviour), nameof(TaskPanelBehaviour.Update))]
+    [HarmonyPrefix]
+    public static bool TaskPanelPatch(TaskPanelBehaviour __instance)
+    {
+        if (GameConfig.DisableTaskPanel)
+        {
+            __instance.gameObject.SetActive(false);
+            return false;
+        }
+
+        return true;
+    }
 }
