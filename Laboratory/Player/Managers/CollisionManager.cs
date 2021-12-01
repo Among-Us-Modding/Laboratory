@@ -53,6 +53,10 @@ public class CollisionManager : MonoBehaviour
     public virtual void OnCollision(Collider2D other)
     {
     }
+
+    public virtual void OnExitCollision(Collider2D other)
+    {
+    }
 }
 
 [RegisterInIl2Cpp]
@@ -74,5 +78,15 @@ public class CollisionDetector : MonoBehaviour
     public void OnCollisionEnter2D(Collision2D other)
     {
         Parent.OnCollision(other.collider);
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        Parent.OnExitCollision(other);
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        Parent.OnExitCollision(other.collider);
     }
 }
