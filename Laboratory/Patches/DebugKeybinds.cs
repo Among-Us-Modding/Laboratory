@@ -33,6 +33,7 @@ public static class KeyboardJoystick_Update_Patch
         playerEffectManager.ClearEffects();
         Moveable.Clear(player);
         Visible.Clear(player);
+        SpeedModifier.Clear(player.MyPhysics);
         player.moveable = true;
         player.Visible = true;
         player.Collider.enabled = true;
@@ -46,6 +47,7 @@ public static class KeyboardJoystick_Update_Patch
     {
         player.Collider.enabled = true;
         Moveable.Clear(player);
+        SpeedModifier.Clear(player.MyPhysics);
         player.moveable = true;
         player.Visible = true;
         player.NetTransform.enabled = true;

@@ -63,6 +63,7 @@ public static class Visible
     {
         public static void Postfix(PlayerControl __instance)
         {
+            if (__instance.notRealPlayer) return;
             _invisible[__instance] = new HashSet<object?>();
         }
     }

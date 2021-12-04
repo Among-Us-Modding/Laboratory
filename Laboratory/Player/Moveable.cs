@@ -48,6 +48,7 @@ public static class Moveable
     {
         public static void Postfix(PlayerControl __instance)
         {
+            if (__instance.notRealPlayer) return;
             _immovable[__instance] = new HashSet<object>();
         }
     }
