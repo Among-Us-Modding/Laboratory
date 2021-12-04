@@ -16,11 +16,11 @@
       },
       "BepInEx.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.518, )",
-        "resolved": "6.0.0-be.518",
-        "contentHash": "g9YpcuiczNzZrDMW4fxGl31+kRvCEzK0NqgVeLv6OKFMcu3UPfjyJuAh726UNnbZitZe1WE3bfNu5vBvRJ4XCA==",
+        "requested": "[6.0.0-be.521, )",
+        "resolved": "6.0.0-be.521",
+        "contentHash": "nzXG/X9u4Ane4KvzaTTon9iP2o3zBkPierrkefaq9tmmQ91FzXFtmFGkVZpD6hGqGjd+KRIn0c6my58+e0u+gw==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.518",
+          "BepInEx.Core": "6.0.0-be.521",
           "BepInEx.Il2Cpp.TlsAdapter": "1.0.1",
           "HarmonyX": "2.5.7",
           "Iced": "1.15.0",
@@ -34,23 +34,23 @@
       },
       "BepInEx.IL2CPP.MSBuild": {
         "type": "Direct",
-        "requested": "[1.0.1, )",
-        "resolved": "1.0.1",
-        "contentHash": "fOxbM3r8vBo5djUh3R4/cfzYNwIL4EyPc2P7yGIPaR+jrql1eS2IW+4oy2MGpfvbMLGeDHaYubcYS4VSc7F3jw=="
+        "requested": "[1.0.2, )",
+        "resolved": "1.0.2",
+        "contentHash": "RdnDWUFy0em+AtYXohvPx4HbGokvfzJaiVovFNj35PhwzMlgqHZRIxLHoTRnfJLeWJruqBi8PXJj03JqJAeQUw=="
       },
       "Reactor": {
         "type": "Direct",
-        "requested": "[1.1.0-dev, )",
-        "resolved": "1.1.0-dev",
-        "contentHash": "jy6bRDm+ka/jARgKDs9h2NYfbzHHWmG5qEZaafpQFo0uAMFlblG+Xo/bPDgKS1JPXbLg81ZqZB6u2fkDVSVurA==",
+        "requested": "[1.1.0, )",
+        "resolved": "1.1.0",
+        "contentHash": "iH8G9j+GO/TV21aJWDOhY5GzNsUK+hxfHXGavYL3HetRa0EbTADpPkkpUKsl7By6SbWYr4fBED+KlQ2/Ib4l9A==",
         "dependencies": {
-          "BepInEx.IL2CPP": "6.0.0-be.513"
+          "BepInEx.IL2CPP": "6.0.0-be.521"
         }
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.518",
-        "contentHash": "Rsu82H3ouTcm6P5AWwdrqauaKRDnVMXZCbKfL6v6lP6t1xHcz8Q0B4lpT8rSMkTwBImifaJyoYuSMjGfjuU+eg==",
+        "resolved": "6.0.0-be.521",
+        "contentHash": "O1UmrldEd72/0//LIdop26QuWwToNP3lXURfORKZGZv1Kp5nU03jS/hXIXEgDSzxRZJt5j+ffay7x+5eedXMbg==",
         "dependencies": {
           "HarmonyX": "2.5.7",
           "MonoMod.Utils": "21.10.10.1",
