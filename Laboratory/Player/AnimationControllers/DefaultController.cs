@@ -23,9 +23,12 @@ public class DefaultController : IAnimationController
     public virtual AnimationClip EnterVentAnim => Physics.EnterVentAnim;
     public virtual AnimationClip ExitVentAnim => Physics.ExitVentAnim;
 
+    public virtual bool HideHat => HideCosmetics;
+    public virtual bool HideSkin => HideCosmetics;
+    public virtual bool HidePet => HideCosmetics;
     public virtual bool HideCosmetics => false;
     public virtual bool HideName => false;
-    
+
     public virtual Vector2 RendererOffset => Vector2.zero;
     public virtual float ColliderYOffset => -0.3636f;
     public virtual float ZOffset => 0;

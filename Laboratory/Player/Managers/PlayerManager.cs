@@ -51,9 +51,9 @@ public class PlayerManager : MonoBehaviour
         if (data == null) return;
 
         Player.nameText.enabled = !AnimationController.HideName;
-        Physics.Skin.gameObject.SetActive(!AnimationController.HideCosmetics && Player.Visible);
-        Player.HatRenderer.gameObject.SetActive(!AnimationController.HideCosmetics && !data.IsDead && Player.Visible);
-        if (Player.CurrentPet) Player.CurrentPet.gameObject.SetActive(!AnimationController.HideCosmetics && Player.Visible);
+        Physics.Skin.gameObject.SetActive(!AnimationController.HideSkin && Player.Visible);
+        Player.HatRenderer.gameObject.SetActive(!AnimationController.HideHat && !data.IsDead && Player.Visible);
+        if (Player.CurrentPet) Player.CurrentPet.gameObject.SetActive(!AnimationController.HidePet && Player.Visible);
 
         Player.Collider.offset = new Vector2(0, AnimationController.ColliderYOffset);
         Player.myRend.transform.localPosition = new Vector3(AnimationController.RendererOffset.x * (Player.myRend.flipX ? -1 : 1), AnimationController.RendererOffset.y, 0);

@@ -14,7 +14,9 @@ public interface IAnimationController
     public AnimationClip EnterVentAnim { get; }
     public AnimationClip ExitVentAnim { get; }
 
-    public bool HideCosmetics { get; }
+    public bool HideHat { get; }
+    public bool HideSkin { get; }
+    public bool HidePet { get; }
     public bool HideName { get; }
 
     public Vector2 RendererOffset => Vector2.zero;
