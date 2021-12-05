@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using Il2CppSystem.Collections.Generic;
 using UnhollowerBaseLib;
 using UnityEngine;
+using Object = Il2CppSystem.Object;
 
 namespace Laboratory.CustomMap;
 
@@ -69,7 +71,9 @@ public static class LavaColorChanger
                 {
                     for (var j = 0; j < 4; j++)
                     {
-                        if (currentColors[i].Equals(Default[j]))
+                        // ReSharper disable once SuspiciousTypeConversion.Global
+                        // DNF is hard clearing this sus line
+                        if (currentColors[(System.Index) i].Equals(Default[j]))
                         {
                             replacedColors[i] = colors[j];
                         }
