@@ -6,6 +6,7 @@ using Laboratory.CustomMap;
 using Laboratory.Enums;
 using Reactor;
 using Reactor.Networking.MethodRpc;
+using UnhollowerBaseLib.Attributes;
 using UnhollowerRuntimeLib;
 using UnityEngine;
 using IntPtr = System.IntPtr;
@@ -57,6 +58,8 @@ public class CounterSystem : Object, ICustomSystemType
     }
     
     public bool IsDirty { get; set; }
+    
+    [HideFromIl2Cpp]
     public Dictionary<uint, int> Counters { get; } = new();
     
     public void Serialize(MessageWriter writer, bool initialState)
