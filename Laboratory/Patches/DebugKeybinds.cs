@@ -22,9 +22,9 @@ public static class KeyboardJoystick_Update_Patch
         if (player.AmOwner)
         {
             HudManager.Instance.FullScreen.enabled = false;
-            var camTransform = Camera.main.transform;
+            var camTransform = Camera.main!.transform;
             for (var i = 4; i < camTransform.childCount; i++) camTransform.GetChild(i).gameObject.Destroy();
-            CameraZoomController.Instance.OrthographicSize = 3;
+            CameraZoomController.Instance!.OrthographicSize = 3;
             HudManager.Instance.PlayerCam.Target = player;
             HudManager.Instance.PlayerCam.Locked = false;
         }
