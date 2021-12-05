@@ -47,7 +47,7 @@ public static class ShipStatus_Awake_Patch
         // Map specific
         if (__instance.Type == ShipStatus.MapType.Pb)
         {
-            if (MapConfig.LavaColors != default) LavaColorChanger.ChangeColor(MapConfig.LavaColors);
+            LavaColorChanger.ChangeColors(MapConfig.LavaColors);
             if (MapConfig.DisableSnow) Object.FindObjectOfType<SnowManager>()?.gameObject.SetActive(false);
         }
     }
