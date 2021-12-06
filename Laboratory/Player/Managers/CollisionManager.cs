@@ -53,6 +53,10 @@ public class CollisionManager : MonoBehaviour
     public virtual void OnCollision(Collider2D other)
     {
     }
+    
+    public virtual void OnStay(Collider2D other)
+    {
+    }
 
     public virtual void OnExitCollision(Collider2D other)
     {
@@ -88,5 +92,10 @@ public class CollisionDetector : MonoBehaviour
     private void OnCollisionExit2D(Collision2D other)
     {
         Parent.OnExitCollision(other.collider);
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        Parent.OnStay(other);
     }
 }
