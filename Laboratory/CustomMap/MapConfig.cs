@@ -33,4 +33,10 @@ public static class MapConfig
     /// AssetBundles containing the Sprites used to swap textures on the map
     /// </summary>
     public static List<AssetBundle> TextureSwapBundles { get; set; } = new();
+    
+    /// <summary>
+    /// Should the texture swapping use sprites from the bundle, or replace the texture currently being used on the SpriteRender
+    /// I cba to explain more here so dm me if u have problems
+    /// </summary>
+    public static bool SwapRawTextures { get; set; }
 }

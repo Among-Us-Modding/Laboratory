@@ -39,8 +39,15 @@ public static class ShipStatus_Awake_Patch
 
         foreach (var textureSwapBundle in MapConfig.TextureSwapBundles)
         {
-            var sprites = textureSwapBundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList();
-            SpriteSwapper.Swap(__instance.gameObject, sprites);
+            if (!MapConfig.SwapRawTextures)
+            {
+                var sprites = textureSwapBundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList();
+                SpriteSwapper.Swap(__instance.gameObject, sprites);
+            }
+            else
+            {
+                SpriteSwapper.SwapMapSpritesRaw(textureSwapBundle);
+            }
         }
 
 
