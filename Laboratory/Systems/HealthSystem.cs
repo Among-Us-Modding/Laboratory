@@ -43,7 +43,7 @@ public class HealthSystem : Object, ICustomSystemType
     [MethodRpc((uint)CustomRpcs.ChangeHealth)]
     public static void CmdChangeHealth(PlayerControl player, int change)
     {
-        if (AmongUsClient.Instance.AmHost && Instance is not null)
+        if (Instance is not null)
         {
             var pid = player.PlayerId;
             Instance.SetHealth(pid, Instance.GetHealth(pid) + change);
@@ -75,19 +75,31 @@ public class HealthSystem : Object, ICustomSystemType
     /// <param name="newHealth">The new amount of heath to set the player with</param>
     public void SetHealth(byte playerId, int newHealth)
     {
+        var data = GameData.Instance.GetPlayerById(playerId);
         var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
         IsDirty = true;
 
-        var data = GameData.Instance.GetPlayerById(playerId);
         if (data != null && data.Object)
         {
             var player = data.Object;
-            player.nameText.text = $"<color=#{Palette.PlayerColors[(data.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{data.PlayerName}";
+            UpdateHealthText(player, data, playerHealth);
 
-            if (AmongUsClient.Instance.AmHost && playerHealth <= 0)
+            if (!data.IsImpostor && AmongUsClient.Instance.AmHost && playerHealth <= 0)
             {
                 player.RpcCustomMurder(player, true);
             }
+        }
+    }
+
+    public void UpdateHealthText(PlayerControl player, GameData.PlayerInfo data, int playerHealth)
+    {
+        if (data.IsImpostor)
+        {
+            player.nameText.text = data.PlayerName;
+        }
+        else
+        {
+            player.nameText.text = $"<color=#{Palette.PlayerColors[(data.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{data.PlayerName}";
         }
     }
 
