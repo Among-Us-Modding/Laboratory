@@ -42,12 +42,18 @@ internal static class GameConfigPatches
     }
 
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive))]
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     [HarmonyPostfix]
-    public static void HideKillButtonPatch(HudManager __instance)
+    public static void HideButtonsPatch(HudManager __instance)
     {
         if (GameConfig.DisableKillButton)
         {
             __instance.KillButton.gameObject.SetActive(false);
+        }
+
+        if (GameConfig.DisableReportButton)
+        {
+            __instance.ReportButton.gameObject.SetActive(false);
         }
     }
 
