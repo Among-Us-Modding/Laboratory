@@ -52,6 +52,8 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void AddEffect(IEffect? effect, bool primary)
     {
+        if (primary) PrimaryEffect = effect;
+
         if (effect != null)
         {
             if (effect is IPlayerEffect playerEffect)
@@ -62,8 +64,6 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
             effect.Awake();
             Effects.Add(effect);
         }
-
-        if (primary) PrimaryEffect = effect;
     }
 
     [HideFromIl2Cpp]

@@ -47,13 +47,13 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void AddEffect(IEffect? effect, bool primary)
     {
+        if (primary) PrimaryEffect = effect;
+
         if (effect != null)
         {
             effect.Awake();
             Effects.Add(effect);
         }
-
-        if (primary) PrimaryEffect = effect;
     }
 
     [HideFromIl2Cpp]
