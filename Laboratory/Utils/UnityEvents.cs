@@ -7,26 +7,17 @@ namespace Laboratory.Utils;
 [RegisterInIl2Cpp]
 public class UnityEvents : MonoBehaviour
 {
-    public static event Action? OnEnableEvent;
+    /// <summary>
+    /// Action which is called according to the update function of unity's event loop
+    /// </summary>
     public static event Action? UpdateEvent;
-    public static event Action? FixedUpdateEvent;
 
     public UnityEvents(IntPtr ptr) : base(ptr)
     {
     }
 
-    private void OnEnable()
-    {
-        OnEnableEvent?.Invoke();
-    }
-    
     private void Update()
     {
         UpdateEvent?.Invoke();
-    }
-    
-    private void FixedUpdate()
-    {
-        FixedUpdateEvent?.Invoke();
     }
 }
