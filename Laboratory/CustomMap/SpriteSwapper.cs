@@ -26,6 +26,7 @@ public static class SpriteSwapper
     public static void SwapMapSpritesRaw(AssetBundle bundle)
     {
         var newTex = bundle.LoadAllAssets().OfIl2CppType<Texture2D>();
+        newTex = newTex.OrderBy(t => t.name.Length);
 
         var mapRends = ShipStatus.Instance.GetComponentsInChildren<SpriteRenderer>();
         
@@ -33,7 +34,7 @@ public static class SpriteSwapper
         {
             if (spriteRenderer.sprite && spriteRenderer.sprite.texture)
             {
-                var match = newTex.FirstOrDefault(t => t.name.Contains(spriteRenderer.sprite.texture.name + '-'));
+                var match = newTex.FirstOrDefault(t => t.name.Replace('_', '-').Contains(spriteRenderer.sprite.texture.name.Replace('_', '-') + '-'));
                 if (match)
                 {
                     var block = new MaterialPropertyBlock();
@@ -54,6 +55,22 @@ public static class SpriteSwapper
                 ground.parent = background;
                 ground.localPosition = new Vector3(19.97f, -13.5f, -1f);
                 ground.localScale = new Vector3(0.3915f, 0.3915f, 1f);
+                var groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
+                groundRend.sprite = groundSprite;
+            }
+        }
+        
+        if (ShipStatus.Instance.Type == ShipStatus.MapType.Ship)
+        {
+            var groundSprite = bundle.LoadAllAssets().OfIl2CppType<Sprite>().FirstOrDefault(s => s.name.Contains("SkeldFloor"));
+            if (groundSprite)
+            {
+                var background = ShipStatus.Instance.transform.Find("Hull2");
+                background.GetComponent<MeshRenderer>().enabled = false;
+                var ground = new GameObject() { layer = 9, name = "Ground" }.transform;
+                ground.parent = background;
+                ground.localPosition = new Vector3(10.64f, -8.46f, -0.001f);
+                ground.localScale = new Vector3(0.1644f, 0.1644f, 1f);
                 var groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
                 groundRend.sprite = groundSprite;
             }
