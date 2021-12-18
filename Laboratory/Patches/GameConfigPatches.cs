@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿using System.Collections;
+using BepInEx.IL2CPP.Utils.Collections;
+using HarmonyLib;
+using Il2CppSystem.Collections.Generic;
+using UnityEngine;
 
 namespace Laboratory.Patches;
 
@@ -76,5 +80,36 @@ internal static class GameConfigPatches
         }
 
         return true;
+    }
+
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.CoShowIntro))]
+    [HarmonyPrefix]
+    public static bool CoShowIntroPatch(HudManager __instance, List<PlayerControl> yourTeam, ref Il2CppSystem.Collections.IEnumerator __result)
+    {
+        if (!GameConfig.DisableIntroCutscene)
+        {
+            return true;
+        }
+
+        __result = CoShowIntro(__instance, yourTeam).WrapToIl2Cpp();
+        return false;
+    }
+
+
+    private static IEnumerator CoShowIntro(HudManager hudManager, List<PlayerControl> yourTeam)
+    {
+        while (!ShipStatus.Instance)
+        {
+            yield return null;
+        }
+
+        hudManager.isIntroDisplayed = true;
+        DestroyableSingleton<HudManager>.Instance.FullScreen.transform.SetLocalZ(-250f);
+        PlayerControl.LocalPlayer.SetKillTimer(10f);
+        ShipStatus.Instance.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>().ForceSabTime(10f);
+        yield return ShipStatus.Instance.PrespawnStep();
+        yield return hudManager.CoFadeFullScreen(Color.black, Color.clear);
+        DestroyableSingleton<HudManager>.Instance.FullScreen.transform.SetLocalZ(-500f);
+        hudManager.isIntroDisplayed = false;
     }
 }
