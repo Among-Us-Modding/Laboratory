@@ -115,7 +115,7 @@ public static class KeyboardJoystick_Update_Patch
                 if (mousebutton == 1)
                 {
                     instance.MouseUpEvent -= MouseUpEvent;
-                    instance.Parent.Close();
+                    instance.Parent!.Close();
                     PlayerControl.LocalPlayer.moveable = true;
                     PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(worldposition);
                 }
