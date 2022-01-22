@@ -29,6 +29,21 @@ public class HealthSystem : Object, ICustomSystemType
     public static int MaxHealth { get; set; } = 100;
 
     /// <summary>
+    /// Set if the players name should be updated when their health changes
+    /// </summary>
+    public static bool UpdateNameText { get; set; } = true;
+    
+    /// <summary>
+    /// Should a player be killed when their health hits zero
+    /// </summary>
+    public static bool KillWhenNoHealth { get; set; } = true;
+    
+    /// <summary>
+    /// Action invoked when a player's health is changed with their old and new health values
+    /// </summary>
+    public static Action<PlayerControl, (int previous, int current)>? OnHealthChange { get; set; }
+
+    /// <summary>
     /// The current instance of the health system
     /// </summary>
     public static HealthSystem? Instance => ShipStatus.Instance ? _instance : null;
@@ -76,17 +91,19 @@ public class HealthSystem : Object, ICustomSystemType
     public void SetHealth(byte playerId, int newHealth)
     {
         var data = GameData.Instance.GetPlayerById(playerId);
+        var oldHealth = GetHealth(playerId);
         var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
         IsDirty = true;
 
         if (data != null && data.Object)
         {
             var player = data.Object;
-            UpdateHealthText(player, data, playerHealth);
+            OnHealthChange?.Invoke(player, (oldHealth, newHealth));
+            if (UpdateNameText) UpdateHealthText(player, data, playerHealth);
 
             if (!data.IsImpostor && AmongUsClient.Instance.AmHost && playerHealth <= 0)
             {
-                player.RpcCustomMurder(player, true);
+                if (KillWhenNoHealth) player.RpcCustomMurder(player, true);
             }
         }
     }
