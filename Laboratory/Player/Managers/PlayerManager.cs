@@ -35,7 +35,7 @@ public class PlayerManager : MonoBehaviour
         if (Physics.body) Physics.EnableInterpolation();
         Physics.Skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
 
-        AnimationController = new DefaultController(this);
+        AnimationController = new DefaultController(this, DefaultController.MaterialType.Player);
     }
 
     public void Update()
