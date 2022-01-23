@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Laboratory.Extensions;
@@ -20,8 +21,10 @@ public static class SpriteSwapper
                 renderer.sprite = replacement;
             }
         }
+
+        CreateGround(replacementSprites);
     }
-    
+
     // TODO add filtering options
     public static void SwapMapSpritesRaw(AssetBundle bundle)
     {
@@ -29,7 +32,7 @@ public static class SpriteSwapper
         newTex = newTex.OrderBy(t => t.name.Length);
 
         var mapRends = ShipStatus.Instance.GetComponentsInChildren<SpriteRenderer>();
-        
+
         foreach (var spriteRenderer in mapRends)
         {
             if (spriteRenderer.sprite && spriteRenderer.sprite.texture)
@@ -44,25 +47,34 @@ public static class SpriteSwapper
             }
         }
 
-        // TODO add stuff here for other maps
-        if (ShipStatus.Instance.Type == ShipStatus.MapType.Pb)
+        CreateGround(bundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList());
+    }
+
+    public static void CreateGround(List<Sprite> sprites)
+    {
+        if (ShipStatus.Instance.TryCast<PolusShipStatus>())
         {
-            var groundSprite = bundle.LoadAllAssets().OfIl2CppType<Sprite>().FirstOrDefault(s => s.name.Contains("Polus_Ground"));
-            if (groundSprite)
+            var z = -1f;
+
+            foreach (var groundSprite in sprites.Where(s => s.name.Contains("Ground")))
             {
                 var background = ShipStatus.Instance.transform.Find("Background");
                 var ground = new GameObject() { layer = 9, name = "Ground" }.transform;
                 ground.parent = background;
-                ground.localPosition = new Vector3(19.97f, -13.5f, -1f);
+                ground.localPosition = new Vector3(19.97f, -13.5f, z);
                 ground.localScale = new Vector3(0.3915f, 0.3915f, 1f);
                 var groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
                 groundRend.sprite = groundSprite;
+
+                z -= 0.001f;
             }
+
+            return;
         }
-        
-        if (ShipStatus.Instance.Type == ShipStatus.MapType.Ship)
+
+        if (ShipStatus.Instance.TryCast<SkeldShipStatus>())
         {
-            var groundSprite = bundle.LoadAllAssets().OfIl2CppType<Sprite>().FirstOrDefault(s => s.name.Contains("SkeldFloor"));
+            var groundSprite = sprites.FirstOrDefault(s => s.name.Contains("SkeldFloor"));
             if (groundSprite)
             {
                 var background = ShipStatus.Instance.transform.Find("Hull2");
@@ -74,6 +86,10 @@ public static class SpriteSwapper
                 var groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
                 groundRend.sprite = groundSprite;
             }
+
+            return;
         }
+
+        throw new NotSupportedException();
     }
 }
