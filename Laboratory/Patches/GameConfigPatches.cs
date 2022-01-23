@@ -59,6 +59,11 @@ internal static class GameConfigPatches
         {
             __instance.ReportButton.gameObject.SetActive(false);
         }
+
+        if (GameConfig.DisableTaskPanel)
+        {
+            __instance.TaskText.transform.parent.gameObject.SetActive(false);
+        }
     }
 
     [HarmonyPatch(typeof(ArrowBehaviour), nameof(ArrowBehaviour.Awake))]
