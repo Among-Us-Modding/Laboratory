@@ -78,7 +78,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void ClearEffects()
     {
-        foreach (var effect in Effects)
+        foreach (var effect in new List<IEffect>(Effects))
         {
             RemoveEffect(effect);
         }
