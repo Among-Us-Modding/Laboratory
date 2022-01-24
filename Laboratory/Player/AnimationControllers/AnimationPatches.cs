@@ -65,8 +65,10 @@ internal static class AnimationPatches
 
         var playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
-
-        __result = playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.ClimbAnim : GetOriginalClip(playerManager, __result);
+        
+        // This ensures that when a custom animation finishes it will allow the normal animation cycle to continue
+        var actuallyPlaying = __instance.Clip is {isLooping: true} || __instance.IsPlaying();
+        __result = actuallyPlaying && playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.ClimbAnim : GetOriginalClip(playerManager, __result);
     }
 
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
