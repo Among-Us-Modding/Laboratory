@@ -12,6 +12,10 @@ public class GeneralTab : BaseDebugTab
 {
     public override string Name => "General";
 
+    public Dictionary<string, int> OldHealths { get; } = new();
+    public bool AllowDeath { get; set; }
+
+    
     public override void BuildUI()
     {
         if (CameraZoomController.Instance != null)
@@ -30,6 +34,7 @@ public class GeneralTab : BaseDebugTab
             GUILayout.Label("Mod Phase: " + ProgressSystem.Instance.Stage);
             if (AmongUsClient.Instance.AmHost)
             {
+                ProgressSystem.Instance.ShouldRun = GUILayout.Toggle(ProgressSystem.Instance.ShouldRun, $"Progress Bar: {(ProgressSystem.Instance.ShouldRun ? "Running" : "Stopped")}", GUI.skin.button);
                 var timer = GUILayout.HorizontalSlider(ProgressSystem.Instance.Timer, 0, ProgressSystem.Instance.TotalTime + 0.0001f);
                 if (Math.Abs(timer - ProgressSystem.Instance.Timer) > 0.001f)
                 {
@@ -44,21 +49,40 @@ public class GeneralTab : BaseDebugTab
             GUILayout.Label("Max Health: " + HealthSystem.MaxHealth);
             if (AmongUsClient.Instance.AmHost)
             {
-                var maxHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(HealthSystem.MaxHealth/10f, 0, 25)) * 10;
+                var maxHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(HealthSystem.MaxHealth / 10f, 0, 25)) * 10;
                 if (maxHealth != HealthSystem.MaxHealth)
                 {
                     HealthSystem.MaxHealth = maxHealth;
                 }
                 
-                GUILayoutExtensions.Divider();
+                if (GUILayout.Button("Save Current Health"))
+                {
+                    foreach (var instanceAllPlayer in GameData.Instance.AllPlayers)
+                    {
+                        OldHealths[instanceAllPlayer.PlayerName] = Math.Clamp(HealthSystem.Instance.GetHealth(instanceAllPlayer.PlayerId), 1, 999999);
+                    }
+                }
+
+                if (GUILayout.Button("Load Old Health"))
+                {
+                    foreach (var instanceAllPlayer in GameData.Instance.AllPlayers)
+                    {
+                        if (OldHealths.TryGetValue(instanceAllPlayer.PlayerName, out var health))
+                        {
+                            HealthSystem.Instance.SetHealth(instanceAllPlayer.PlayerId, health);
+                        }
+                    }
+                }
+                
+                AllowDeath = GUILayout.Toggle(AllowDeath, "Allow Death When Changing Health");
 
                 List<(byte playerId, int newHealth)> list = new();
                 var system = HealthSystem.Instance!;
                 foreach (var (pid, health) in system.PlayerHealths)
                 {
                     GUILayout.Label(GameData.Instance.GetPlayerById(pid).PlayerName);
-                    var newHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(health, 0, HealthSystem.MaxHealth));
-                    if (newHealth != health) list.Add((pid, newHealth));
+                    var newHealth = Mathf.RoundToInt(GUILayout.HorizontalSlider(health, 0, HealthSystem.Instance.GetMaxHealth(pid)));
+                    if (newHealth != health) list.Add((pid, AllowDeath ? newHealth : Math.Clamp(newHealth, 1, int.MaxValue)));
                 }
 
                 foreach (var (playerId, newHealth) in list)

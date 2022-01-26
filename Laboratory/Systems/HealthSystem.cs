@@ -76,9 +76,11 @@ public class HealthSystem : Object, ICustomSystemType
 
         foreach (var playerInfo in PlayerControl.AllPlayerControls)
         {
-            SetHealth(playerInfo.PlayerId, MaxHealth);
+            SetHealth(playerInfo.PlayerId, GetMaxHealth(playerInfo.PlayerId));
         }
     }
+
+    public int GetMaxHealth(byte playerId) => MaxHealth;
 
     [HideFromIl2Cpp]
     internal Dictionary<byte, int> PlayerHealths { get; } = new();
@@ -92,7 +94,7 @@ public class HealthSystem : Object, ICustomSystemType
     {
         var data = GameData.Instance.GetPlayerById(playerId);
         var oldHealth = GetHealth(playerId);
-        var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, MaxHealth);
+        var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, GetMaxHealth(playerId));
         IsDirty = true;
 
         if (data != null && data.Object)
@@ -127,7 +129,7 @@ public class HealthSystem : Object, ICustomSystemType
     /// <returns></returns>
     public int GetHealth(byte playerId)
     {
-        if (!PlayerHealths.ContainsKey(playerId)) return PlayerHealths[playerId] = MaxHealth;
+        if (!PlayerHealths.ContainsKey(playerId)) return PlayerHealths[playerId] = GetMaxHealth(playerId);
         return PlayerHealths[playerId];
     }
 

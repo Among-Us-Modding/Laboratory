@@ -41,7 +41,19 @@ public class ProgressSystem : Object, ICustomSystemType
 
     public float Timer { get; set; }
     public bool IsDirty { get; set; }
+    
+    private bool _shouldRun = true;
+    public bool ShouldRun
+    {
+        get => _shouldRun;
+        set
+        {
+            _shouldRun = value;
+            IsDirty = true;
+        }
+    }
 
+    
     private float _totalTime = -1;
     public float TotalTime => _totalTime < 0 ? _totalTime = Stages.Sum() : _totalTime;
 
@@ -67,7 +79,7 @@ public class ProgressSystem : Object, ICustomSystemType
     
     public void Detoriorate(float deltaTime)
     {
-        Timer += deltaTime;
+        if (ShouldRun) Timer += deltaTime;
         Timer = Mathf.Clamp(Timer, 0, TotalTime);
         if (!AmongUsClient.Instance.AmHost) return;
         float sum = 0;
@@ -85,6 +97,7 @@ public class ProgressSystem : Object, ICustomSystemType
     {
         writer.Write((byte)Stage);
         writer.Write(Timer);
+        writer.Write(ShouldRun);
         IsDirty = false;
     }
 
@@ -92,6 +105,7 @@ public class ProgressSystem : Object, ICustomSystemType
     {
         Stage = reader.ReadByte();
         Timer = reader.ReadSingle();
+        ShouldRun = reader.ReadBoolean();
     }
 
     public void RepairDamage(PlayerControl player, byte amount)
