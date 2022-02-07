@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Laboratory.Extensions;
+using Reactor;
+using Reactor.Extensions;
 using UnityEngine;
 
 namespace Laboratory.CustomMap;
@@ -58,8 +60,10 @@ public static class SpriteSwapper
 
             foreach (var groundSprite in sprites.Where(s => s.name.Contains("Ground")))
             {
+                GameObject.Find("NewMapGround")?.Destroy();
+                
                 var background = ShipStatus.Instance.transform.Find("Background");
-                var ground = new GameObject() { layer = 9, name = "Ground" }.transform;
+                var ground = new GameObject() { layer = 9, name = "NewMapGround" }.transform;
                 ground.parent = background;
                 ground.localPosition = new Vector3(19.97f, -13.5f, z);
                 ground.localScale = new Vector3(0.3915f, 0.3915f, 1f);
@@ -77,9 +81,11 @@ public static class SpriteSwapper
             var groundSprite = sprites.FirstOrDefault(s => s.name.Contains("SkeldFloor"));
             if (groundSprite)
             {
+                GameObject.Find("NewMapGround")?.Destroy();
+
                 var background = ShipStatus.Instance.transform.Find("Hull2");
                 background.GetComponent<MeshRenderer>().enabled = false;
-                var ground = new GameObject() { layer = 9, name = "Ground" }.transform;
+                var ground = new GameObject() { layer = 9, name = "NewMapGround" }.transform;
                 ground.parent = background;
                 ground.localPosition = new Vector3(10.64f, -8.46f, -0.001f);
                 ground.localScale = new Vector3(0.1644f, 0.1644f, 1f);

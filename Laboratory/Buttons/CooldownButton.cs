@@ -53,7 +53,8 @@ public class CooldownButton : MonoBehaviour
         // TextMeshPro
         TimerText = Instantiate(HudManager.Instance.KillButton.TimerText, buttonObj.transform);
         TimerText.transform.localPosition = new Vector3(0, 0.07f, -0.001f);
-            
+        TimerText.gameObject.SetActive(true);
+        
         // AspectPosition
         Aspect = buttonObj.AddComponent<AspectPosition>();
         Aspect.parentCam = HudManager.Instance.UICamera;
