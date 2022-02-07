@@ -22,11 +22,11 @@ public static class KeyboardJoystick_Update_Patch
         if (player.AmOwner)
         {
             HudManager.Instance.FullScreen.enabled = false;
-            var camTransform = Camera.main!.transform;
-            for (var i = 4; i < camTransform.childCount; i++) camTransform.GetChild(i).gameObject.Destroy();
             CameraZoomController.Instance!.OrthographicSize = 3;
             HudManager.Instance.PlayerCam.Target = player;
             HudManager.Instance.PlayerCam.Locked = false;
+            var camTransform = Camera.main!.transform;
+            for (var i = 5; i < camTransform.childCount; i++) camTransform.GetChild(i).gameObject.Destroy();
         }
 
         var playerEffectManager = player.GetEffectManager();
@@ -34,10 +34,10 @@ public static class KeyboardJoystick_Update_Patch
         Moveable.Clear(player);
         Visible.Clear(player);
         SpeedModifier.Clear(player.MyPhysics);
+        SizeModifer.Clear(player.MyPhysics);
         player.moveable = true;
         player.Visible = true;
         player.Collider.enabled = true;
-        player.transform.localScale = new Vector3(0.7f, 0.7f, 1);
         player.transform.localEulerAngles = Vector3.zero;
         HudManager.Instance.SetHudActive(true);
     }
