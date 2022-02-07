@@ -52,7 +52,7 @@ public static class SpriteSwapper
 
     public static void CreateGround(List<Sprite> sprites)
     {
-        if (ShipStatus.Instance.TryCast<PolusShipStatus>())
+        if (ShipStatus.Instance.Type == ShipStatus.MapType.Pb)
         {
             var z = -1f;
 
@@ -72,7 +72,7 @@ public static class SpriteSwapper
             return;
         }
 
-        if (ShipStatus.Instance.TryCast<SkeldShipStatus>())
+        if (ShipStatus.Instance.Type == ShipStatus.MapType.Ship)
         {
             var groundSprite = sprites.FirstOrDefault(s => s.name.Contains("SkeldFloor"));
             if (groundSprite)
