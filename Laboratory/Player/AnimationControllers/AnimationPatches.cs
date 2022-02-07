@@ -3,6 +3,7 @@ using HarmonyLib;
 using Laboratory.Extensions;
 using Laboratory.Player.Managers;
 using PowerTools;
+using Reactor;
 using UnityEngine;
 
 namespace Laboratory.Player.AnimationControllers;
@@ -30,7 +31,7 @@ internal static class AnimationPatches
         return original;
     }
 
-    public static AnimationClip GetOriginalClip(PlayerManager playerManager, AnimationClip changed)
+    public static AnimationClip? GetOriginalClip(PlayerManager playerManager, AnimationClip? changed)
     {
         if (!changed) return changed;
 
@@ -56,7 +57,7 @@ internal static class AnimationPatches
     // SpriteAnim.GetCurrentAnimation is too short to patch
     // Imagine this is a prefix which is enabled before PlayerPhysics.HandleAnimation and disabled afterwards
     // As such we will just call this in the reimplemented version of HandleAnimation as would be done in a postfix
-    public static void GetCurrentAnimationPatch(SpriteAnim __instance, ref AnimationClip __result)
+    public static void GetCurrentAnimationPatch(SpriteAnim __instance, ref AnimationClip? __result)
     {
         if (__result == null) return;
 
@@ -68,7 +69,7 @@ internal static class AnimationPatches
         
         // This ensures that when a custom animation finishes it will allow the normal animation cycle to continue
         var actuallyPlaying = __instance.Clip is {isLooping: true} || __instance.IsPlaying();
-        __result = actuallyPlaying && playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.ClimbAnim : GetOriginalClip(playerManager, __result);
+        __result = actuallyPlaying ? playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.ClimbAnim : GetOriginalClip(playerManager, __result) : null;
     }
 
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
@@ -81,7 +82,7 @@ internal static class AnimationPatches
         }
 
         Vector2 velocity = __instance.body.velocity;
-        AnimationClip currentAnimation = __instance.Animator.GetCurrentAnimation();
+        AnimationClip? currentAnimation = __instance.Animator.GetCurrentAnimation();
         // PATCH START
         // Here we image that we are running GetCurrentAnimationPatch as a postifx patch for GetCurrentAnimation
         GetCurrentAnimationPatch(__instance.Animator, ref currentAnimation);
@@ -90,7 +91,7 @@ internal static class AnimationPatches
         {
             return false;
         }
-
+        
         if (!amDead)
         {
             if (velocity.sqrMagnitude >= 0.05f)
