@@ -34,7 +34,6 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
                 if (current == GlobalEffectManager.Instance!.PrimaryEffect)
                 {
                     Logger<LaboratoryPlugin>.Error("You cannot set a player's effect during a primary global effect");
-                    _dontAwake = true;
                     return;
                 }
                 current.Cancel();
@@ -54,14 +53,12 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
         Rpc<RpcAddEffect>.Instance.Send(new RpcAddEffect.EffectInfo(this, effect, primary), true);
     }
 
-    private bool _dontAwake = false;
-
     [HideFromIl2Cpp]
     public void AddEffect(IEffect? effect, bool primary)
     {
         if (primary) PrimaryEffect = effect;
 
-        if (effect != null && !_dontAwake)
+        if (PrimaryEffect == effect && effect != null)
         {
             if (effect is IPlayerEffect playerEffect)
             {
@@ -71,8 +68,6 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
             effect.Awake();
             Effects.Add(effect);
         }
-
-        _dontAwake = false;
     }
 
     [HideFromIl2Cpp]
