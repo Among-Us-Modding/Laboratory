@@ -31,7 +31,6 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
             var current = PrimaryEffect;
             if (current is not null)
             {
-                if (current == GlobalEffectManager.Instance!.PrimaryEffect) throw new InvalidOperationException("You cannot set a player's effect during a primary global effect");
                 current.Cancel();
                 RemoveEffect(current);
             }
@@ -52,6 +51,12 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void AddEffect(IEffect? effect, bool primary)
     {
+        if (PrimaryEffect == GlobalEffectManager.Instance!.PrimaryEffect && effect != null)
+        {
+            effect.Timer = -1;
+            return;
+        }
+        
         if (primary) PrimaryEffect = effect;
 
         if (effect != null)
