@@ -8,8 +8,9 @@ namespace Laboratory.Effects.DefaultEffects;
 public abstract class CoroutineEffect : IPlayerEffect
 {
     public float Timer { get; set; } = 1;
-    public PlayerManager Owner { get; set; }
-    public Coroutine EffectRoutine { get; set; }
+    public PlayerManager Owner { get; set; } = null!;
+    public Coroutine EffectRoutine { get; set; } = null!;
+    
     public virtual void Awake()
     {
         EffectRoutine = Owner.StartCoroutine(CoEffect());
