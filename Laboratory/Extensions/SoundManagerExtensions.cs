@@ -29,6 +29,12 @@ public static class SoundManagerExtensions
     {
         void PointSoundFunc(AudioSource source, float dt)
         {
+            if (trns == null || trns.WasCollected)
+            {
+                source.Stop();
+                return;
+            } 
+            
             var distance = Vector2.Distance(trns.position, PlayerControl.LocalPlayer.GetTruePosition());
             var maxDist = 4;
             if (distance > maxDist)
