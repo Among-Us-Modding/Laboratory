@@ -59,16 +59,14 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
         
         if (primary) PrimaryEffect = effect;
 
-        if (effect != null)
+        if (effect == null) return;
+        if (effect is IPlayerEffect playerEffect)
         {
-            if (effect is IPlayerEffect playerEffect)
-            {
-                playerEffect.Owner = Manager;
-            }
-
-            effect.Awake();
-            Effects.Add(effect);
+            playerEffect.Owner = Manager;
         }
+
+        effect.Awake();
+        Effects.Add(effect);
     }
 
     [HideFromIl2Cpp]
