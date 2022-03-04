@@ -30,7 +30,7 @@ public partial class LaboratoryPlugin : BasePlugin
     /// </summary>
     public List<ServerInfo> Regions { get; } = new()
     {
-        new ServerInfo("Modded", "3.80.231.147", 22023),
+        new ServerInfo("Modded", "129.153.90.167", 22023),
     };
 
     public static LaboratoryPlugin Instance => PluginSingleton<LaboratoryPlugin>.Instance;
