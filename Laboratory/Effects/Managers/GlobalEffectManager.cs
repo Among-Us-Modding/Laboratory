@@ -16,6 +16,8 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
 
     public static GlobalEffectManager? Instance { get; set; }
 
+    public static List<PlayerEffectManager> PlayerEffectManagers { get; } = new();
+
     private IEffect? _primaryEffect;
 
     [HideFromIl2Cpp]
@@ -24,6 +26,8 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
         get => _primaryEffect;
         set
         {
+            foreach (var playerEffectManager in PlayerEffectManagers) playerEffectManager.PrimaryEffect = null;
+
             var current = PrimaryEffect;
             if (current is not null)
             {

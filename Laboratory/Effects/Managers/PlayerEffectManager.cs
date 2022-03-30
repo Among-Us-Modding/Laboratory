@@ -51,7 +51,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void AddEffect(IEffect? effect, bool primary)
     {
-        if (PrimaryEffect == GlobalEffectManager.Instance!.PrimaryEffect && effect != null)
+        if (primary && PrimaryEffect != null && PrimaryEffect == GlobalEffectManager.Instance!.PrimaryEffect && effect != null)
         {
             effect.Timer = -1;
             return;
@@ -90,6 +90,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     private void Start()
     {
         Manager = this.GetPlayerManager();
+        GlobalEffectManager.PlayerEffectManagers.Add(this);
     }
 
     private void FixedUpdate()
@@ -121,5 +122,6 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     private void OnDestroy()
     {
         foreach (var effect in Effects) effect.Cancel();
+        GlobalEffectManager.PlayerEffectManagers.Remove(this);
     }
 }

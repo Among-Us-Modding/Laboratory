@@ -1,6 +1,7 @@
 using System.Collections;
 using BepInEx.IL2CPP.Utils;
 using Laboratory.Player.Managers;
+using Reactor;
 using UnityEngine;
 
 namespace Laboratory.Effects.DefaultEffects;
