@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Laboratory.Extensions;
+using Il2CppInterop.Runtime.Attributes;
 using Laboratory.Player.Attributes;
+using Laboratory.Player.Extensions;
 using Laboratory.Player.Managers;
-using Reactor;
-using Reactor.Networking;
-using UnhollowerBaseLib.Attributes;
+using Reactor.Networking.Rpc;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 
 namespace Laboratory.Effects.Managers;
@@ -20,15 +20,15 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public PlayerManager Manager { get; private set; } = null!;
 
-    private IEffect? _primaryEffect;
+    private IEffect _primaryEffect;
 
     [HideFromIl2Cpp]
-    public IEffect? PrimaryEffect
+    public IEffect PrimaryEffect
     {
         get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? _primaryEffect : _primaryEffect;
         set
         {
-            IEffect? current = PrimaryEffect;
+            IEffect current = PrimaryEffect;
             if (current is not null)
             {
                 current.Cancel();
@@ -43,13 +43,13 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     public List<IEffect> Effects { get; } = new();
 
     [HideFromIl2Cpp]
-    public void RpcAddEffect(IEffect? effect, bool primary = false)
+    public void RpcAddEffect(IEffect effect, bool primary = false)
     {
         Rpc<RpcAddEffect>.Instance.Send(new RpcAddEffect.EffectInfo(this, effect, primary), true);
     }
 
     [HideFromIl2Cpp]
-    public void AddEffect(IEffect? effect, bool primary)
+    public void AddEffect(IEffect effect, bool primary)
     {
         if (primary && PrimaryEffect != null && PrimaryEffect == GlobalEffectManager.Instance!.PrimaryEffect && effect != null)
         {
@@ -81,7 +81,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void ClearEffects()
     {
-        foreach (IEffect? effect in new List<IEffect>(Effects))
+        foreach (IEffect effect in new List<IEffect>(Effects))
         {
             RemoveEffect(effect);
         }
@@ -95,24 +95,24 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
 
     private void FixedUpdate()
     {
-        foreach (IEffect? effect in Effects) effect.FixedUpdate();
+        foreach (IEffect effect in Effects) effect.FixedUpdate();
     }
 
     private void Update()
     {
-        foreach (IEffect? effect in Effects) effect.Update();
+        foreach (IEffect effect in Effects) effect.Update();
     }
 
     private void LateUpdate()
     {
         List<IEffect> effects = new();
-        foreach (IEffect? effect in Effects)
+        foreach (IEffect effect in Effects)
         {
             effect.LateUpdate();
             if (effect.Timer < 0) effects.Add(effect);
         }
 
-        foreach (IEffect? effect in effects)
+        foreach (IEffect effect in effects)
         {
             if (_primaryEffect == effect) _primaryEffect = null;
             RemoveEffect(effect);
@@ -121,7 +121,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
 
     private void OnDestroy()
     {
-        foreach (IEffect? effect in Effects) effect.Cancel();
+        foreach (IEffect effect in Effects) effect.Cancel();
         GlobalEffectManager.PlayerEffectManagers.Remove(this);
     }
 }

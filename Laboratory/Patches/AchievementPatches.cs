@@ -27,7 +27,6 @@ public class AchievementPatches
     {
         public static bool Prefix() => false;
     }
-    //
 
     [HarmonyPatch(typeof(AchievementManager), nameof(AchievementManager.OnTaskComplete))]
     public static class AchievementManager_OnTaskComplete_Patch

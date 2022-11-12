@@ -1,3 +1,4 @@
+using Laboratory.Effects.Managers;
 using Laboratory.Extensions;
 using Laboratory.Player.AnimationControllers;
 using Laboratory.Player.Managers;

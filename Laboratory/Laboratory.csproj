@@ -25,9 +25,6 @@
         </None>
         
         <None Update="packages.lock.json" Visible="false" />
-
-        <Compile Remove="_old\**" />
-        <None Include="_old\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,5 +33,9 @@
         <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.0.1" PrivateAssets="all" />
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.662" />
         <PackageReference Include="Reactor" Version="2.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Effects\Utils" />
     </ItemGroup>
 </Project>

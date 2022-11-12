@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Laboratory.Utils;
-using Reactor;
+using Laboratory.Utilities;
+using Reactor.Utilities.Attributes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,11 +29,11 @@ public class CooldownButton : MonoBehaviour
 
     public CooldownButton(IntPtr ptr) : base(ptr) { }
 
-    public SpriteRenderer? Renderer;
-    public TextMeshPro? TimerText;
-    public AspectPosition? Aspect;
-    public PassiveButton? Button;
-    public Action? OnClickAction;
+    public SpriteRenderer Renderer;
+    public TextMeshPro TimerText;
+    public AspectPosition Aspect;
+    public PassiveButton Button;
+    public Action OnClickAction;
         
     public float CurrentTime;
     public float Cooldown;
@@ -51,7 +51,7 @@ public class CooldownButton : MonoBehaviour
         Renderer.material = new Material(Shader.Find("Unlit/CooldownShader"));
             
         // TextMeshPro
-        TimerText = Instantiate(HudManager.Instance.KillButton.TimerText, buttonObj.transform);
+        TimerText = Instantiate(HudManager.Instance.KillButton.cooldownTimerText, buttonObj.transform);
         TimerText.transform.localPosition = new Vector3(0, 0.07f, -0.001f);
         TimerText.gameObject.SetActive(true);
         
@@ -60,7 +60,7 @@ public class CooldownButton : MonoBehaviour
         Aspect.parentCam = HudManager.Instance.UICamera;
             
         // PassiveButton
-        BoxCollider2D? buttonColl = buttonObj.AddComponent<BoxCollider2D>();
+        BoxCollider2D buttonColl = buttonObj.AddComponent<BoxCollider2D>();
         buttonColl.size = new Vector2(1.15f, 1.15f);
 
         Button = buttonObj.AddComponent<PassiveButton>();
@@ -130,7 +130,7 @@ public class CooldownButton : MonoBehaviour
 
     public void SetSprite(string spriteName, float ppu = 100) => SetSprite(AssetManager.LoadSprite(spriteName, ppu));
 
-    public void SetSprite(Sprite? sprite)
+    public void SetSprite(Sprite sprite)
     {
         Renderer!.sprite = sprite;
         // ReSharper disable once InvokeAsExtensionMethod
@@ -158,7 +158,7 @@ public class CooldownButton : MonoBehaviour
     {
         if (!ShipStatus.Instance) return false;
         if (!HudManager.Instance.UseButton.gameObject.active) return false;
-        PlayerControl? localPlayer = PlayerControl.LocalPlayer;
+        PlayerControl localPlayer = PlayerControl.LocalPlayer;
         if (!localPlayer || localPlayer.Data == null) return false;
         if (localPlayer.Data.IsDead) return false;
         return true;

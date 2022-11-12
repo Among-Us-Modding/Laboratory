@@ -1,6 +1,5 @@
-using System.Linq;
 using HarmonyLib;
-using UnhollowerBaseLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
 namespace Laboratory.Patches;
@@ -8,15 +7,6 @@ namespace Laboratory.Patches;
 [HarmonyPatch]
 internal static class GameSettingsPatches
 {
-    [HarmonyPatch(typeof(CustomPlayerMenu), nameof(CustomPlayerMenu.Start))]
-    [HarmonyPostfix]
-    public static void HideLobbyStoreButtonPatch(CustomPlayerMenu __instance)
-    {
-        __instance.GetComponentsInChildren<PassiveButton>(true)
-            .Where(t => t.name == "StoreButton")
-            .Do(t => t.gameObject.SetActive(false));
-    }
-    
     [HarmonyPatch(typeof(OptionBehaviour), nameof(OptionBehaviour.SetAsPlayer))]
     [HarmonyPrefix]
     public static bool DisableOptionsWhenNotHostPatch(OptionBehaviour __instance)

@@ -16,7 +16,7 @@ internal static class FancyShadowsPatches
         int screenHeight = Screen.height;
         if (screenWidth != PreviousScreenResolution.width || screenHeight != PreviousScreenResolution.height)
         {
-            Camera? shadowCamera = __instance.PlayerCam.GetComponentInChildren<ShadowCamera>().GetComponent<Camera>();
+            Camera shadowCamera = __instance.PlayerCam.GetComponentInChildren<ShadowCamera>().GetComponent<Camera>();
 
             if (!shadowCamera) return;
                 

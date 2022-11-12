@@ -1,4 +1,5 @@
 using System;
+using Laboratory.Effects.Managers;
 using Laboratory.Player.Extensions;
 using Reactor.Utilities.Attributes;
 using UnityEngine;

@@ -1,7 +1,7 @@
 using System;
 using HarmonyLib;
 using Laboratory.Extensions;
-using Reactor;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,14 +10,14 @@ namespace Laboratory.Patches;
 [HarmonyPatch]
 internal static class ModStampPatches
 {
-    public static ModStampManager? StampManager { get; private set; }
+    public static ModStampManager StampManager { get; private set; }
 
     public static Vector3 ComputeStampPosition(ModManager __instance)
     {
         if (!StampManager) StampManager = __instance.gameObject.EnsureComponent<ModStampManager>();
 
         float z = __instance.localCamera.nearClipPlane + 0.1f;
-        string? sceneName = SceneManager.GetActiveScene().name;
+        string sceneName = SceneManager.GetActiveScene().name;
         switch (sceneName)
         {
             case "Tutorial":
@@ -59,7 +59,7 @@ public class ModStampManager : MonoBehaviour
     {
     }
 
-    private ModManager? ModManager { get; set; }
+    private ModManager ModManager { get; set; }
 
     private void Awake()
     {

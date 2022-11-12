@@ -3,13 +3,13 @@ using Hazel;
 using InnerNet;
 using Laboratory.Effects.Managers;
 using Laboratory.Enums;
-using Laboratory.Extensions;
-using Reactor;
-using Reactor.Networking;
+using Laboratory.Player.Extensions;
+using Reactor.Networking.Attributes;
+using Reactor.Networking.Rpc;
 
 namespace Laboratory.Effects;
 
-[RegisterCustomRpc((uint)CustomRpcs.AddEffect)]
+[RegisterCustomRpc((uint)CustomRPCs.AddEffect)]
 public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.EffectInfo>
 {
     public RpcAddEffect(LaboratoryPlugin plugin, uint id) : base(plugin, id)
@@ -19,10 +19,10 @@ public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.Effec
     public readonly struct EffectInfo
     {
         public readonly IEffectManager EffectManager;
-        public readonly IEffect? Effect;
+        public readonly IEffect Effect;
         public readonly bool IsPrimary;
 
-        public EffectInfo(IEffectManager effectManager, IEffect? effect, bool isPrimary)
+        public EffectInfo(IEffectManager effectManager, IEffect effect, bool isPrimary)
         {
             EffectManager = effectManager;
             Effect = effect;
@@ -59,8 +59,8 @@ public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.Effec
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        string? effectName = reader.ReadString();
-        IEffect? effect = null;
+        string effectName = reader.ReadString();
+        IEffect effect = null;
         if (effectName != "null") effect = (IEffect) Activator.CreateInstance(Type.GetType(effectName)!);
 
         bool isPrimary = reader.ReadBoolean();

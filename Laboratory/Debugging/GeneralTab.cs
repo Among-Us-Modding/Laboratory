@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Laboratory.Systems;
 using Laboratory.Systems.DefaultSystems;
+using Laboratory.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Debugging;
@@ -15,12 +15,11 @@ public class GeneralTab : BaseDebugTab
 
     public override void BuildUI()
     {
-        // TODO
-        // if (CameraZoomController.Instance != null)
-        // {
-        //     GUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
-        //     CameraZoomController.Instance.OrthographicSize = GUILayout.HorizontalSlider(CameraZoomController.Instance.OrthographicSize, 1f, 24f);
-        // }
+        if (CameraZoomController.Instance != null)
+        {
+            GUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
+            CameraZoomController.Instance.OrthographicSize = GUILayout.HorizontalSlider(CameraZoomController.Instance.OrthographicSize, 1f, 24f);
+        }
 
         if (ProgressSystem.Instance != null)
         {

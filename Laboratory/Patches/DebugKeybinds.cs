@@ -1,13 +1,13 @@
 ﻿using System;
 using HarmonyLib;
 using Laboratory.Effects.Managers;
-using Laboratory.Effects.Utils;
 using Laboratory.Enums;
-using Laboratory.Extensions;
-using Laboratory.HudMap;
+using Laboratory.HUDMap;
 using Laboratory.Player;
-using Reactor.Extensions;
-using Reactor.Networking.MethodRpc;
+using Laboratory.Player.Extensions;
+using Laboratory.Utilities;
+using Reactor.Networking.Attributes;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
 namespace Laboratory.Patches;
@@ -15,7 +15,7 @@ namespace Laboratory.Patches;
 [HarmonyPatch(typeof(KeyboardJoystick), nameof(KeyboardJoystick.Update))]
 public static class KeyboardJoystick_Update_Patch
 {
-    [MethodRpc((uint)CustomRpcs.HardReset)]
+    [MethodRpc((uint)CustomRPCs.HardReset)]
     public static void HardReset(PlayerControl player)
     {
         if (player.AmOwner)
@@ -24,11 +24,11 @@ public static class KeyboardJoystick_Update_Patch
             CameraZoomController.Instance!.OrthographicSize = 3;
             HudManager.Instance.PlayerCam.Target = player;
             HudManager.Instance.PlayerCam.Locked = false;
-            Transform? camTransform = Camera.main!.transform;
+            Transform camTransform = Camera.main!.transform;
             for (int i = 5; i < camTransform.childCount; i++) camTransform.GetChild(i).gameObject.Destroy();
         }
 
-        PlayerEffectManager? playerEffectManager = player.GetEffectManager();
+        PlayerEffectManager playerEffectManager = player.GetEffectManager();
         playerEffectManager.ClearEffects();
         Moveable.Clear(player);
         Visible.Clear(player);
@@ -41,7 +41,7 @@ public static class KeyboardJoystick_Update_Patch
         HudManager.Instance.SetHudActive(true);
     }
 
-    [MethodRpc((uint)CustomRpcs.ResetMovement)]
+    [MethodRpc((uint)CustomRPCs.ResetMovement)]
     public static void ResetMovement(PlayerControl player)
     {
         player.Collider.enabled = true;
@@ -52,7 +52,7 @@ public static class KeyboardJoystick_Update_Patch
         player.NetTransform.enabled = true;
     }
 
-    [MethodRpc((uint)CustomRpcs.EndGame)]
+    [MethodRpc((uint)CustomRPCs.EndGame)]
     public static void RpcEndGame(PlayerControl player)
     {
         if (AmongUsClient.Instance.AmHost)
@@ -104,7 +104,7 @@ public static class KeyboardJoystick_Update_Patch
                 PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
                 map.ColorControl.SetColor(new Color32(158, 240, 103, 255));
                 DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-                CustomMapBehaviour? customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
+                CustomMapBehaviour customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
                 customMapBehaviour.ShowAllPlayers();
                 customMapBehaviour.MouseUpEvent += MouseUpEvent;
             }));

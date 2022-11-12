@@ -1,6 +1,6 @@
 using HarmonyLib;
 using Laboratory.Effects.Managers;
-using Laboratory.Effects.Utils;
+using Laboratory.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Effects.Patches;

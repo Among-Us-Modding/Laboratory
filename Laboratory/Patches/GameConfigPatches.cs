@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using BepInEx.IL2CPP.Utils.Collections;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
+using Laboratory.Config;
 using UnityEngine;
 
 namespace Laboratory.Patches;
@@ -31,14 +32,14 @@ internal static class GameConfigPatches
         return !GameConfig.DisableMeetings;
     }
 
-    [HarmonyPatch(typeof(KillButtonManager), nameof(KillButtonManager.PerformKill))]
+    [HarmonyPatch(typeof(KillButton), nameof(KillButton.DoClick))]
     [HarmonyPrefix]
     public static bool PerformKillPatch()
     {
         return !GameConfig.DisableKillButton;
     }
 
-    [HarmonyPatch(typeof(KillButtonManager), nameof(KillButtonManager.SetTarget))]
+    [HarmonyPatch(typeof(KillButton), nameof(KillButton.SetTarget))]
     [HarmonyPrefix]
     public static bool SetTargetPatch()
     {
@@ -96,25 +97,25 @@ internal static class GameConfigPatches
             return true;
         }
 
-        __result = CoShowIntro(__instance, yourTeam).WrapToIl2Cpp();
+        __result = CoShowIntro(__instance).WrapToIl2Cpp();
         return false;
     }
 
 
-    private static IEnumerator CoShowIntro(HudManager hudManager, List<PlayerControl> yourTeam)
+    private static IEnumerator CoShowIntro(HudManager hudManager)
     {
         while (!ShipStatus.Instance)
         {
             yield return null;
         }
 
-        hudManager.isIntroDisplayed = true;
+        hudManager.IsIntroDisplayed = true;
         DestroyableSingleton<HudManager>.Instance.FullScreen.transform.SetLocalZ(-250f);
         PlayerControl.LocalPlayer.SetKillTimer(10f);
         ShipStatus.Instance.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>().ForceSabTime(10f);
         yield return ShipStatus.Instance.PrespawnStep();
         yield return hudManager.CoFadeFullScreen(Color.black, Color.clear);
         DestroyableSingleton<HudManager>.Instance.FullScreen.transform.SetLocalZ(-500f);
-        hudManager.isIntroDisplayed = false;
+        hudManager.IsIntroDisplayed = false;
     }
 }

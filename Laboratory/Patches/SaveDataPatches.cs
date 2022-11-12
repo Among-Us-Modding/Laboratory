@@ -27,14 +27,7 @@ internal static class SaveDataPatches
         __result = Path.Combine(__result, LaboratoryPlugin.Instance.AppDataSubFolderName);
     }
     
-    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.SavePlayerPrefs))]
-    [HarmonyPrefix]
-    public static void SavePlayerPrefsPatch()
-    {
-        if (SaveManager.lastLanguage == uint.MaxValue) SaveManager.lastLanguage = 0;
-    }
-    
-    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.GetPurchase))]
+    [HarmonyPatch(typeof(PlayerPurchasesData), nameof(PlayerPurchasesData.GetPurchase))]
     [HarmonyPrefix]
     public static bool GetPurchasePatch(out bool __result)
     {
@@ -42,23 +35,9 @@ internal static class SaveDataPatches
         return false;
     }
         
-    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.SetPurchased))]
+    [HarmonyPatch(typeof(PlayerPurchasesData), nameof(PlayerPurchasesData.SetPurchased))]
     [HarmonyPrefix]
     public static bool SetPurchasedPatch()
-    {
-        return false;
-    }
-    
-    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.LoadSecureData))]
-    [HarmonyPrefix]
-    public static bool LoadSecureDataPatch()
-    {
-        return false;
-    }
-    
-    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.SaveSecureData))]
-    [HarmonyPrefix]
-    public static bool SaveSecureDataPatch()
     {
         return false;
     }

@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
-using BepInEx.IL2CPP.Utils.Collections;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
+using Il2CppInterop.Runtime.Attributes;
 using Laboratory.Effects;
-using Reactor;
-using UnhollowerBaseLib.Attributes;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 
 namespace Laboratory.Buttons;
@@ -13,8 +13,8 @@ public class EffectButton : CooldownButton
 {
     public EffectButton(IntPtr ptr) : base(ptr) { }
 
-    public IEffect? Effect;
-    public Coroutine? EffectRoutine;
+    public IEffect Effect;
+    public Coroutine EffectRoutine;
         
     public override void PerformClick()
     {
@@ -47,11 +47,10 @@ public class EffectButton : CooldownButton
         {
             CurrentTime = int.MaxValue;
             TimerText!.text = Mathf.CeilToInt(Effect.Timer).ToString();
-            Color lerpedColor;
-            if (Effect.Timer / duration < 0.5) lerpedColor = Color.Lerp(new Color32(255, 0, 0, 255), new Color32(255, 242, 0, 255), (Effect.Timer / duration) * 2);
-            else lerpedColor = Color.Lerp(new Color32(255, 242, 0, 255), new Color32(30, 150, 0, 255), ((Effect.Timer / duration) - 0.5f) * 2);
+            TimerText.color = Effect.Timer / duration < 0.5 
+                ? Color.Lerp(new Color32(255, 0, 0, 255), new Color32(255, 242, 0, 255), (Effect.Timer / duration) * 2) 
+                : Color.Lerp(new Color32(255, 242, 0, 255), new Color32(30, 150, 0, 255), ((Effect.Timer / duration) - 0.5f) * 2);
 
-            TimerText.color = lerpedColor;
             yield return null;
         }
 

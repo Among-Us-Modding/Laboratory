@@ -1,9 +1,9 @@
 using System;
-using Reactor;
-using UnhollowerBaseLib.Attributes;
+using Il2CppInterop.Runtime.Attributes;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 
-namespace Laboratory.Effects.Utils;
+namespace Laboratory.Utilities;
 
 /// <summary>
 /// Camera allowing for zooming while in game without interacting with other Hud elements
@@ -14,16 +14,16 @@ public class CameraZoomController : MonoBehaviour
     /// <summary>
     /// Current instance of the CameraZoomController
     /// </summary>
-    public static CameraZoomController? Instance { get; set; }
+    public static CameraZoomController Instance { get; set; }
         
     public CameraZoomController(IntPtr ptr) : base(ptr) { }
 
     /// <summary>
     /// Zoom controller's camera
     /// </summary>
-    public Camera? Cam { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+    public Camera Cam { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
         
-    private ShadowCollab? ShadowCollab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+    private ShadowCollab ShadowCollab { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
         
     /// <summary>
     /// Orthographic size of the zoom camera

@@ -1,7 +1,7 @@
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Reactor.Extensions;
+using Reactor.Utilities.Extensions;
 
 namespace Laboratory.Patches;
 
@@ -12,7 +12,7 @@ internal static class CustomServerPatches
     [HarmonyPrefix]
     public static bool LoadServersPatch(ServerManager __instance)
     {
-        Il2CppReferenceArray<IRegionInfo>? regions = ServerManager.DefaultRegions = __instance.AvailableRegions = LaboratoryPlugin.Instance.Regions.Select(s =>
+        Il2CppReferenceArray<IRegionInfo> regions = ServerManager.DefaultRegions = __instance.AvailableRegions = LaboratoryPlugin.Instance.Regions.Select(s =>
         {
             return new StaticRegionInfo(s.Name, StringNames.NoTranslation, s.Ip, new[]
             {
@@ -20,13 +20,13 @@ internal static class CustomServerPatches
             }).Cast<IRegionInfo>();
         }).ToArray();
 
-        IRegionInfo? currentRegion = __instance.CurrentRegion = regions.First();
-        __instance.CurrentServer = currentRegion.Servers.Random();
+        IRegionInfo currentRegion = __instance.CurrentRegion = regions.First();
+        __instance.CurrentUdpServer = currentRegion.Servers.Random();
 
         return false;
     }
     
-    [HarmonyPatch(typeof(AuthManager._CoWaitForNonce_d__5), nameof(AuthManager._CoWaitForNonce_d__5.MoveNext))]
+    [HarmonyPatch(typeof(AuthManager._CoWaitForNonce_d__6), nameof(AuthManager._CoWaitForNonce_d__6.MoveNext))]
     [HarmonyPrefix]
     public static bool CoWaitForNoncePatch(out bool __result)
     {
