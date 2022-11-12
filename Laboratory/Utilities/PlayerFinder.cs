@@ -11,11 +11,11 @@ public static class PlayerFinder
     public static Predicate<PlayerControl> Crewmate { get; } = player => !player.Data.Role.IsImpostor;
     public static Predicate<PlayerControl> Impostor { get; } = player => player.Data.Role.IsImpostor;
 
-    public static PlayerControl? FindPlayer(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
+    public static PlayerControl FindPlayer(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
     {
-        PlayerControl? current = null;
+        PlayerControl current = null;
 
-        foreach (PlayerControl? player in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl player in PlayerControl.AllPlayerControls)
         {
             if (filters.Any(filter => !filter(player))) continue;
 
@@ -30,12 +30,12 @@ public static class PlayerFinder
         return current;
     }
 
-    public static PlayerControl? FindCrewmate(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
+    public static PlayerControl FindCrewmate(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
     {
         return FindPlayer(position, maxDistance, Alive, Visible, Crewmate, player => filters.All(filter => filter(player)));
     }
 
-    public static PlayerControl? FindImpostor(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
+    public static PlayerControl FindImpostor(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
     {
         return FindPlayer(position, maxDistance, Alive, Visible, Impostor, player => filters.All(filter => filter(player)));
     }

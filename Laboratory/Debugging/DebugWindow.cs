@@ -14,7 +14,7 @@ public class DebugWindow : MonoBehaviour
     /// <summary>
     /// Current Instance of the debug window
     /// </summary>
-    public static DebugWindow? Instance { get; set; }
+    public static DebugWindow Instance { get; set; }
 
     /// <summary>
     /// List of tabs in the debug window
@@ -31,7 +31,7 @@ public class DebugWindow : MonoBehaviour
     /// Index into the tabs array which is currently active
     /// </summary>
     [HideFromIl2Cpp]
-    public BaseDebugTab? SelectedTab { get; set; }
+    public BaseDebugTab SelectedTab { get; set; }
 
     /// <summary>
     /// Draw window used to draw debug components
@@ -70,7 +70,7 @@ public class DebugWindow : MonoBehaviour
 
             GUILayout.BeginHorizontal();
 
-            foreach (BaseDebugTab? tab in Tabs)
+            foreach (BaseDebugTab tab in Tabs)
             {
                 if (GUILayout.Toggle(SelectedTab == tab, tab.Name, GUI.skin.button))
                 {

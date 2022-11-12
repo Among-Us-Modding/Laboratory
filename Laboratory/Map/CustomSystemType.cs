@@ -7,7 +7,9 @@ namespace Laboratory.Map;
 
 public class CustomSystemType
 {
+#pragma warning disable CS0414
     private static int _lastId = -1;
+#pragma warning restore CS0414
 
     private static readonly List<CustomSystemType> _list = new();
 
@@ -15,10 +17,10 @@ public class CustomSystemType
 
     public static CustomSystemType Register<T>() where T : ICustomSystemType
     {
-        CustomSystemType? customStringName = new CustomSystemType(_lastId--, typeof(T));
+        CustomSystemType customStringName = new CustomSystemType(_lastId--, typeof(T));
         _list.Add(customStringName);
         SystemTypeHelpers.AllTypes = SystemTypeHelpers.AllTypes.Append(customStringName).ToArray();
-
+    
         return customStringName;
     }
 
@@ -33,5 +35,5 @@ public class CustomSystemType
     }
 
     public static implicit operator SystemTypes(CustomSystemType name) => (SystemTypes)name.Id;
-    public static explicit operator CustomSystemType?(SystemTypes name) => List.SingleOrDefault(x => x.Id == (int)name);
+    public static explicit operator CustomSystemType(SystemTypes name) => List.SingleOrDefault(x => x.Id == (int)name);
 }

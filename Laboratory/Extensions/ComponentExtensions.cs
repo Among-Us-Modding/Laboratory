@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Laboratory.Utils;
+using Laboratory.Utilities;
 using Reactor.Utilities;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ public static class ComponentExtensions
     /// </summary>
     public static T EnsureComponent<T>(this GameObject obj) where T : Component
     {
-        T? comp = obj.GetComponent<T>();
+        T comp = obj.GetComponent<T>();
         if (!comp) comp = obj.AddComponent<T>();
         return comp;
     }
@@ -24,18 +24,18 @@ public static class ComponentExtensions
 
     public static T GetCachedComponent<T>(this GameObject gameObject) where T : Component
     {
-        if (CachedComponentStore<T>.Map.TryGetValue(gameObject, out T? result))
+        if (CachedComponentStore<T>.Map.TryGetValue(gameObject, out T result))
         {
             return result;
         }
 
-        T? component = gameObject.GetComponent<T>();
+        T component = gameObject.GetComponent<T>();
         if (!component) return component;
         
         Dictionary<GameObject, T> map = CachedComponentStore<T>.Map;
         map[gameObject] = component;
 
-        gameObject.EnsureComponent<UnityEventListener>().OnDestroyEvent += () => map.Remove(gameObject);
+        gameObject.EnsureComponent<DestroyEventListener>().OnDestroyEvent += () => map.Remove(gameObject);
 
         return component;
     }

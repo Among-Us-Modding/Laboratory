@@ -1,16 +1,16 @@
 using System.Collections;
-using BepInEx.IL2CPP.Utils;
+using BepInEx.Unity.IL2CPP.Utils;
 using Laboratory.Enums;
 using PowerTools;
-using Reactor.Extensions;
-using Reactor.Networking.MethodRpc;
+using Reactor.Networking.Attributes;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
-namespace Laboratory.Utils;
+namespace Laboratory.Utilities;
 
 public static class CustomMurder
 {
-    [MethodRpc((uint)CustomRpcs.CustomMurder)]
+    [MethodRpc((uint)CustomRPCs.CustomMurder)]
     public static void RpcCustomMurder(this PlayerControl murderer, PlayerControl target, bool silent = false)
     {
         if (AmongUsClient.Instance.IsGameOver)
@@ -18,7 +18,7 @@ public static class CustomMurder
             return;
         }
 
-        GameData.PlayerInfo? data = target.Data;
+        GameData.PlayerInfo data = target.Data;
         if (data == null || data.IsDead || data.Disconnected)
         {
             return;
@@ -56,9 +56,9 @@ public static class CustomMurder
             }
 
             DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(false);
-            target.nameText.GetComponent<MeshRenderer>().material.SetInt("_Mask", 0);
+            target.cosmetics.nameText.GetComponent<MeshRenderer>().material.SetInt("_Mask", 0);
             target.RpcSetScanner(false);
-            ImportantTextTask? importantTextTask = new GameObject("_Player").AddComponent<ImportantTextTask>();
+            ImportantTextTask importantTextTask = new GameObject("_Player").AddComponent<ImportantTextTask>();
             importantTextTask.transform.SetParent(target.transform, false);
             if (!PlayerControl.GameOptions.GhostsDoTasks)
             {
@@ -78,7 +78,7 @@ public static class CustomMurder
 
     private static IEnumerator CoPerformKill(KillAnimation killAnimation, PlayerControl murderer, PlayerControl target, bool silent)
     {
-        FollowerCamera? cam = Camera.main!.GetComponent<FollowerCamera>();
+        FollowerCamera cam = Camera.main!.GetComponent<FollowerCamera>();
         bool isParticipant = PlayerControl.LocalPlayer == murderer || PlayerControl.LocalPlayer == target;
 
         if (!silent)
@@ -87,7 +87,7 @@ public static class CustomMurder
             KillAnimation.SetMovement(target, false);
         }
 
-        DeadBody? deadBody = Object.Instantiate(killAnimation.bodyPrefab);
+        DeadBody deadBody = Object.Instantiate(killAnimation.bodyPrefab);
         deadBody.enabled = false;
         deadBody.ParentId = target.PlayerId;
         target.SetPlayerMaterialColors(deadBody.bodyRenderer);
@@ -107,10 +107,10 @@ public static class CustomMurder
 
         if (!silent)
         {
-            SpriteAnim? sourceAnim = murderer.MyAnim;
+            SpriteAnim sourceAnim = murderer.MyAnim;
             yield return new WaitForAnimationFinish(sourceAnim, killAnimation.BlurAnim);
             murderer.NetTransform.SnapTo(target.transform.position);
-            sourceAnim.Play(murderer.MyPhysics.IdleAnim);
+            sourceAnim.Play(murderer.MyPhysics.CurrentAnimationGroup.IdleAnim);
 
             KillAnimation.SetMovement(murderer, true);
             KillAnimation.SetMovement(target, true);

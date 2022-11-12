@@ -13,7 +13,7 @@ namespace Laboratory.Debugging.Unstripping;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TextEditor_Reimpl
 {
-    public TouchScreenKeyboard? keyboardOnScreen = null;
+    public TouchScreenKeyboard keyboardOnScreen = null;
     public int controlID = 0;
     public GUIStyle style = GUIStyle.none;
     public bool multiline = false;
@@ -1227,7 +1227,7 @@ public class TextEditor_Reimpl
         ScrollStart, ScrollEnd, ScrollPageUp, ScrollPageDown
     }
 
-    string? oldText;
+    string oldText;
     int oldPos, oldSelectPos;
 
     public void SaveBackup()
@@ -1301,8 +1301,8 @@ public class TextEditor_Reimpl
         s_Keyactions![Event.KeyboardEvent(key)] = action;
     }
 
-    static Dictionary<Event, TextEditOp>? s_Keyactions;
-    static List<(Event, TextEditOp)>? s_Keyactions2;
+    static Dictionary<Event, TextEditOp> s_Keyactions;
+    static List<(Event, TextEditOp)> s_Keyactions2;
     /// Set up a platform independant keyboard->Edit action map. This varies depending on whether we are on mac or windows.
     void InitKeyActions()
     {

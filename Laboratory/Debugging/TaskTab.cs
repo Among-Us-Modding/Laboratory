@@ -11,7 +11,7 @@ public class TaskTab : BaseDebugTab
     {
         if (!PlayerControl.LocalPlayer) return;
 
-        foreach (PlayerTask? dataTask in PlayerControl.LocalPlayer.myTasks)
+        foreach (PlayerTask dataTask in PlayerControl.LocalPlayer.myTasks)
         {
             if (!dataTask.IsComplete && dataTask.TryCast<NormalPlayerTask>() is { } task)
             {

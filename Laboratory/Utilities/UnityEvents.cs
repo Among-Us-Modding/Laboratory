@@ -1,5 +1,5 @@
 using System;
-using Reactor;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 
 namespace Laboratory.Utils;
@@ -10,7 +10,7 @@ public class UnityEvents : MonoBehaviour
     /// <summary>
     /// Action which is called according to the update function of unity's event loop
     /// </summary>
-    public static event Action? UpdateEvent;
+    public static event Action UpdateEvent;
 
     public UnityEvents(IntPtr ptr) : base(ptr)
     {

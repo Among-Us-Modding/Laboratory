@@ -47,7 +47,7 @@ public static class CollectionExtensions
     /// </summary>
     public static IEnumerable<T> OfIl2CppType<T>(this IEnumerable source) where T : Il2CppObjectBase
     {
-        foreach (object? obj in source)
+        foreach (object obj in source)
         {
             if (obj is Il2CppObjectBase il2CppObject)
             {

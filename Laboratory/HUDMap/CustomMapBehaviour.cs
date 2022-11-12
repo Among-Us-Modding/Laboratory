@@ -4,7 +4,7 @@ using Il2CppInterop.Runtime.Attributes;
 using Reactor.Utilities.Attributes;
 using UnityEngine;
 
-namespace Laboratory.HudMap;
+namespace Laboratory.HUDMap;
 
 [RegisterInIl2Cpp]
 public class CustomMapBehaviour : MonoBehaviour
@@ -14,13 +14,13 @@ public class CustomMapBehaviour : MonoBehaviour
     public delegate void MouseClickEvent(CustomMapBehaviour instance, int mouseButton, Vector2 worldPosition);
 
     // PLS Unsubscribe from these thanks
-    public MouseClickEvent? MouseDownEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-    public MouseClickEvent? MouseHeldEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-    public MouseClickEvent? MouseUpEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+    public MouseClickEvent MouseDownEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+    public MouseClickEvent MouseHeldEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+    public MouseClickEvent MouseUpEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
 
     private Dictionary<GameData.PlayerInfo, SpriteRenderer> HerePoints { [HideFromIl2Cpp] get; } = new();
 
-    public MapBehaviour? Parent { get; set; }
+    public MapBehaviour Parent { get; set; }
     
     public void ShowAllPlayers()
     {
@@ -30,15 +30,15 @@ public class CustomMapBehaviour : MonoBehaviour
         }
         HerePoints.Clear();
         if (Parent == null) return;
-        foreach (GameData.PlayerInfo? player in GameData.Instance.AllPlayers)
+        foreach (GameData.PlayerInfo player in GameData.Instance.AllPlayers)
         {
             if (player.Disconnected) continue;
             Transform hereTransform = Parent.HerePoint.transform;
 
-            GameObject? newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
+            GameObject newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
             newHerePoint.transform.localScale = hereTransform.localScale;
                 
-            SpriteRenderer? newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
+            SpriteRenderer newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
             if (player.Object) player.Object.SetPlayerMaterialColors(newHerePointRend);
             HerePoints[player] = newHerePointRend;
         }
@@ -63,7 +63,7 @@ public class CustomMapBehaviour : MonoBehaviour
             PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
             map.ColorControl.SetColor(mapColor);
             DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-            CustomMapBehaviour? customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
+            CustomMapBehaviour customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
             customMapBehaviour.ShowAllPlayers();
 
             // sketchy hack to remove the delegate when done
@@ -115,7 +115,7 @@ public class CustomMapBehaviour : MonoBehaviour
             return;
         }
 
-        foreach ((GameData.PlayerInfo? data, SpriteRenderer rend) in HerePoints)
+        foreach ((GameData.PlayerInfo data, SpriteRenderer rend) in HerePoints)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (data == null || !data.Object || data.IsDead || data.Disconnected)

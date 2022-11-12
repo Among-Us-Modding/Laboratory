@@ -1,6 +1,6 @@
 namespace Laboratory.Enums;
 
-public enum CustomRpcs : uint
+public enum CustomRPCs : uint
 {
     ChangeHealth,
     CustomMurder,

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Laboratory.Effects.Utils;
-using Laboratory.Extensions;
 using Laboratory.Systems;
-using Laboratory.Utils;
 using UnityEngine;
 
 namespace Laboratory.Debugging;
@@ -17,11 +14,12 @@ public class GeneralTab : BaseDebugTab
 
     public override void BuildUI()
     {
-        if (CameraZoomController.Instance != null)
-        {
-            GUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
-            CameraZoomController.Instance.OrthographicSize = GUILayout.HorizontalSlider(CameraZoomController.Instance.OrthographicSize, 1f, 24f);
-        }
+        // TODO
+        // if (CameraZoomController.Instance != null)
+        // {
+        //     GUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
+        //     CameraZoomController.Instance.OrthographicSize = GUILayout.HorizontalSlider(CameraZoomController.Instance.OrthographicSize, 1f, 24f);
+        // }
 
         if (ProgressSystem.Instance != null)
         {
@@ -51,7 +49,7 @@ public class GeneralTab : BaseDebugTab
                 
                 if (GUILayout.Button("Save Current Health"))
                 {
-                    foreach (GameData.PlayerInfo? instanceAllPlayer in GameData.Instance.AllPlayers)
+                    foreach (GameData.PlayerInfo instanceAllPlayer in GameData.Instance.AllPlayers)
                     {
                         OldHealths[instanceAllPlayer.PlayerName] = Math.Clamp(HealthSystem.Instance.GetHealth(instanceAllPlayer.PlayerId), 1, 999999);
                     }
@@ -59,7 +57,7 @@ public class GeneralTab : BaseDebugTab
 
                 if (GUILayout.Button("Load Old Health"))
                 {
-                    foreach (GameData.PlayerInfo? instanceAllPlayer in GameData.Instance.AllPlayers)
+                    foreach (GameData.PlayerInfo instanceAllPlayer in GameData.Instance.AllPlayers)
                     {
                         if (OldHealths.TryGetValue(instanceAllPlayer.PlayerName, out int health))
                         {

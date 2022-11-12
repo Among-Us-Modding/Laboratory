@@ -1,18 +1,13 @@
 ﻿global using static Reactor.Utilities.Logger<Laboratory.LaboratoryPlugin>;
-
-using System;
 using System.Collections.Generic;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Laboratory.Attributes;
 using Laboratory.Debugging;
-using Laboratory.Player.Attributes;
-using Laboratory.Utils;
 using Reactor;
 using Reactor.Patches;
 using Reactor.Utilities;
-using UnityEngine.SceneManagement;
 
 namespace Laboratory;
 
@@ -42,29 +37,18 @@ public partial class LaboratoryPlugin : BasePlugin
     {
         KeybindAttribute.Initialize();
         BaseDebugTab.Initialize();
-        PlayerComponentAttribute.Initialize();
+        // PlayerComponentAttribute.Initialize();
     }
 
     public override void Load()
     {
         Harmony.PatchAll();
         DebugWindow.Instance = AddComponent<DebugWindow>();
-        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>)OnSceneLoaded);
         
-        AddComponent<MapLoader>();
-        AddComponent<UnityEvents>();
+        // TODO
+        // AddComponent<MapLoader>();
+        // AddComponent<UnityEvents>();
 
         ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + Version;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
-    {
-        switch (scene.name)
-        {
-            // Starts account login process
-            case "MainMenu":
-                EOSManager.Instance.InitializePlatformInterface();
-                break;
-        }
     }
 }

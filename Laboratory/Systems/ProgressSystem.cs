@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using Hazel;
+using Il2CppInterop.Runtime.Injection;
 using Laboratory.Map;
-using Reactor;
-using UnhollowerRuntimeLib;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 using IntPtr = System.IntPtr;
 using Object = Il2CppSystem.Object;
@@ -13,8 +13,8 @@ namespace Laboratory.Systems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class ProgressSystem : Object, ICustomSystemType
 {
-    private static ProgressSystem? _instance;
-    public static ProgressSystem? Instance => ShipStatus.Instance ? _instance : null;
+    private static ProgressSystem _instance;
+    public static ProgressSystem Instance => ShipStatus.Instance ? _instance : null;
     public static CustomSystemType SystemType { get; } = CustomSystemType.Register<ProgressSystem>();
     public static float[] Stages { get; set; } = {
         60f,
@@ -84,9 +84,9 @@ public class ProgressSystem : Object, ICustomSystemType
         if (!AmongUsClient.Instance.AmHost) return;
         float sum = 0;
         int stage = 0;
-        for (int i = 0; i < Stages.Length; i++)
+        foreach (float t in Stages)
         {
-            sum += Stages[i];
+            sum += t;
             if (Timer >= sum) stage++;
         }
 

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Hazel;
+using Il2CppInterop.Runtime.Attributes;
+using Il2CppInterop.Runtime.Injection;
 using Laboratory.Enums;
 using Laboratory.Map;
-using Reactor;
-using Reactor.Networking.MethodRpc;
-using UnhollowerBaseLib.Attributes;
-using UnhollowerRuntimeLib;
+using Reactor.Networking.Attributes;
+using Reactor.Utilities.Attributes;
 using IntPtr = System.IntPtr;
 using Object = Il2CppSystem.Object;
 
@@ -21,7 +21,7 @@ public class CounterSystem : Object, ICustomSystemType
         return res;
     }
 
-    [MethodRpc((uint)CustomRpcs.SetCount)]
+    [MethodRpc((uint)CustomRPCs.SetCount)]
     public static void SetCount(PlayerControl player, uint key, int value)
     {
         if (AmongUsClient.Instance.AmHost)
@@ -31,7 +31,7 @@ public class CounterSystem : Object, ICustomSystemType
         }
     }
 
-    [MethodRpc((uint)CustomRpcs.ChangeCount)]
+    [MethodRpc((uint)CustomRPCs.ChangeCount)]
     public static void ChangeCount(PlayerControl player, uint key, int change)
     {
         if (AmongUsClient.Instance.AmHost)
@@ -40,8 +40,8 @@ public class CounterSystem : Object, ICustomSystemType
         }
     }
     
-    private static CounterSystem? _instance;
-    public static CounterSystem? Instance => ShipStatus.Instance ? _instance : null;
+    private static CounterSystem _instance;
+    public static CounterSystem Instance => ShipStatus.Instance ? _instance : null;
     
     public static CustomSystemType SystemType { get; } = CustomSystemType.Register<CounterSystem>();
 

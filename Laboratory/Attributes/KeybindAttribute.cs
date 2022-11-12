@@ -4,8 +4,6 @@ using System.Reflection;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Laboratory.Utils;
-using MonoMod.Utils;
-using Reactor;
 using UnityEngine;
 
 namespace Laboratory.Attributes;
@@ -57,7 +55,7 @@ public class KeybindAttribute : Attribute
         {
             foreach (MethodInfo method in type.GetMethods(AccessTools.all))
             {
-                KeybindAttribute? attribute = method.GetCustomAttribute<KeybindAttribute>();
+                KeybindAttribute attribute = method.GetCustomAttribute<KeybindAttribute>();
                 if (attribute != null)
                 {
                     if (!method.IsStatic)

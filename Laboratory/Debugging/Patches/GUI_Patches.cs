@@ -31,7 +31,7 @@ public static class GUI_DoTextField_Patch
 
     private static TextEditor_Reimpl GetStateObject(int controlID)
     {
-        if (!StateObjects.TryGetValue(controlID, out TextEditor_Reimpl? instance))
+        if (!StateObjects.TryGetValue(controlID, out TextEditor_Reimpl instance))
         {
             instance = new TextEditor_Reimpl();
             StateObjects[controlID] = instance;

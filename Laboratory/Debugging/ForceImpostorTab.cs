@@ -1,8 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using HarmonyLib;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Laboratory.Extensions;
 using Laboratory.Utilities;
 using UnityEngine;
 
@@ -27,8 +24,8 @@ public class ForceImpostorTab : BaseDebugTab
         if (!Enabled) return;
         GUILayoutUtils.Divider();
 
-        IEnumerable<string>? allPlayerNames = GameData.Instance.AllPlayers.ToArray().Where(d => d != null).Select(d => d.PlayerName);
-        foreach (string? playerName in allPlayerNames)
+        IEnumerable<string> allPlayerNames = GameData.Instance.AllPlayers.ToArray().Where(d => d != null).Select(d => d.PlayerName);
+        foreach (string playerName in allPlayerNames)
         {
             bool currentlyForced = CurrentlySelected.Contains(playerName);
             bool toggled = GUILayout.Toggle(currentlyForced, $"{playerName}{(currentlyForced ? " Forced" : "")}", GUI.skin.button);
