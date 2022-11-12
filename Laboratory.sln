@@ -2,10 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laboratory", "Laboratory\Laboratory.csproj", "{790E5540-7655-4F57-BBED-8D644A031BC6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{095ED6FA-D3D6-4104-8322-EDD1CCCBBD30}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{095ED6FA-D3D6-4104-8322-EDD1CCCBBD30}"
 ProjectSection(SolutionItems) = preProject
-	Laboratory.props = Laboratory.props
-	Directory.Build.props = Directory.Build.props
+	nuget.config = nuget.config
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laboratory.Loader", "Laboratory.Loader\Laboratory.Loader.csproj", "{9D4D75F7-DAA1-475E-A35B-978A06A32D1D}"

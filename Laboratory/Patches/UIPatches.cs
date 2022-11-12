@@ -10,7 +10,7 @@ internal static class UIPatches
     [HarmonyPrefix]
     public static void RefocusTextBoxPatch(TextBoxTMP __instance)
     {
-        foreach (var textBox in Object.FindObjectsOfType<TextBoxTMP>())
+        foreach (TextBoxTMP? textBox in Object.FindObjectsOfType<TextBoxTMP>())
         {
             if (textBox.GetHashCode() != __instance.GetHashCode()) textBox.LoseFocus();
         }

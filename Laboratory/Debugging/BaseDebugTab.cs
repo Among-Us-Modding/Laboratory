@@ -17,9 +17,9 @@ public abstract class BaseDebugTab
 
     private static void Register(Assembly assembly)
     {
-        foreach (var type in assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(BaseDebugTab)) && !t.IsAbstract))
+        foreach (Type? type in assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(BaseDebugTab)) && !t.IsAbstract))
         {
-            var debugger = (BaseDebugTab)Activator.CreateInstance(type);
+            BaseDebugTab? debugger = (BaseDebugTab)Activator.CreateInstance(type);
             DebugWindow.Tabs.Add(debugger);
         }
     }

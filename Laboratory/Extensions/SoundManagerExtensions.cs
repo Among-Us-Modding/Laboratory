@@ -10,14 +10,14 @@ public static class SoundManagerExtensions
     {
         void PointSoundFunc(AudioSource source, float dt)
         {
-            var distance = Vector2.Distance(point, PlayerControl.LocalPlayer.GetTruePosition());
-            var maxDist = 4;
+            float distance = Vector2.Distance(point, PlayerControl.LocalPlayer.GetTruePosition());
+            int maxDist = 4;
             if (distance > maxDist)
             {
                 source.volume = 0f;
             }
 
-            var modVol = 1f - Mathf.Clamp01(distance / maxDist);
+            float modVol = 1f - Mathf.Clamp01(distance / maxDist);
             source.volume = Mathf.Lerp(source.volume, volume * modVol, dt);
         }
 
@@ -35,14 +35,14 @@ public static class SoundManagerExtensions
                 return;
             } 
             
-            var distance = Vector2.Distance(trns.position, PlayerControl.LocalPlayer.GetTruePosition());
-            var maxDist = 4;
+            float distance = Vector2.Distance(trns.position, PlayerControl.LocalPlayer.GetTruePosition());
+            int maxDist = 4;
             if (distance > maxDist)
             {
                 source.volume = 0f;
             }
 
-            var modVol = 1f - Mathf.Clamp01(distance / maxDist);
+            float modVol = 1f - Mathf.Clamp01(distance / maxDist);
             source.volume = Mathf.Lerp(source.volume, volume * modVol, dt);
         }
 

@@ -22,7 +22,7 @@ public class CooldownButton : MonoBehaviour
 
     public static T Create<T>() where T : CooldownButton
     {
-        var buttonObj = new GameObject(typeof(T).Name) {layer = 5};
+        GameObject buttonObj = new GameObject(typeof(T).Name) {layer = 5};
         buttonObj.transform.parent = HudManager.Instance.transform;
         return buttonObj.AddComponent<T>();
     }
@@ -44,7 +44,7 @@ public class CooldownButton : MonoBehaviour
     {
         Buttons.Add(this);
 
-        var buttonObj = gameObject;
+        GameObject buttonObj = gameObject;
             
         // SpriteRenderer
         Renderer = buttonObj.AddComponent<SpriteRenderer>();
@@ -60,7 +60,7 @@ public class CooldownButton : MonoBehaviour
         Aspect.parentCam = HudManager.Instance.UICamera;
             
         // PassiveButton
-        var buttonColl = buttonObj.AddComponent<BoxCollider2D>();
+        BoxCollider2D? buttonColl = buttonObj.AddComponent<BoxCollider2D>();
         buttonColl.size = new Vector2(1.15f, 1.15f);
 
         Button = buttonObj.AddComponent<PassiveButton>();
@@ -104,7 +104,7 @@ public class CooldownButton : MonoBehaviour
         
     public void OnDestroy()
     {
-        var myHashCode = GetHashCode();
+        int myHashCode = GetHashCode();
         Buttons.RemoveAll(b => b.GetHashCode() == myHashCode);
     }
 
@@ -114,7 +114,7 @@ public class CooldownButton : MonoBehaviour
 
     public void SetPosition(AspectPosition.EdgeAlignments alignment, int buttonIndex = Int32.MaxValue)
     {
-        var myHashCode = GetHashCode();
+        int myHashCode = GetHashCode();
         if (buttonIndex == Int32.MaxValue) buttonIndex = Buttons.Count(c => c.GetHashCode() != myHashCode && c.Aspect!.Alignment == alignment);
             
         Vector3 distanceFromEdge = new(0.7f, 0.7f, -5f);
@@ -158,7 +158,7 @@ public class CooldownButton : MonoBehaviour
     {
         if (!ShipStatus.Instance) return false;
         if (!HudManager.Instance.UseButton.gameObject.active) return false;
-        var localPlayer = PlayerControl.LocalPlayer;
+        PlayerControl? localPlayer = PlayerControl.LocalPlayer;
         if (!localPlayer || localPlayer.Data == null) return false;
         if (localPlayer.Data.IsDead) return false;
         return true;

@@ -26,9 +26,9 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
         get => _primaryEffect;
         set
         {
-            foreach (var playerEffectManager in PlayerEffectManagers) playerEffectManager.PrimaryEffect = null;
+            foreach (PlayerEffectManager? playerEffectManager in PlayerEffectManagers) playerEffectManager.PrimaryEffect = null;
 
-            var current = PrimaryEffect;
+            IEffect? current = PrimaryEffect;
             if (current is not null)
             {
                 current.Cancel();
@@ -72,7 +72,7 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public void ClearEffects()
     {
-        foreach (var effect in Effects)
+        foreach (IEffect? effect in Effects)
         {
             RemoveEffect(effect);
         }
@@ -85,24 +85,24 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
 
     private void FixedUpdate()
     {
-        foreach (var effect in Effects) effect.FixedUpdate();
+        foreach (IEffect? effect in Effects) effect.FixedUpdate();
     }
 
     private void Update()
     {
-        foreach (var effect in Effects) effect.Update();
+        foreach (IEffect? effect in Effects) effect.Update();
     }
 
     private void LateUpdate()
     {
         List<IEffect> effects = new();
-        foreach (var effect in Effects)
+        foreach (IEffect? effect in Effects)
         {
             effect.LateUpdate();
             if (effect.Timer < 0) effects.Add(effect);
         }
 
-        foreach (var effect in effects)
+        foreach (IEffect? effect in effects)
         {
             if (_primaryEffect == effect) _primaryEffect = null;
             RemoveEffect(effect);
@@ -111,7 +111,7 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
 
     private void OnDestroy()
     {
-        foreach (var effect in Effects) effect.Cancel();
+        foreach (IEffect? effect in Effects) effect.Cancel();
         Instance = null;
     }
 }

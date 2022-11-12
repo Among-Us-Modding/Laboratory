@@ -21,7 +21,7 @@ public static class MEffects
 
     public static IEnumerator Wait(float duration)
     {
-        for (var t = 0f; t < duration; t += Time.deltaTime)
+        for (float t = 0f; t < duration; t += Time.deltaTime)
         {
             yield return null;
         }
@@ -29,29 +29,29 @@ public static class MEffects
 
     public static IEnumerator Sequence(params IEnumerator[] items)
     {
-        var i = 0;
+        int i = 0;
         while (i < items.Length)
         {
             yield return items[i];
-            var num = i + 1;
+            int num = i + 1;
             i = num;
         }
     }
 
     public static IEnumerator All(params IEnumerator[] items)
     {
-        var enums = new Stack<IEnumerator>[items.Length];
-        for (var i = 0; i < items.Length; i++)
+        Stack<IEnumerator>[]? enums = new Stack<IEnumerator>[items.Length];
+        for (int i = 0; i < items.Length; i++)
         {
             enums[i] = new Stack<IEnumerator>();
             enums[i].Push(items[i]);
         }
 
-        var cap = 0;
+        int cap = 0;
         while (cap < 100000)
         {
-            var flag = false;
-            foreach (var t in enums)
+            bool flag = false;
+            foreach (Stack<IEnumerator>? t in enums)
             {
                 if (t.Count <= 0)
                 {
@@ -59,7 +59,7 @@ public static class MEffects
                 }
 
                 flag = true;
-                var enumerator = t.Peek();
+                IEnumerator? enumerator = t.Peek();
                 if (enumerator.MoveNext())
                 {
                     if (enumerator.Current is IEnumerator current)
@@ -76,7 +76,7 @@ public static class MEffects
             if (flag)
             {
                 yield return null;
-                var num = cap + 1;
+                int num = cap + 1;
                 cap = num;
                 continue;
             }
@@ -87,7 +87,7 @@ public static class MEffects
 
     public static IEnumerator Lerp(float duration, Action<float> action)
     {
-        for (var t = 0f; t < duration; t += Time.deltaTime)
+        for (float t = 0f; t < duration; t += Time.deltaTime)
         {
             action(t / duration);
             yield return null;
@@ -98,15 +98,15 @@ public static class MEffects
 
     public static IEnumerator Overlerp(float duration, Action<float> action, float overextend = 0.05f)
     {
-        var d1 = duration * 0.95f;
-        for (var t2 = 0f; t2 < d1; t2 += Time.deltaTime)
+        float d1 = duration * 0.95f;
+        for (float t2 = 0f; t2 < d1; t2 += Time.deltaTime)
         {
             action(Mathf.Lerp(0f, 1f + overextend, t2 / d1));
             yield return null;
         }
 
-        var d2 = duration * 0.050000012f;
-        for (var t2 = 0f; t2 < d2; t2 += Time.deltaTime)
+        float d2 = duration * 0.050000012f;
+        for (float t2 = 0f; t2 < d2; t2 += Time.deltaTime)
         {
             action(Mathf.Lerp(1f + overextend, 1f, t2 / d2));
             yield return null;
@@ -119,8 +119,8 @@ public static class MEffects
     {
         if ((bool)self)
         {
-            var localScale = default(Vector3);
-            for (var t = 0f; t < duration; t += Time.deltaTime)
+            Vector3 localScale = default(Vector3);
+            for (float t = 0f; t < duration; t += Time.deltaTime)
             {
                 localScale.x = (localScale.y = (localScale.z = Mathf.SmoothStep(source, target, t / duration)));
                 self.localScale = localScale;
@@ -137,9 +137,9 @@ public static class MEffects
         if ((bool)self)
         {
             self.enabled = true;
-            for (var t = 0f; t < duration; t += Time.deltaTime)
+            for (float t = 0f; t < duration; t += Time.deltaTime)
             {
-                var t2 = Mathf.Sin(t * (float)Math.PI / rate) / 2f + 0.5f;
+                float t2 = Mathf.Sin(t * (float)Math.PI / rate) / 2f + 0.5f;
                 self.color = Color.Lerp(source, target, t2);
                 yield return null;
             }
@@ -153,7 +153,7 @@ public static class MEffects
         if ((bool)self)
         {
             self.enabled = true;
-            for (var t = 0f; t < duration; t += Time.deltaTime)
+            for (float t = 0f; t < duration; t += Time.deltaTime)
             {
                 self.color = Color.Lerp(target, source, t / duration);
                 yield return null;
@@ -167,7 +167,7 @@ public static class MEffects
     {
         if ((bool)self)
         {
-            for (var t = 0f; t < duration; t += Time.deltaTime)
+            for (float t = 0f; t < duration; t += Time.deltaTime)
             {
                 self.color = Color.Lerp(target, source, t / duration);
                 yield return null;
@@ -182,7 +182,7 @@ public static class MEffects
         if ((bool)self)
         {
             self.enabled = true;
-            for (var t = 0f; t < duration; t += Time.deltaTime)
+            for (float t = 0f; t < duration; t += Time.deltaTime)
             {
                 self.color = Color.Lerp(source, target, t / duration);
                 yield return null;
@@ -197,7 +197,7 @@ public static class MEffects
         if ((bool)self)
         {
             self.enabled = true;
-            for (var t = 0f; t < duration; t += Time.deltaTime)
+            for (float t = 0f; t < duration; t += Time.deltaTime)
             {
                 self.color = Color.Lerp(source, target, t / duration);
                 yield return null;
@@ -209,10 +209,10 @@ public static class MEffects
 
     public static IEnumerator Rotate2D(Transform target, float source, float dest, float duration = 0.75f)
     {
-        var temp = target.localEulerAngles;
-        for (var time = 0f; time < duration; time += Time.deltaTime)
+        Vector3 temp = target.localEulerAngles;
+        for (float time = 0f; time < duration; time += Time.deltaTime)
         {
-            var t = time / duration;
+            float t = time / duration;
             temp.z = Mathf.SmoothStep(source, dest, t);
             target.localEulerAngles = temp;
             yield return null;
@@ -224,10 +224,10 @@ public static class MEffects
 
     public static IEnumerator Slide3D(Transform target, Vector3 source, Vector3 dest, float duration = 0.75f)
     {
-        var localPosition = default(Vector3);
-        for (var time = 0f; time < duration; time += Time.deltaTime)
+        Vector3 localPosition = default(Vector3);
+        for (float time = 0f; time < duration; time += Time.deltaTime)
         {
-            var t = time / duration;
+            float t = time / duration;
             localPosition.x = Mathf.SmoothStep(source.x, dest.x, t);
             localPosition.y = Mathf.SmoothStep(source.y, dest.y, t);
             localPosition.z = Mathf.Lerp(source.z, dest.z, t);
@@ -240,11 +240,11 @@ public static class MEffects
 
     public static IEnumerator Slide2D(Transform target, Vector2 source, Vector2 dest, float duration = 0.75f)
     {
-        var temp = default(Vector3);
+        Vector3 temp = default(Vector3);
         temp.z = target.localPosition.z;
-        for (var time = 0f; time < duration; time += Time.deltaTime)
+        for (float time = 0f; time < duration; time += Time.deltaTime)
         {
-            var t = time / duration;
+            float t = time / duration;
             temp.x = Mathf.SmoothStep(source.x, dest.x, t);
             temp.y = Mathf.SmoothStep(source.y, dest.y, t);
             target.localPosition = temp;
@@ -258,11 +258,11 @@ public static class MEffects
 
     public static IEnumerator Slide2DWorld(Transform target, Vector2 source, Vector2 dest, float duration = 0.75f)
     {
-        var temp = default(Vector3);
+        Vector3 temp = default(Vector3);
         temp.z = target.position.z;
-        for (var time = 0f; time < duration; time += Time.deltaTime)
+        for (float time = 0f; time < duration; time += Time.deltaTime)
         {
-            var t = time / duration;
+            float t = time / duration;
             temp.x = Mathf.SmoothStep(source.x, dest.x, t);
             temp.y = Mathf.SmoothStep(source.y, dest.y, t);
             target.position = temp;
@@ -281,12 +281,12 @@ public static class MEffects
             yield break;
         }
 
-        var origin = target.localPosition;
-        var temp = origin;
-        for (var timer = 0f; timer < duration; timer += Time.deltaTime)
+        Vector3 origin = target.localPosition;
+        Vector3 temp = origin;
+        for (float timer = 0f; timer < duration; timer += Time.deltaTime)
         {
-            var num = timer / duration;
-            var num2 = 1f - num;
+            float num = timer / duration;
+            float num2 = 1f - num;
             temp.y = origin.y + height * Mathf.Abs(Mathf.Sin(num * (float)Math.PI * 3f)) * num2;
             if (!target)
             {
@@ -306,10 +306,10 @@ public static class MEffects
     public static IEnumerator Shake(Transform target, float duration, float halfWidth, bool taper)
     {
         _ = target.localPosition;
-        for (var timer = 0f; timer < duration; timer += Time.deltaTime)
+        for (float timer = 0f; timer < duration; timer += Time.deltaTime)
         {
-            var num = timer / duration;
-            var vector = (Vector3)UnityEngine.Random.insideUnitCircle * halfWidth;
+            float num = timer / duration;
+            Vector3 vector = (Vector3)UnityEngine.Random.insideUnitCircle * halfWidth;
             if (taper)
             {
                 vector *= 1f - num;
@@ -324,10 +324,10 @@ public static class MEffects
     {
         if (_activeShakes.Add(target))
         {
-            var origin = target.localPosition;
-            for (var timer = 0f; timer < duration; timer += Time.deltaTime)
+            Vector3 origin = target.localPosition;
+            for (float timer = 0f; timer < duration; timer += Time.deltaTime)
             {
-                var num = timer / duration;
+                float num = timer / duration;
                 target.localPosition = origin + Vector3.right * (halfWidth * Mathf.Sin(num * 30f) * (1f - num));
                 yield return null;
             }
@@ -339,15 +339,15 @@ public static class MEffects
 
     public static IEnumerator Bloop(float delay, Transform target, float finalSize = 1f, float duration = 0.5f)
     {
-        for (var t = 0f; t < delay; t += Time.deltaTime)
+        for (float t = 0f; t < delay; t += Time.deltaTime)
         {
             yield return null;
         }
 
-        var localScale = default(Vector3);
-        for (var t = 0f; t < duration; t += Time.deltaTime)
+        Vector3 localScale = default(Vector3);
+        for (float t = 0f; t < duration; t += Time.deltaTime)
         {
-            var z = ElasticOut(t, duration) * finalSize;
+            float z = ElasticOut(t, duration) * finalSize;
             localScale.x = (localScale.y = (localScale.z = z));
             target.localScale = localScale;
             yield return null;
@@ -359,10 +359,10 @@ public static class MEffects
 
     public static IEnumerator ArcSlide(float duration, Transform target, Vector2 sourcePos, Vector2 targetPos, float anchorDistance)
     {
-        var vector = (targetPos - sourcePos) / 2f;
-        var anchor = sourcePos + vector + vector.Rotate(90f).normalized * anchorDistance;
-        var z = target.localPosition.z;
-        for (var timer = 0f; timer < duration; timer += Time.deltaTime)
+        Vector2 vector = (targetPos - sourcePos) / 2f;
+        Vector2 anchor = sourcePos + vector + vector.Rotate(90f).normalized * anchorDistance;
+        float z = target.localPosition.z;
+        for (float timer = 0f; timer < duration; timer += Time.deltaTime)
         {
             Vector3 localPosition = Bezier(timer / duration, sourcePos, targetPos, anchor);
             localPosition.z = z;
@@ -376,22 +376,22 @@ public static class MEffects
     public static Vector3 Bezier(float t, Vector3 src, Vector3 dest, Vector3 anchor)
     {
         t = Mathf.Clamp(t, 0f, 1f);
-        var num = 1f - t;
+        float num = 1f - t;
         return num * num * src + 2f * num * t * anchor + t * t * dest;
     }
 
     public static Vector2 Bezier(float t, Vector2 src, Vector2 dest, Vector2 anchor)
     {
         t = Mathf.Clamp(t, 0f, 1f);
-        var num = 1f - t;
+        float num = 1f - t;
         return num * num * src + 2f * num * t * anchor + t * t * dest;
     }
 
     private static float ElasticOut(float time, float duration)
     {
         time /= duration;
-        var num = time * time;
-        var num2 = num * time;
+        float num = time * time;
+        float num2 = num * time;
         return 33f * num2 * num + -106f * num * num + 126f * num2 + -67f * num + 15f * time;
     }
 

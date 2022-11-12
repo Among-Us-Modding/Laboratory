@@ -59,11 +59,11 @@ public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.Effec
             _ => throw new ArgumentOutOfRangeException(),
         };
 
-        var effectName = reader.ReadString();
+        string? effectName = reader.ReadString();
         IEffect? effect = null;
         if (effectName != "null") effect = (IEffect) Activator.CreateInstance(Type.GetType(effectName)!);
 
-        var isPrimary = reader.ReadBoolean();
+        bool isPrimary = reader.ReadBoolean();
 
         return new EffectInfo(effectManager, effect, isPrimary);
     }

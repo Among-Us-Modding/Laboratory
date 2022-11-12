@@ -14,8 +14,8 @@ public static class Moveable
 
     public static void SetMoveable(this PlayerControl player, bool canMove, object key)
     {
-        var set = _immovable[player];
-        var changed = canMove ? set.Remove(key) : set.Add(key);
+        HashSet<object>? set = _immovable[player];
+        bool changed = canMove ? set.Remove(key) : set.Add(key);
 
         if (changed && !canMove)
         {

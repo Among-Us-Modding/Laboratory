@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Reactor;
 using Reactor.Extensions;
 using UnhollowerRuntimeLib;
@@ -29,11 +30,11 @@ public sealed class AssetManager
     /// <param name="assembly">Assembly containing the sprite - defaults to searching all loaded assemblies</param>
     public static Sprite? LoadSprite(string spriteName, float ppu = 100f, Assembly? assembly = null)
     {
-        var assemblies = assembly == null ? AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : new[] { assembly };
+        Assembly?[] assemblies = assembly == null ? AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : new[] { assembly };
 
-        foreach (var ass in assemblies)
+        foreach (Assembly? ass in assemblies)
         {
-            var match = ass?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
+            string? match = ass?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(spriteName));
             if (match == null) continue;
 
             if (_cachedEmbeddedSprites.ContainsKey(match)) return _cachedEmbeddedSprites[match];
@@ -59,11 +60,11 @@ public sealed class AssetManager
     {
         if (bundleName == null) return null;
 
-        var assemblies = assembly == null ? AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : new[] { assembly };
+        Assembly?[] assemblies = assembly == null ? AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.IsDynamic).ToArray() : new[] { assembly };
 
-        foreach (var asm in assemblies)
+        foreach (Assembly? asm in assemblies)
         {
-            var match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
+            string? match = asm?.GetManifestResourceNames().FirstOrDefault(n => n.Contains(bundleName));
             if (match == null) continue;
 
             if (_cachedEmbeddedBundles.ContainsKey(match)) return _cachedEmbeddedBundles[match];
@@ -111,7 +112,7 @@ public sealed class AssetManager
     /// </summary>
     public T? LoadAsset<T>(string name) where T : Object
     {
-        if (ObjectCache.TryGetValue(name, out var result)) return result.TryCast<T>();
+        if (ObjectCache.TryGetValue(name, out Object? result)) return result.TryCast<T>();
         if (Bundle == null) throw new NullReferenceException();
         var asset = Bundle.LoadAsset<T>(name);
         if (!asset)
@@ -134,8 +135,8 @@ public sealed class AssetManager
     public Object[]? LoadAllAssets()
     {
         if (Bundle == null) return null;
-        var assets = Bundle.LoadAllAssets();
-        foreach (var asset in assets) asset.DontUnload();
+        Il2CppReferenceArray<Object>? assets = Bundle.LoadAllAssets();
+        foreach (Object? asset in assets) asset.DontUnload();
         return assets;
     }
 }
@@ -147,7 +148,7 @@ internal static class AssetManagerPatches
     [HarmonyPostfix]
     public static void AmongUsClientAwakePatch()
     {
-        foreach (var manager in AssetManager._managers)
+        foreach (AssetManager manager in AssetManager._managers)
         {
             manager.Bundle!.LoadAllAssetsAsync(Il2CppType.Of<Object>());
         }

@@ -23,13 +23,13 @@ public class CollisionManager : MonoBehaviour
 
     public virtual void Awake()
     {
-        foreach (var (layerName, layer) in _layers)
+        foreach ((string? layerName, int layer) in _layers)
         {
             GameObject obj = new($"{nameof(CollisionDetector)} ({layerName})") { layer = layer };
             obj.AddComponent<CollisionDetector>().Parent = this;
-            var detectorTransform = obj.transform;
-            var box = obj.AddComponent<BoxCollider2D>();
-            var body = obj.AddComponent<Rigidbody2D>();
+            Transform? detectorTransform = obj.transform;
+            BoxCollider2D? box = obj.AddComponent<BoxCollider2D>();
+            Rigidbody2D? body = obj.AddComponent<Rigidbody2D>();
 
             body.gravityScale = 0f;
             body.isKinematic = true;

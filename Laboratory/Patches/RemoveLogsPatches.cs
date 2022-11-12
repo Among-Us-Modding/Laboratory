@@ -49,7 +49,7 @@ internal static class LanguageUnitLogPatch
                         string text3 = __instance.UnescapeCodes(text, num + 1);
                         if (text2.Length != 0 || text3.Length != 0)
                         {
-                            if (!Enum.TryParse<StringNames>(text2, out var result) && !string.IsNullOrEmpty(text2))
+                            if (!Enum.TryParse<StringNames>(text2, out StringNames result) && !string.IsNullOrEmpty(text2))
                             {
                                 if (text2[0] == 'Q' && text2[1] == 'C')
                                 {

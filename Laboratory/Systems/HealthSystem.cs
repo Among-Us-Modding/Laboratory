@@ -60,7 +60,7 @@ public class HealthSystem : Object, ICustomSystemType
     {
         if (Instance is not null)
         {
-            var pid = player.PlayerId;
+            byte pid = player.PlayerId;
             Instance.SetHealth(pid, Instance.GetHealth(pid) + change);
         }
     }
@@ -74,7 +74,7 @@ public class HealthSystem : Object, ICustomSystemType
         ClassInjector.DerivedConstructorBody(this);
         _instance = this;
 
-        foreach (var playerInfo in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl? playerInfo in PlayerControl.AllPlayerControls)
         {
             SetHealth(playerInfo.PlayerId, GetMaxHealth(playerInfo.PlayerId));
         }
@@ -92,14 +92,14 @@ public class HealthSystem : Object, ICustomSystemType
     /// <param name="newHealth">The new amount of heath to set the player with</param>
     public void SetHealth(byte playerId, int newHealth)
     {
-        var data = GameData.Instance.GetPlayerById(playerId);
-        var oldHealth = GetHealth(playerId);
-        var playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, GetMaxHealth(playerId));
+        GameData.PlayerInfo? data = GameData.Instance.GetPlayerById(playerId);
+        int oldHealth = GetHealth(playerId);
+        int playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, GetMaxHealth(playerId));
         IsDirty = true;
 
         if (data != null && data.Object)
         {
-            var player = data.Object;
+            PlayerControl? player = data.Object;
             OnHealthChange?.Invoke(player, (oldHealth, newHealth));
             if (UpdateNameText) UpdateHealthText(player, data, playerHealth);
 
@@ -139,10 +139,10 @@ public class HealthSystem : Object, ICustomSystemType
 
     public void Deserialize(MessageReader reader, bool initialState)
     {
-        var length = reader.ReadByte();
-        for (var i = 0; i < length; i++)
+        byte length = reader.ReadByte();
+        for (int i = 0; i < length; i++)
         {
-            var dirty = IsDirty;
+            bool dirty = IsDirty;
             SetHealth(reader.ReadByte(), reader.ReadInt32());
             IsDirty = dirty;
         }
@@ -151,7 +151,7 @@ public class HealthSystem : Object, ICustomSystemType
     public void Serialize(MessageWriter writer, bool initialState)
     {
         writer.Write((byte)PlayerHealths.Count);
-        foreach (var (playerId, health) in PlayerHealths)
+        foreach ((byte playerId, int health) in PlayerHealths)
         {
             writer.Write(playerId);
             writer.Write(health);

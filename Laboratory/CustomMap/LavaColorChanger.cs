@@ -57,17 +57,17 @@ public static class LavaColorChanger
         {
             GameObject.Find("BubbleParent")?.SetActive(false);
 
-            var meshAnimator = GameObject.Find("LavaOrange").GetComponent<MeshAnimator>();
+            MeshAnimator? meshAnimator = GameObject.Find("LavaOrange").GetComponent<MeshAnimator>();
 
-            foreach (var mesh in meshAnimator.Frames)
+            foreach (Mesh? mesh in meshAnimator.Frames)
             {
-                var currentColors = new List<Color32>();
+                List<Color32>? currentColors = new List<Color32>();
                 mesh.GetColors(currentColors);
 
                 var replacedColors = new Il2CppStructArray<Color32>(currentColors.Count);
-                for (var i = 0; i < currentColors.Count; i++)
+                for (int i = 0; i < currentColors.Count; i++)
                 {
-                    for (var j = 0; j < 4; j++)
+                    for (int j = 0; j < 4; j++)
                     {
                         // ReSharper disable once SuspiciousTypeConversion.Global
                         // DNF is hard clearing this sus line
@@ -83,7 +83,7 @@ public static class LavaColorChanger
         }
 
         // Makes a sprite to go under the clear part of the lava
-        var blankSprite = new GameObject { layer = 9 }.AddComponent<SpriteRenderer>();
+        SpriteRenderer? blankSprite = new GameObject { layer = 9 }.AddComponent<SpriteRenderer>();
         blankSprite.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
         blankSprite.drawMode = SpriteDrawMode.Sliced;
         blankSprite.size = new Vector2(8.63f, 1.28f);

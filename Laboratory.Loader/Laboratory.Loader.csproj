@@ -6,6 +6,7 @@
         <RuntimeIdentifier>win-x86</RuntimeIdentifier>
         <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     </PropertyGroup>
 
     <ItemGroup>

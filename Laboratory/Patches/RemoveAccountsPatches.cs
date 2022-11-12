@@ -54,7 +54,7 @@ internal static class RemoveAccountsPatches
     [HarmonyPrefix]
     public static bool EnableOnlineButtonPatch()
     {
-        var playButton = EOSManager.Instance.FindPlayOnlineButton();
+        GameObject? playButton = EOSManager.Instance.FindPlayOnlineButton();
         playButton.GetComponent<SpriteRenderer>().color = Color.white;
         playButton.GetComponent<PassiveButton>().enabled = true;
         playButton.GetComponent<ButtonRolloverHandler>().SetEnabledColors();

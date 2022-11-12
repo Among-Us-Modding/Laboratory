@@ -17,7 +17,7 @@ public class CounterSystem : Object, ICustomSystemType
 {
     public static int GetCount(uint key)
     {
-        Instance!.Counters.TryGetValue(key, out var res);
+        Instance!.Counters.TryGetValue(key, out int res);
         return res;
     }
 
@@ -75,7 +75,7 @@ public class CounterSystem : Object, ICustomSystemType
     public void Deserialize(MessageReader reader, bool initialState)
     {
         Counters.Clear();
-        var count = reader.ReadInt32();
+        int count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
         {
             Counters[reader.ReadUInt32()] = reader.ReadInt32();

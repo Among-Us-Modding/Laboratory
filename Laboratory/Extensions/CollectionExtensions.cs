@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnhollowerBaseLib;
+using Il2CppInterop.Runtime.InteropTypes;
 using I = Il2CppSystem.Collections.Generic;
 
 namespace Laboratory.Extensions;
@@ -14,36 +14,32 @@ public static class CollectionExtensions
     public static I.List<T> ToIl2CppList<T>(this List<T> systemList)
     {
         I.List<T> iList = new();
-        foreach (var item in systemList) iList.Add(item);
+        foreach (T item in systemList) iList.Add(item);
         return iList;
     }
 
     /// <summary>
     /// Shuffle a list with the fisher-yeats algorithm with Unity random
     /// </summary>
-    public static IList<T> Shuffle<T>(this IList<T> self)
+    public static void Shuffle<T>(this IList<T> self)
     {
-        for (var i = self.Count - 1; i > 0; i--)
+        for (int i = self.Count - 1; i > 0; i--)
         {
-            var j = UnityEngine.Random.Range(0, i + 1);
+            int j = UnityEngine.Random.Range(0, i + 1);
             (self[i], self[j]) = (self[j], self[i]);
         }
-
-        return self;
     }
 
     /// <summary>
     /// Shuffle a list with the fisher-yeats algorithm with a given random
     /// </summary>
-    public static IList<T> Shuffle<T>(this IList<T> self, Random random)
+    public static void Shuffle<T>(this IList<T> self, Random random)
     {
-        for (var i = self.Count - 1; i > 0; i--)
+        for (int i = self.Count - 1; i > 0; i--)
         {
-            var j = random.Next(i + 1);
+            int j = random.Next(i + 1);
             (self[i], self[j]) = (self[j], self[i]);
         }
-
-        return self;
     }
 
     /// <summary>
@@ -51,7 +47,7 @@ public static class CollectionExtensions
     /// </summary>
     public static IEnumerable<T> OfIl2CppType<T>(this IEnumerable source) where T : Il2CppObjectBase
     {
-        foreach (var obj in source)
+        foreach (object? obj in source)
         {
             if (obj is Il2CppObjectBase il2CppObject)
             {

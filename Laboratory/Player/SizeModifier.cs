@@ -19,7 +19,7 @@ public static class SizeModifer
 
     public static void SetSizeModifier(this PlayerPhysics player, float value, object? key)
     {
-        var set = sizeModifiers[player];
+        Dictionary<object?, float>? set = sizeModifiers[player];
         if (value == 1)
         {
             set.Remove(key);
@@ -39,9 +39,9 @@ public static class SizeModifer
 
     public static void Update(PlayerPhysics player)
     {
-        var size = DefaultSize;
+        Vector3 size = DefaultSize;
 
-        foreach (var (_, v) in sizeModifiers[player])
+        foreach ((object? _, float v) in sizeModifiers[player])
         {
             size *= v;
         }

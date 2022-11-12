@@ -2,24 +2,24 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace Laboratory.Extensions;
+namespace Laboratory.Utilities;
 
-public static class FindExtensions
+public static class PlayerFinder
 {
     public static Predicate<PlayerControl> Alive { get; } = player => !player.Data.IsDead;
     public static Predicate<PlayerControl> Visible { get; } = player => player.Visible;
-    public static Predicate<PlayerControl> Crewmate { get; } = player => !player.Data.IsImpostor;
-    public static Predicate<PlayerControl> Impostor { get; } = player => player.Data.IsImpostor;
+    public static Predicate<PlayerControl> Crewmate { get; } = player => !player.Data.Role.IsImpostor;
+    public static Predicate<PlayerControl> Impostor { get; } = player => player.Data.Role.IsImpostor;
 
     public static PlayerControl? FindPlayer(Vector3 position, float maxDistance, params Predicate<PlayerControl>[] filters)
     {
         PlayerControl? current = null;
 
-        foreach (var player in PlayerControl.AllPlayerControls)
+        foreach (PlayerControl? player in PlayerControl.AllPlayerControls)
         {
             if (filters.Any(filter => !filter(player))) continue;
 
-            var delta = Vector2.Distance(position, player.transform.position);
+            float delta = Vector2.Distance(position, player.transform.position);
             if (delta < maxDistance)
             {
                 maxDistance = delta;

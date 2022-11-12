@@ -15,7 +15,7 @@ public class CustomSystemType
 
     public static CustomSystemType Register<T>() where T : ICustomSystemType
     {
-        var customStringName = new CustomSystemType(_lastId--, typeof(T));
+        CustomSystemType? customStringName = new CustomSystemType(_lastId--, typeof(T));
         _list.Add(customStringName);
         SystemTypeHelpers.AllTypes = SystemTypeHelpers.AllTypes.Append(customStringName).ToArray();
 

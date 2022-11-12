@@ -9,7 +9,7 @@ internal static class InnerslothsMistakePatches
     [HarmonyPrefix]
     public static void AirshipMapTypePatch(ShipStatus __instance)
     {
-        var airship = __instance.TryCast<AirshipStatus>();
+        AirshipStatus? airship = __instance.TryCast<AirshipStatus>();
         if (airship) airship.Type = (ShipStatus.MapType) 3;
     }
 }

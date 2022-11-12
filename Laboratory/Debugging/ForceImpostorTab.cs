@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Laboratory.Extensions;
+using Laboratory.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Debugging;
@@ -23,13 +25,13 @@ public class ForceImpostorTab : BaseDebugTab
 
         Enabled = GUILayout.Toggle(Enabled, $"Force Impostor: {(Enabled ? "Enabled" : "Disabled")}", GUI.skin.button);
         if (!Enabled) return;
-        GUILayoutExtensions.Divider();
+        GUILayoutUtils.Divider();
 
-        var allPlayerNames = GameData.Instance.AllPlayers.ToArray().Where(d => d != null).Select(d => d.PlayerName);
-        foreach (var playerName in allPlayerNames)
+        IEnumerable<string>? allPlayerNames = GameData.Instance.AllPlayers.ToArray().Where(d => d != null).Select(d => d.PlayerName);
+        foreach (string? playerName in allPlayerNames)
         {
-            var currentlyForced = CurrentlySelected.Contains(playerName);
-            var toggled = GUILayout.Toggle(currentlyForced, $"{playerName}{(currentlyForced ? " Forced" : "")}", GUI.skin.button);
+            bool currentlyForced = CurrentlySelected.Contains(playerName);
+            bool toggled = GUILayout.Toggle(currentlyForced, $"{playerName}{(currentlyForced ? " Forced" : "")}", GUI.skin.button);
             if (toggled && !currentlyForced) CurrentlySelected.Add(playerName);
             if (!toggled && currentlyForced) CurrentlySelected.Remove(playerName);
         }
@@ -43,12 +45,12 @@ public class ForceImpostorTab : BaseDebugTab
         {
             if (!Enabled) return true;
 
-            var impostors = new List<GameData.PlayerInfo>();
+            List<GameData.PlayerInfo>? impostors = new List<GameData.PlayerInfo>();
 
-            var allPlayers = GameData.Instance.AllPlayers.ToArray();
-            foreach (var name in CurrentlySelected)
+            Il2CppArrayBase<GameData.PlayerInfo>? allPlayers = GameData.Instance.AllPlayers.ToArray();
+            foreach (string? name in CurrentlySelected)
             {
-                var match = allPlayers.FirstOrDefault(p => p.PlayerName == name);
+                GameData.PlayerInfo? match = allPlayers.FirstOrDefault(p => p.PlayerName == name);
                 if (match == null || match.Disconnected) continue;
                 impostors.Add(match);
             }

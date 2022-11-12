@@ -68,9 +68,9 @@ public class CameraZoomController : MonoBehaviour
             
         HudManager.Instance.FullScreen.transform.localScale *= 50;
 
-        var mainCam = Camera.main!;
+        Camera mainCam = Camera.main!;
         GameObject newCamObj = new("ZoomCamera");
-        var newCamTransform = newCamObj.transform;
+        Transform newCamTransform = newCamObj.transform;
         newCamTransform.parent = mainCam.transform;
         newCamTransform.localPosition = new Vector3(0, 0, 0);
         newCamTransform.localScale = new Vector3(1, 1, 1);
@@ -83,7 +83,7 @@ public class CameraZoomController : MonoBehaviour
         
     private void Update()
     {
-        var mainCam = Camera.main!;
+        Camera mainCam = Camera.main!;
         if (!mainCam) return;
             
         Cam!.backgroundColor = mainCam.backgroundColor;

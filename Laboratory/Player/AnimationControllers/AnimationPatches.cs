@@ -13,10 +13,10 @@ internal static class AnimationPatches
 {
     public static AnimationClip GetChangedClip(PlayerManager playerManager, AnimationClip original)
     {
-        var animationController = playerManager.AnimationController;
+        IAnimationController? animationController = playerManager.AnimationController;
         if (animationController == null) return original;
 
-        var playerPhysics = playerManager.Physics;
+        PlayerPhysics? playerPhysics = playerManager.Physics;
         if (playerPhysics == null) return original;
 
         if (original == playerPhysics.IdleAnim) return animationController.IdleAnim;
@@ -35,10 +35,10 @@ internal static class AnimationPatches
     {
         if (!changed) return changed;
 
-        var animationController = playerManager.AnimationController;
+        IAnimationController? animationController = playerManager.AnimationController;
         if (animationController == null) return changed;
 
-        var playerPhysics = playerManager.Physics;
+        PlayerPhysics? playerPhysics = playerManager.Physics;
         if (playerPhysics == null) return changed;
 
         if (changed == animationController.IdleAnim) return playerPhysics.IdleAnim;
@@ -61,14 +61,14 @@ internal static class AnimationPatches
     {
         if (__result == null) return;
 
-        var parent = __instance.transform.parent;
+        Transform? parent = __instance.transform.parent;
         if (!parent) return;
 
-        var playerManager = parent.GetPlayerManager();
+        PlayerManager? playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
         
         // This ensures that when a custom animation finishes it will allow the normal animation cycle to continue
-        var actuallyPlaying = __instance.Clip is {isLooping: true} || __instance.IsPlaying();
+        bool actuallyPlaying = __instance.Clip is {isLooping: true} || __instance.IsPlaying();
         __result = actuallyPlaying ? playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.ClimbAnim : GetOriginalClip(playerManager, __result) : null;
     }
 
@@ -150,10 +150,10 @@ internal static class AnimationPatches
     {
         if (anim == null) return;
 
-        var parent = __instance.transform.parent;
+        Transform? parent = __instance.transform.parent;
         if (!parent) return;
 
-        var playerManager = parent.GetPlayerManager();
+        PlayerManager? playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
 
         anim = GetChangedClip(playerManager, anim);
@@ -167,10 +167,10 @@ internal static class AnimationPatches
 
         if (__instance.clip == null || __instance.animator == null) return;
 
-        var parent = __instance.animator.transform.parent;
+        Transform? parent = __instance.animator.transform.parent;
         if (!parent) return;
 
-        var playerManager = parent.GetPlayerManager();
+        PlayerManager? playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
 
         __instance.clip = GetChangedClip(playerManager, __instance.clip);
@@ -180,11 +180,11 @@ internal static class AnimationPatches
     [HarmonyPrefix]
     public static bool AdjustOffsets(PlayerPhysics __instance)
     {
-        var anim = __instance.myPlayer.GetPlayerManager().AnimationController;
+        IAnimationController? anim = __instance.myPlayer.GetPlayerManager().AnimationController;
         if (anim == null) return true;
 
-        var transform = __instance.transform;
-        var position = transform.position;
+        Transform? transform = __instance.transform;
+        Vector3 position = transform.position;
         position.z = (position.y - anim.RendererOffset.y) / 1000f + anim.ZOffset;
         transform.position = position;
 

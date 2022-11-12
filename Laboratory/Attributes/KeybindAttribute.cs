@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Laboratory.Utils;
 using MonoMod.Utils;
@@ -43,7 +44,7 @@ public class KeybindAttribute : Attribute
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
     }
 
     private static void Register(Assembly assembly)
@@ -51,12 +52,12 @@ public class KeybindAttribute : Attribute
         if (Processed.Contains(assembly)) return;
         Processed.Add(assembly);
 
-        var types = assembly.GetTypes();
-        foreach (var type in types)
+        Type[] types = assembly.GetTypes();
+        foreach (Type type in types)
         {
-            foreach (var method in type.GetMethods(AccessTools.all))
+            foreach (MethodInfo method in type.GetMethods(AccessTools.all))
             {
-                var attribute = method.GetCustomAttribute<KeybindAttribute>();
+                KeybindAttribute? attribute = method.GetCustomAttribute<KeybindAttribute>();
                 if (attribute != null)
                 {
                     if (!method.IsStatic)
@@ -90,22 +91,22 @@ public class KeybindAttribute : Attribute
 
     private static void CheckInputs()
     {
-        foreach (var key in Keybinds.Keys)
+        foreach (KeyCode key in Keybinds.Keys)
         {
             if (Input.GetKeyDown(key))
             {
-                foreach (var action in Keybinds[key])
+                foreach (Action action in Keybinds[key])
                 {
                     action();
                 }
             }
         }
 
-        foreach (var mouseButton in Mousebinds.Keys)
+        foreach (int mouseButton in Mousebinds.Keys)
         {
             if (Input.GetMouseButtonDown(mouseButton))
             {
-                foreach (var action in Mousebinds[mouseButton])
+                foreach (Action action in Mousebinds[mouseButton])
                 {
                     action();
                 }

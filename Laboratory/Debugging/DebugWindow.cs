@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Laboratory.Extensions;
+using Laboratory.Utilities;
 using Reactor;
 using Reactor.Extensions;
 using UnhollowerBaseLib.Attributes;
@@ -70,7 +71,7 @@ public class DebugWindow : MonoBehaviour
 
             GUILayout.BeginHorizontal();
 
-            foreach (var tab in Tabs)
+            foreach (BaseDebugTab? tab in Tabs)
             {
                 if (GUILayout.Toggle(SelectedTab == tab, tab.Name, GUI.skin.button))
                 {
@@ -83,7 +84,7 @@ public class DebugWindow : MonoBehaviour
 
             if (SelectedTab is { IsVisible: true })
             {
-                GUILayoutExtensions.Divider();
+                GUILayoutUtils.Divider();
                 SelectedTab?.BuildUI();
             }
 

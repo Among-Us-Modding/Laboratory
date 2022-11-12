@@ -13,7 +13,7 @@ public class DefaultController : IAnimationController
     public DefaultController(PlayerManager owner, MaterialType? materialType)
     {
         Owner = owner;
-        var player = owner.Player;
+        PlayerControl? player = owner.Player;
         Anim = player.MyAnim;
 
         if (materialType != null)

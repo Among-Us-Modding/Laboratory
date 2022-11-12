@@ -14,7 +14,7 @@ internal static class TextFieldUnstrippingPatches
 
         private static TextEditor GetStateObject(int controlID)
         {
-            if (!StateObjects.TryGetValue(controlID, out var instance))
+            if (!StateObjects.TryGetValue(controlID, out TextEditor? instance))
             {
                 instance = new TextEditor();
                 StateObjects[controlID] = instance;
@@ -25,8 +25,8 @@ internal static class TextFieldUnstrippingPatches
 
         private static void HandleTextFieldEventForDesktop(Rect position, int id, GUIContent content, bool multiline, int maxLength, GUIStyle style, TextEditor editor)
         {
-            var current = Event.current;
-            var flag = false;
+            Event? current = Event.current;
+            bool flag = false;
             switch (current.type)
             {
                 case EventType.MouseDown:
@@ -85,9 +85,9 @@ internal static class TextFieldUnstrippingPatches
                     }
 
                     if (current.keyCode == KeyCode.Tab || current.character == '\t') return;
-                    var character = current.character;
+                    char character = current.character;
                     if (character == '\n' && !multiline && !current.alt) return;
-                    var font = style.font;
+                    Font? font = style.font;
                     if (!(bool)(Object)font) font = GUI.skin.font;
                     if (font.HasCharacter(character) || character == '\n')
                     {
@@ -133,7 +133,7 @@ internal static class TextFieldUnstrippingPatches
         {
             GUIUtility.CheckOnGUI();
             if (maxLength >= 0 && content.text.Length > maxLength) content.text = content.text.Substring(0, maxLength);
-            var editor = GetStateObject(id);
+            TextEditor? editor = GetStateObject(id);
             editor.text = content.text;
             editor.SaveBackup();
             editor.position = position;
@@ -151,10 +151,10 @@ internal static class TextFieldUnstrippingPatches
         [HarmonyPrefix]
         public static bool ReimplementGUILayoutDoTextField(GUILayout __instance, ref string __result, string text, int maxLength, bool multiline, GUIStyle style, Il2CppReferenceArray<GUILayoutOption> options)
         {
-            var controlId = GUIUtility.GetControlID(FocusType.Keyboard);
+            int controlId = GUIUtility.GetControlID(FocusType.Keyboard);
             GUIContent.Temp(text);
-            var content = GUIUtility.keyboardControl == controlId ? GUIContent.Temp(text + GUIUtility.compositionString) : GUIContent.Temp(text);
-            var rect = GUILayoutUtility.GetRect(content, style, options);
+            GUIContent? content = GUIUtility.keyboardControl == controlId ? GUIContent.Temp(text + GUIUtility.compositionString) : GUIContent.Temp(text);
+            Rect rect = GUILayoutUtility.GetRect(content, style, options);
             if (GUIUtility.keyboardControl == controlId) content = GUIContent.Temp(text);
             GUI.DoTextField(rect, controlId, content, multiline, maxLength, style);
             __result = content.text;

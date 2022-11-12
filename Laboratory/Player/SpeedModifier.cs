@@ -18,7 +18,7 @@ public static class SpeedModifier
 
     public static void SetSpeedModifier(this PlayerPhysics player, float value, object? key)
     {
-        var set = _speedModifiers[player];
+        Dictionary<object?, float>? set = _speedModifiers[player];
         if (value == 1)
         {
             set.Remove(key);
@@ -38,9 +38,9 @@ public static class SpeedModifier
 
     public static void Update(PlayerPhysics player)
     {
-        var speed = DefaultSpeed;
+        float speed = DefaultSpeed;
 
-        foreach (var (_, v) in _speedModifiers[player])
+        foreach ((object? _, float v) in _speedModifiers[player])
         {
             speed *= v;
         }

@@ -18,7 +18,7 @@ public static class CustomMurder
             return;
         }
 
-        var data = target.Data;
+        GameData.PlayerInfo? data = target.Data;
         if (data == null || data.IsDead || data.Disconnected)
         {
             return;
@@ -58,7 +58,7 @@ public static class CustomMurder
             DestroyableSingleton<HudManager>.Instance.ShadowQuad.gameObject.SetActive(false);
             target.nameText.GetComponent<MeshRenderer>().material.SetInt("_Mask", 0);
             target.RpcSetScanner(false);
-            var importantTextTask = new GameObject("_Player").AddComponent<ImportantTextTask>();
+            ImportantTextTask? importantTextTask = new GameObject("_Player").AddComponent<ImportantTextTask>();
             importantTextTask.transform.SetParent(target.transform, false);
             if (!PlayerControl.GameOptions.GhostsDoTasks)
             {
@@ -78,8 +78,8 @@ public static class CustomMurder
 
     private static IEnumerator CoPerformKill(KillAnimation killAnimation, PlayerControl murderer, PlayerControl target, bool silent)
     {
-        var cam = Camera.main!.GetComponent<FollowerCamera>();
-        var isParticipant = PlayerControl.LocalPlayer == murderer || PlayerControl.LocalPlayer == target;
+        FollowerCamera? cam = Camera.main!.GetComponent<FollowerCamera>();
+        bool isParticipant = PlayerControl.LocalPlayer == murderer || PlayerControl.LocalPlayer == target;
 
         if (!silent)
         {
@@ -87,12 +87,12 @@ public static class CustomMurder
             KillAnimation.SetMovement(target, false);
         }
 
-        var deadBody = Object.Instantiate(killAnimation.bodyPrefab);
+        DeadBody? deadBody = Object.Instantiate(killAnimation.bodyPrefab);
         deadBody.enabled = false;
         deadBody.ParentId = target.PlayerId;
         target.SetPlayerMaterialColors(deadBody.bodyRenderer);
         target.SetPlayerMaterialColors(deadBody.bloodSplatter);
-        var position = target.transform.position + killAnimation.BodyOffset;
+        Vector3 position = target.transform.position + killAnimation.BodyOffset;
         position.z = position.y / 1000f;
         deadBody.transform.position = position;
 
@@ -107,7 +107,7 @@ public static class CustomMurder
 
         if (!silent)
         {
-            var sourceAnim = murderer.MyAnim;
+            SpriteAnim? sourceAnim = murderer.MyAnim;
             yield return new WaitForAnimationFinish(sourceAnim, killAnimation.BlurAnim);
             murderer.NetTransform.SnapTo(target.transform.position);
             sourceAnim.Play(murderer.MyPhysics.IdleAnim);

@@ -11,11 +11,11 @@ public class TaskTab : BaseDebugTab
     {
         if (!PlayerControl.LocalPlayer) return;
 
-        foreach (var dataTask in PlayerControl.LocalPlayer.myTasks)
+        foreach (PlayerTask? dataTask in PlayerControl.LocalPlayer.myTasks)
         {
             if (!dataTask.IsComplete && dataTask.TryCast<NormalPlayerTask>() is { } task)
             {
-                var sb = new StringBuilder();
+                StringBuilder? sb = new StringBuilder();
                 dataTask.AppendTaskText(sb);
                 if (GUILayout.Button($"{sb.ToString().Replace('\n', ' ')}"))
                 {

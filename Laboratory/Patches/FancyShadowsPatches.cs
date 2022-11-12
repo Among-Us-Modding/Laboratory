@@ -12,15 +12,15 @@ internal static class FancyShadowsPatches
     [HarmonyPostfix]
     public static void UpdateShadowResolutionPatch(HudManager __instance)
     {
-        var screenWidth = Screen.width;
-        var screenHeight = Screen.height;
+        int screenWidth = Screen.width;
+        int screenHeight = Screen.height;
         if (screenWidth != PreviousScreenResolution.width || screenHeight != PreviousScreenResolution.height)
         {
-            var shadowCamera = __instance.PlayerCam.GetComponentInChildren<ShadowCamera>().GetComponent<Camera>();
+            Camera? shadowCamera = __instance.PlayerCam.GetComponentInChildren<ShadowCamera>().GetComponent<Camera>();
 
             if (!shadowCamera) return;
                 
-            var res = Mathf.Max(Screen.width, Screen.height);
+            int res = Mathf.Max(Screen.width, Screen.height);
             RenderTexture highResTexture = new(res, res, 0) {antiAliasing = 4};
         
             shadowCamera.targetTexture = highResTexture;

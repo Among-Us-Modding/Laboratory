@@ -13,8 +13,8 @@ public static class Visible
 
     public static void SetVisible(this PlayerControl player, bool value, object? key)
     {
-        var set = _invisible[player];
-        var changed = value ? set.Remove(key) : set.Add(key);
+        HashSet<object?>? set = _invisible[player];
+        bool changed = value ? set.Remove(key) : set.Add(key);
 
         if (changed)
         {
@@ -39,7 +39,7 @@ public static class Visible
 
     public static void UpdateVisible(PlayerControl player)
     {
-        var isVisible = player.Visible;
+        bool isVisible = player.Visible;
 
         player.myRend.enabled = isVisible;
         player.MyPhysics.Skin.Visible = isVisible;

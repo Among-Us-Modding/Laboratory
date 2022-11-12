@@ -41,7 +41,7 @@ public class EffectButton : CooldownButton
             yield return null;
         }
 
-        var duration = Effect.Timer;
+        float duration = Effect.Timer;
 
         while (Effect is { Timer: > 0 })
         {

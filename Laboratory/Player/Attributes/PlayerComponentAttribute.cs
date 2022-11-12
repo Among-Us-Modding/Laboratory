@@ -19,8 +19,8 @@ public class PlayerComponentAttribute : Attribute
 
     private static void Register(Assembly assembly)
     {
-        var types = assembly.GetTypes();
-        foreach (var type in types)
+        Type[]? types = assembly.GetTypes();
+        foreach (Type? type in types)
         {
             if (type.GetCustomAttribute<PlayerComponentAttribute>() is not null)
             {
@@ -39,7 +39,7 @@ public class PlayerComponentAttribute : Attribute
                 return;
             }
 
-            foreach (var type in _types)
+            foreach (Type? type in _types)
             {
                 var il2cppType = Il2CppType.From(type);
                 if (!__instance.GetComponent(il2cppType)) __instance.gameObject.AddComponent(il2cppType);

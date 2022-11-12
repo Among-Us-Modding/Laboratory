@@ -47,7 +47,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (AnimationController == null) return;
 
-        var data = Player.Data;
+        GameData.PlayerInfo? data = Player.Data;
         if (data == null) return;
 
         Player.nameText.enabled = !AnimationController.HideName;

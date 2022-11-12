@@ -9,11 +9,11 @@ public static class AnimationExtensions
 {
     public static IEnumerator Wait(this AnimationClip clip, Action<AnimationEvent>? onEvent = null)
     {
-        var length = clip.length;
+        float length = clip.length;
 
-        foreach (var animationEvent in clip.events)
+        foreach (AnimationEvent? animationEvent in clip.events)
         {
-            var time = animationEvent.time;
+            float time = animationEvent.time;
             length -= time;
 
             yield return new WaitForSeconds(time);

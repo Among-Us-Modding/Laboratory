@@ -6,6 +6,8 @@ using Reactor;
 using Reactor.Extensions;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Laboratory.Utils;
 
@@ -51,17 +53,17 @@ public class MapLoader : MonoBehaviour
     {
         while (AmongUsClient.Instance == null) yield return null;
 
-        var toLoad = new List<int>();
+        List<int>? toLoad = new List<int>();
         if (LoadSkeld) toLoad.Add(0);
         if (LoadMira) toLoad.Add(1);
         if (LoadPolus) toLoad.Add(2);
         if (LoadDleks) toLoad.Add(3);
         if (LoadAirship) toLoad.Add(4);
 
-        foreach (var i in toLoad)
+        foreach (int i in toLoad)
         {
-            var shipPrefab = AmongUsClient.Instance.ShipPrefabs.ToArray()[i];
-            var shipAsset = shipPrefab.LoadAsset<GameObject>();
+            AssetReference? shipPrefab = AmongUsClient.Instance.ShipPrefabs.ToArray()[i];
+            AsyncOperationHandle<GameObject>? shipAsset = shipPrefab.LoadAsset<GameObject>();
 
             yield return shipAsset;
 

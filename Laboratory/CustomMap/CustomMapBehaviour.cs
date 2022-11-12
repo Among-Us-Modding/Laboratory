@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Il2CppInterop.Runtime.Attributes;
 using Reactor;
+using Reactor.Utilities.Attributes;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -21,24 +23,24 @@ public class CustomMapBehaviour : MonoBehaviour
     private Dictionary<GameData.PlayerInfo, SpriteRenderer> HerePoints { [HideFromIl2Cpp] get; } = new();
 
     public MapBehaviour? Parent { get; set; }
-        
+    
     public void ShowAllPlayers()
     {
-        foreach (var (_, value) in HerePoints)
+        foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
         {
             Destroy(value.gameObject);
         }
         HerePoints.Clear();
         if (Parent == null) return;
-        foreach (var player in GameData.Instance.AllPlayers)
+        foreach (GameData.PlayerInfo? player in GameData.Instance.AllPlayers)
         {
             if (player.Disconnected) continue;
-            var hereTransform = Parent.HerePoint.transform;
+            Transform hereTransform = Parent.HerePoint.transform;
 
-            var newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
+            GameObject? newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
             newHerePoint.transform.localScale = hereTransform.localScale;
                 
-            var newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
+            SpriteRenderer? newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
             if (player.Object) player.Object.SetPlayerMaterialColors(newHerePointRend);
             HerePoints[player] = newHerePointRend;
         }
@@ -63,15 +65,15 @@ public class CustomMapBehaviour : MonoBehaviour
             PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
             map.ColorControl.SetColor(mapColor);
             DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-            var customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
+            CustomMapBehaviour? customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
             customMapBehaviour.ShowAllPlayers();
 
             // sketchy hack to remove the delegate when done
-            var clicks = new MouseClickEvent[2];
+            MouseClickEvent[] clicks = new MouseClickEvent[2];
             customMapBehaviour.MouseUpEvent += clicks[0] = mouseUpEvent;
             customMapBehaviour.MouseUpEvent += clicks[1] = delegate(CustomMapBehaviour instance, int _, Vector2 _)
             {
-                foreach (var mouseClickEvent in clicks)
+                foreach (MouseClickEvent mouseClickEvent in clicks)
                 {
                     instance.MouseUpEvent -= mouseClickEvent;
                 }
@@ -87,7 +89,7 @@ public class CustomMapBehaviour : MonoBehaviour
 
         if (Parent == null) return default;
             
-        var offset = ShipStatus.Instance.Type switch
+        Vector2 offset = ShipStatus.Instance.Type switch
         {
             ShipStatus.MapType.Ship => new Vector2(-2.3f, -5.4f),
             ShipStatus.MapType.Hq => new Vector2(9.1f, 11.1f),
@@ -115,7 +117,7 @@ public class CustomMapBehaviour : MonoBehaviour
             return;
         }
 
-        foreach (var (data, rend) in HerePoints)
+        foreach ((GameData.PlayerInfo? data, SpriteRenderer rend) in HerePoints)
         {
             if (data == null || !data.Object || data.IsDead || data.Disconnected)
             {
@@ -123,7 +125,7 @@ public class CustomMapBehaviour : MonoBehaviour
                 continue;
             }
             rend.enabled = true;
-            var vector = data.Object.transform.position;
+            Vector3 vector = data.Object.transform.position;
             vector /= ShipStatus.Instance.MapScale;
             vector.x *= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
             vector.z = -1f;
@@ -133,8 +135,8 @@ public class CustomMapBehaviour : MonoBehaviour
         
     private void Update()
     {
-        var mapPosition = Vector2.zero;
-        var mapPositionSet = false;
+        Vector2 mapPosition = Vector2.zero;
+        bool mapPositionSet = false;
         if (MouseDownEvent != null)
         {
             if (Input.GetMouseButtonDown(0)) MouseDownEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
@@ -159,7 +161,7 @@ public class CustomMapBehaviour : MonoBehaviour
         
     private void OnDisable()
     {
-        foreach (var (_, value) in HerePoints)
+        foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
         {
             Destroy(value.gameObject);
         }

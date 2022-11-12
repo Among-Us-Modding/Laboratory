@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes;
 using Laboratory.Extensions;
-using Reactor.Extensions;
-using UnhollowerBaseLib;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,15 +21,15 @@ public static class ShipStatus_Awake_Patch
         {
             HudManager.Instance.ShadowQuad.material.color = Color.clear;
 
-            foreach (var collider2D in Object.FindObjectsOfType<Collider2D>())
+            foreach (Collider2D? collider2D in Object.FindObjectsOfType<Collider2D>())
             {
                 if (collider2D.gameObject.layer == 10) collider2D.isTrigger = true;
             }
 
             Material newMat = new(Shader.Find("Sprites/Default"));
-            foreach (var shadow in Object.FindObjectsOfType<NoShadowBehaviour>())
+            foreach (NoShadowBehaviour? shadow in Object.FindObjectsOfType<NoShadowBehaviour>())
             {
-                var rend = shadow.GetComponent<SpriteRenderer>();
+                SpriteRenderer? rend = shadow.GetComponent<SpriteRenderer>();
                 shadow.Destroy();
                 rend.material = newMat;
             }
@@ -37,11 +37,11 @@ public static class ShipStatus_Awake_Patch
 
         if (MapConfig.DisableRoomTracker) HudManager.Instance.roomTracker.text.renderer.enabled = false;
 
-        foreach (var textureSwapBundle in MapConfig.TextureSwapBundles)
+        foreach (AssetBundle textureSwapBundle in MapConfig.TextureSwapBundles)
         {
             if (!MapConfig.SwapRawTextures)
             {
-                var sprites = textureSwapBundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList();
+                List<Sprite> sprites = textureSwapBundle.LoadAllAssets().OfIl2CppType<Sprite>().ToList();
                 SpriteSwapper.Swap(__instance.gameObject, sprites);
             }
             else
@@ -49,7 +49,6 @@ public static class ShipStatus_Awake_Patch
                 SpriteSwapper.SwapMapSpritesRaw(textureSwapBundle);
             }
         }
-
 
         // Map specific
         if (__instance.Type == ShipStatus.MapType.Pb)
@@ -79,9 +78,9 @@ public static class ShipStatus_OnEnable_Patch
     {
         if (!__state) return;
 
-        foreach (var customSystemType in CustomSystemType.List)
+        foreach (CustomSystemType customSystemType in CustomSystemType.List)
         {
-            __instance.Systems[customSystemType] = ((Il2CppObjectBase)Activator.CreateInstance(customSystemType.Value)).TryCast<ISystemType>();
+            __instance.Systems[customSystemType] = ((Il2CppObjectBase)Activator.CreateInstance(customSystemType.Value)!).TryCast<ISystemType>();
         }
     }
 }

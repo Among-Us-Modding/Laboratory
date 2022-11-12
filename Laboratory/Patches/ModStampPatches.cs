@@ -16,8 +16,8 @@ internal static class ModStampPatches
     {
         if (!StampManager) StampManager = __instance.gameObject.EnsureComponent<ModStampManager>();
 
-        var z = __instance.localCamera.nearClipPlane + 0.1f;
-        var sceneName = SceneManager.GetActiveScene().name;
+        float z = __instance.localCamera.nearClipPlane + 0.1f;
+        string? sceneName = SceneManager.GetActiveScene().name;
         switch (sceneName)
         {
             case "Tutorial":

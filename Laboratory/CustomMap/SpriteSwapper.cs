@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Laboratory.Extensions;
 using Reactor;
 using Reactor.Extensions;
@@ -12,12 +13,12 @@ public static class SpriteSwapper
 {
     public static void Swap(GameObject gameObject, List<Sprite> replacementSprites)
     {
-        foreach (var renderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+        foreach (SpriteRenderer? renderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
         {
-            var sprite = renderer.sprite;
+            Sprite? sprite = renderer.sprite;
             if (!sprite) continue;
 
-            var replacement = replacementSprites.FirstOrDefault(s => s.name == sprite.name && s.texture.name == sprite.texture.name);
+            Sprite? replacement = replacementSprites.FirstOrDefault(s => s.name == sprite.name && s.texture.name == sprite.texture.name);
             if (replacement)
             {
                 renderer.sprite = replacement;
@@ -30,19 +31,19 @@ public static class SpriteSwapper
     // TODO add filtering options
     public static void SwapMapSpritesRaw(AssetBundle bundle)
     {
-        var newTex = bundle.LoadAllAssets().OfIl2CppType<Texture2D>();
+        IEnumerable<Texture2D>? newTex = bundle.LoadAllAssets().OfIl2CppType<Texture2D>();
         newTex = newTex.OrderBy(t => t.name.Length);
 
-        var mapRends = ShipStatus.Instance.GetComponentsInChildren<SpriteRenderer>();
+        Il2CppArrayBase<SpriteRenderer>? mapRends = ShipStatus.Instance.GetComponentsInChildren<SpriteRenderer>();
 
-        foreach (var spriteRenderer in mapRends)
+        foreach (SpriteRenderer? spriteRenderer in mapRends)
         {
             if (spriteRenderer.sprite && spriteRenderer.sprite.texture)
             {
-                var match = newTex.FirstOrDefault(t => t.name.Replace('_', '-').Contains(spriteRenderer.sprite.texture.name.Replace('_', '-') + '-'));
+                Texture2D? match = newTex.FirstOrDefault(t => t.name.Replace('_', '-').Contains(spriteRenderer.sprite.texture.name.Replace('_', '-') + '-'));
                 if (match)
                 {
-                    var block = new MaterialPropertyBlock();
+                    MaterialPropertyBlock? block = new MaterialPropertyBlock();
                     block.AddTexture("_MainTex", match);
                     spriteRenderer.SetPropertyBlock(block);
                 }
@@ -56,18 +57,18 @@ public static class SpriteSwapper
     {
         if (ShipStatus.Instance.Type == ShipStatus.MapType.Pb)
         {
-            var z = -1f;
+            float z = -1f;
 
-            foreach (var groundSprite in sprites.Where(s => s.name.Contains("Ground")))
+            foreach (Sprite? groundSprite in sprites.Where(s => s.name.Contains("Ground")))
             {
                 GameObject.Find("NewMapGround")?.Destroy();
                 
-                var background = ShipStatus.Instance.transform.Find("Background");
-                var ground = new GameObject() { layer = 9, name = "NewMapGround" }.transform;
+                Transform? background = ShipStatus.Instance.transform.Find("Background");
+                Transform? ground = new GameObject() { layer = 9, name = "NewMapGround" }.transform;
                 ground.parent = background;
                 ground.localPosition = new Vector3(19.97f, -13.5f, z);
                 ground.localScale = new Vector3(0.3915f, 0.3915f, 1f);
-                var groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
+                SpriteRenderer? groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
                 groundRend.sprite = groundSprite;
 
                 z -= 0.001f;
@@ -78,18 +79,18 @@ public static class SpriteSwapper
 
         if (ShipStatus.Instance.Type == ShipStatus.MapType.Ship)
         {
-            var groundSprite = sprites.FirstOrDefault(s => s.name.Contains("SkeldFloor"));
+            Sprite? groundSprite = sprites.FirstOrDefault(s => s.name.Contains("SkeldFloor"));
             if (groundSprite)
             {
                 GameObject.Find("NewMapGround")?.Destroy();
 
-                var background = ShipStatus.Instance.transform.Find("Hull2");
+                Transform? background = ShipStatus.Instance.transform.Find("Hull2");
                 background.GetComponent<MeshRenderer>().enabled = false;
-                var ground = new GameObject() { layer = 9, name = "NewMapGround" }.transform;
+                Transform? ground = new GameObject() { layer = 9, name = "NewMapGround" }.transform;
                 ground.parent = background;
                 ground.localPosition = new Vector3(10.64f, -8.46f, -0.001f);
                 ground.localScale = new Vector3(0.1644f, 0.1644f, 1f);
-                var groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
+                SpriteRenderer? groundRend = ground.gameObject.AddComponent<SpriteRenderer>();
                 groundRend.sprite = groundSprite;
             }
 

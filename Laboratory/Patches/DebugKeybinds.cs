@@ -3,6 +3,7 @@
 using System;
 using HarmonyLib;
 using Laboratory.CustomMap;
+using Laboratory.Effects.Managers;
 using Laboratory.Effects.Utils;
 using Laboratory.Enums;
 using Laboratory.Extensions;
@@ -25,11 +26,11 @@ public static class KeyboardJoystick_Update_Patch
             CameraZoomController.Instance!.OrthographicSize = 3;
             HudManager.Instance.PlayerCam.Target = player;
             HudManager.Instance.PlayerCam.Locked = false;
-            var camTransform = Camera.main!.transform;
-            for (var i = 5; i < camTransform.childCount; i++) camTransform.GetChild(i).gameObject.Destroy();
+            Transform? camTransform = Camera.main!.transform;
+            for (int i = 5; i < camTransform.childCount; i++) camTransform.GetChild(i).gameObject.Destroy();
         }
 
-        var playerEffectManager = player.GetEffectManager();
+        PlayerEffectManager? playerEffectManager = player.GetEffectManager();
         playerEffectManager.ClearEffects();
         Moveable.Clear(player);
         Visible.Clear(player);
@@ -105,7 +106,7 @@ public static class KeyboardJoystick_Update_Patch
                 PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
                 map.ColorControl.SetColor(new Color32(158, 240, 103, 255));
                 DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-                var customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
+                CustomMapBehaviour? customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
                 customMapBehaviour.ShowAllPlayers();
                 customMapBehaviour.MouseUpEvent += MouseUpEvent;
             }));

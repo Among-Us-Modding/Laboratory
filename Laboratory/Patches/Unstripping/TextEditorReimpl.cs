@@ -73,7 +73,7 @@ public class TextEditor
         get { return m_CursorIndex; }
         set
         {
-            var oldCursorIndex = m_CursorIndex;
+            int oldCursorIndex = m_CursorIndex;
             m_CursorIndex = value;
             EnsureValidCodePointIndex(ref m_CursorIndex);
 
@@ -90,7 +90,7 @@ public class TextEditor
         get { return m_SelectIndex; }
         set
         {
-            var oldSelectIndex = m_SelectIndex;
+            int oldSelectIndex = m_SelectIndex;
             m_SelectIndex = value;
             EnsureValidCodePointIndex(ref m_SelectIndex);
 
@@ -154,21 +154,21 @@ public class TextEditor
     internal bool HandleKeyEvent(Event e, bool textIsReadOnly)
     {
         InitKeyActions();
-        var m = e.modifiers;
+        EventModifiers m = e.modifiers;
         e.modifiers &= ~EventModifiers.CapsLock;
         if (s_Keyactions!.ContainsKey(e))
         {
             Logger<LaboratoryPlugin>.Message($"Event 2: {e}");
-            var op = s_Keyactions[e];
+            TextEditOp op = s_Keyactions[e];
             PerformOperation(op, textIsReadOnly);
             e.modifiers = m;
             return true;
         }
             
-        var keyEvent = s_Keyactions2.FirstOrDefault(a => a.Item1.Equals(e));
+        (Event, TextEditOp) keyEvent = s_Keyactions2.FirstOrDefault(a => a.Item1.Equals(e));
         if (keyEvent != default)
         {
-            var op = keyEvent.Item2;
+            TextEditOp op = keyEvent.Item2;
             PerformOperation(op, textIsReadOnly);
             e.modifiers = m;
             return true;
@@ -186,8 +186,8 @@ public class TextEditor
             DeleteSelection();
             return true;
         }
-        var p = cursorIndex;
-        var i = p;
+        int p = cursorIndex;
+        int i = p;
         while (i-- != 0)
             if (text[i] == '\n')
             {
@@ -214,7 +214,7 @@ public class TextEditor
             return true;
         }
 
-        var prevWordEnd = FindEndOfPreviousWord(cursorIndex);
+        int prevWordEnd = FindEndOfPreviousWord(cursorIndex);
         if (cursorIndex != prevWordEnd)
         {
             m_Content.text = text.Remove(prevWordEnd, cursorIndex - prevWordEnd);
@@ -233,7 +233,7 @@ public class TextEditor
             return true;
         }
 
-        var nextWordStart = FindStartOfNextWord(cursorIndex);
+        int nextWordStart = FindStartOfNextWord(cursorIndex);
         if (cursorIndex < text.Length)
         {
             m_Content.text = text.Remove(cursorIndex, nextWordStart - cursorIndex);
@@ -275,7 +275,7 @@ public class TextEditor
 
         if (cursorIndex > 0)
         {
-            var startIndex = PreviousCodePointIndex(cursorIndex);
+            int startIndex = PreviousCodePointIndex(cursorIndex);
             m_Content.text = text.Remove(startIndex, cursorIndex - startIndex);
             selectIndex = cursorIndex = startIndex;
             ClearCursorPos();
@@ -354,8 +354,8 @@ public class TextEditor
     {
         if (m_iAltCursorPos == -1)
             return;
-        var p = m_iAltCursorPos;
-        var tmp = SelectedText;
+        int p = m_iAltCursorPos;
+        string? tmp = SelectedText;
         m_Content.text = text.Insert(p, tmp);
 
         if (p < cursorIndex)
@@ -439,9 +439,9 @@ public class TextEditor
     public void MoveLineStart()
     {
         // we start from the left-most selected character
-        var p = selectIndex < cursorIndex ? selectIndex : cursorIndex;
+        int p = selectIndex < cursorIndex ? selectIndex : cursorIndex;
         // then we scan back to find the first newline
-        var i = p;
+        int i = p;
         while (i-- != 0)
             if (text[i] == '\n')
             {
@@ -455,10 +455,10 @@ public class TextEditor
     public void MoveLineEnd()
     {
         // we start from the right-most selected character
-        var p = selectIndex > cursorIndex ? selectIndex : cursorIndex;
+        int p = selectIndex > cursorIndex ? selectIndex : cursorIndex;
         // then we scan forward to find the first newline
-        var i = p;
-        var strlen = text.Length;
+        int i = p;
+        int strlen = text.Length;
         while (i < strlen)
         {
             if (text[i] == '\n')
@@ -497,7 +497,7 @@ public class TextEditor
 
     private int IndexOfEndOfLine(int startIndex)
     {
-        var index = text.IndexOf('\n', startIndex);
+        int index = text.IndexOf('\n', startIndex);
         return (index != -1 ? index : text.Length);
     }
 
@@ -546,14 +546,14 @@ public class TextEditor
 
     public void MoveAltCursorToPosition(Vector2 cursorPosition)
     {
-        var index = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
+        int index = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
         m_iAltCursorPos = Mathf.Min(text.Length, index);
         DetectFocusChange();
     }
 
     public bool IsOverSelection(Vector2 cursorPosition)
     {
-        var p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
+        int p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
         return ((p < Mathf.Max(cursorIndex, selectIndex)) && (p > Mathf.Min(cursorIndex, selectIndex)));
     }
 
@@ -564,7 +564,7 @@ public class TextEditor
             cursorIndex = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
         else // snap to words/paragraphs
         {
-            var p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
+            int p = style.GetCursorStringIndex(localPosition, m_Content, cursorPosition + scrollOffset);
 
             EnsureValidCodePointIndex(ref p);
             EnsureValidCodePointIndex(ref m_DblClickInitPos);
@@ -614,7 +614,7 @@ public class TextEditor
         if (m_bJustSelected)
             if (cursorIndex > selectIndex)
             { // swap
-                var tmp = cursorIndex;
+                int tmp = cursorIndex;
                 cursorIndex = selectIndex;
                 selectIndex = tmp;
             }
@@ -628,7 +628,7 @@ public class TextEditor
         if (m_bJustSelected)
             if (cursorIndex < selectIndex)
             { // swap
-                var tmp = cursorIndex;
+                int tmp = cursorIndex;
                 cursorIndex = selectIndex;
                 selectIndex = tmp;
             }
@@ -681,7 +681,7 @@ public class TextEditor
 
     int GetGraphicalLineStart(int p)
     {
-        var point = style.GetCursorPixelPosition(localPosition, m_Content, p);
+        Vector2 point = style.GetCursorPixelPosition(localPosition, m_Content, p);
         point.y += 1.0f / GUIUtility.pixelsPerPoint; // we make sure no floating point errors can make us land on another line
         point.x = localPosition.x;
         return style.GetCursorStringIndex(localPosition, m_Content, point);
@@ -689,7 +689,7 @@ public class TextEditor
 
     int GetGraphicalLineEnd(int p)
     {
-        var point = style.GetCursorPixelPosition(localPosition, m_Content, p);
+        Vector2 point = style.GetCursorPixelPosition(localPosition, m_Content, p);
         point.y += 1.0f / GUIUtility.pixelsPerPoint; // we make sure no floating point errors can make us land on another line
         point.x += 5000;
         return style.GetCursorStringIndex(localPosition, m_Content, point);
@@ -697,7 +697,7 @@ public class TextEditor
 
     int FindNextSeperator(int startPos)
     {
-        var textLen = text.Length;
+        int textLen = text.Length;
         while (startPos < textLen && ClassifyChar(startPos) != CharacterType.LetterLike)
             startPos = NextCodePointIndex(startPos);
         while (startPos < textLen && ClassifyChar(startPos) == CharacterType.LetterLike)
@@ -791,12 +791,12 @@ public class TextEditor
     /// If the cursor is over an punctuation mark, it's moved forward ''till it a letter or a space of a punctuation mark. If the stopping character is a space, this is skipped as well
     public int FindStartOfNextWord(int p)
     {
-        var textLen = text.Length;
+        int textLen = text.Length;
         if (p == textLen)
             return p;
 
         // Find out which char type we're at...
-        var t = ClassifyChar(p);
+        CharacterType t = ClassifyChar(p);
         if (t != CharacterType.WhiteSpace)
         {
             p = NextCodePointIndex(p);
@@ -835,7 +835,7 @@ public class TextEditor
         while (p > 0 && text[p] == ' ')
             p = PreviousCodePointIndex(p);
 
-        var t = ClassifyChar(p);
+        CharacterType t = ClassifyChar(p);
         if (t != CharacterType.WhiteSpace)
         {
             while (p >  0 && ClassifyChar(PreviousCodePointIndex(p)) == t)
@@ -854,7 +854,7 @@ public class TextEditor
     public void SelectWordRight()
     {
         ClearCursorPos();
-        var cachedPos = selectIndex;
+        int cachedPos = selectIndex;
         if (cursorIndex < selectIndex)
         {
             selectIndex = cursorIndex;
@@ -871,7 +871,7 @@ public class TextEditor
     public void SelectWordLeft()
     {
         ClearCursorPos();
-        var cachedPos = selectIndex;
+        int cachedPos = selectIndex;
         if (cursorIndex > selectIndex)
         {
             selectIndex = cursorIndex;
@@ -894,7 +894,7 @@ public class TextEditor
             cursorIndex = GetGraphicalLineStart(cursorIndex);
         else
         {
-            var temp = cursorIndex;
+            int temp = cursorIndex;
             cursorIndex = GetGraphicalLineStart(selectIndex);
             selectIndex = temp;
         }
@@ -909,7 +909,7 @@ public class TextEditor
             cursorIndex = GetGraphicalLineEnd(cursorIndex);
         else
         {
-            var temp = cursorIndex;
+            int temp = cursorIndex;
             cursorIndex = GetGraphicalLineEnd(selectIndex);
             selectIndex = temp;
         }
@@ -934,7 +934,7 @@ public class TextEditor
     public void SelectParagraphForward()
     {
         ClearCursorPos();
-        var wasBehind = cursorIndex < selectIndex;
+        bool wasBehind = cursorIndex < selectIndex;
         if (cursorIndex < text.Length)
         {
             cursorIndex = IndexOfEndOfLine(cursorIndex + 1);
@@ -946,7 +946,7 @@ public class TextEditor
     public void SelectParagraphBackward()
     {
         ClearCursorPos();
-        var wasInFront = cursorIndex > selectIndex;
+        bool wasInFront = cursorIndex > selectIndex;
         if (cursorIndex > 1)
         {
             cursorIndex = text.LastIndexOf('\n', cursorIndex - 2) + 1;
@@ -960,7 +960,7 @@ public class TextEditor
     /// Select the word under the cursor
     public void SelectCurrentWord()
     {
-        var index = cursorIndex;
+        int index = cursorIndex;
         if (cursorIndex < selectIndex)
         {
             cursorIndex = FindEndOfClassification(index, Direction.Backward);
@@ -990,7 +990,7 @@ public class TextEditor
         if (p == text.Length)
             p = PreviousCodePointIndex(p);
 
-        var t = ClassifyChar(p);
+        CharacterType t = ClassifyChar(p);
         do
         {
             switch (dir)
@@ -1018,7 +1018,7 @@ public class TextEditor
     public void SelectCurrentParagraph()
     {
         ClearCursorPos();
-        var textLen = text.Length;
+        int textLen = text.Length;
 
         if (cursorIndex < textLen)
         {
@@ -1038,14 +1038,14 @@ public class TextEditor
 
     internal void UpdateScrollOffset()
     {
-        var cursorPos = cursorIndex;
+        int cursorPos = cursorIndex;
         graphicalCursorPos = style.GetCursorPixelPosition(new Rect(0, 0, position.width, position.height), m_Content, cursorPos);
 
         // The rectangle inside which the text is displayed.
-        var viewRect = style.padding.Remove(position);
+        Rect viewRect = style.padding.Remove(position);
 
         // Position of the cursor in the viewRect coordinate system.
-        var localGraphicalCursorPos = graphicalCursorPos;
+        Vector2 localGraphicalCursorPos = graphicalCursorPos;
         localGraphicalCursorPos.x -= style.padding.left;
         localGraphicalCursorPos.y -= style.padding.top;
 
@@ -1100,8 +1100,8 @@ public class TextEditor
         
     public void DrawCursor(string newText)
     {
-        var realText = text;
-        var cursorPos = cursorIndex;
+        string? realText = text;
+        int cursorPos = cursorIndex;
         if (GUIUtility.compositionString.Length > 0)
         {
             m_Content.text = newText.Substring(0, cursorIndex) + GUIUtility.compositionString + newText.Substring(selectIndex);
@@ -1114,7 +1114,7 @@ public class TextEditor
 
         //Debug.Log("Cursor pos: " + graphicalCursorPos);
 
-        var originalContentOffset = style.contentOffset;
+        Vector2 originalContentOffset = style.contentOffset;
         style.contentOffset -= scrollOffset;
         style.Internal_clipOffset = scrollOffset;
 
@@ -1267,7 +1267,7 @@ public class TextEditor
         if (isPasswordField)
             return;
 
-        var selectedRenderedText = style.Internal_GetSelectedRenderedText(localPosition, m_Content, selectIndex, cursorIndex);
+        string? selectedRenderedText = style.Internal_GetSelectedRenderedText(localPosition, m_Content, selectIndex, cursorIndex);
 
         GUIUtility.systemCopyBuffer = selectedRenderedText;
     }
@@ -1290,7 +1290,7 @@ public class TextEditor
     public bool Paste()
     {
         //Debug.Log ("Paste");
-        var pasteval = GUIUtility.systemCopyBuffer;
+        string? pasteval = GUIUtility.systemCopyBuffer;
         if (pasteval != "")
         {
             if (!multiline)
@@ -1419,7 +1419,7 @@ public class TextEditor
         }
 
         s_Keyactions2 = new List<(Event, TextEditOp)>();
-        foreach (var pair in s_Keyactions)
+        foreach (KeyValuePair<Event, TextEditOp> pair in s_Keyactions)
         {
             s_Keyactions2.Add((pair.Key, pair.Value));
         }

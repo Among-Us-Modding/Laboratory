@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Laboratory.Extensions;
+namespace Laboratory.Utilities;
 
-public static class GUILayoutExtensions
+public static class GUILayoutUtils
 {
     /// <summary>
     /// Makes a divider on a debug window
