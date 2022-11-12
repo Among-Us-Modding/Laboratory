@@ -16,7 +16,7 @@ internal static class CustomServerPatches
         {
             return new StaticRegionInfo(s.Name, StringNames.NoTranslation, s.Ip, new[]
             {
-                new ServerInfo(s.Name + "-Master-1", s.Ip, s.Port)
+                new ServerInfo(s.Name + "-Master-1", s.Ip, s.Port, false)
             }).Cast<IRegionInfo>();
         }).ToArray();
 

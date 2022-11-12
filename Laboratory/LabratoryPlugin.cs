@@ -5,6 +5,7 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Laboratory.Attributes;
 using Laboratory.Debugging;
+using Laboratory.Player.Attributes;
 using Laboratory.Utilities;
 using Reactor;
 using Reactor.Patches;
@@ -38,7 +39,7 @@ public partial class LaboratoryPlugin : BasePlugin
     {
         KeybindAttribute.Initialize();
         BaseDebugTab.Initialize();
-        // PlayerComponentAttribute.Initialize();
+        PlayerComponentAttribute.Initialize();
     }
 
     public override void Load()
