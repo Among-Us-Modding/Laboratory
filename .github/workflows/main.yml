@@ -33,7 +33,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Laboratory.dll
-          path: Laboratory/bin/Release/netstandard2.1/Laboratory.dll
+          path: Laboratory/bin/Release/net6.0/Laboratory.dll
 
       - uses: actions/upload-artifact@v2
         with:
