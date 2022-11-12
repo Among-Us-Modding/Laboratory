@@ -158,7 +158,7 @@ public class TextEditor
         e.modifiers &= ~EventModifiers.CapsLock;
         if (s_Keyactions!.ContainsKey(e))
         {
-            Logger<LaboratoryPlugin>.Message($"Event 2: {e}");
+            Message($"Event 2: {e}");
             TextEditOp op = s_Keyactions[e];
             PerformOperation(op, textIsReadOnly);
             e.modifiers = m;

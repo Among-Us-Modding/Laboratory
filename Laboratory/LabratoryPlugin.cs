@@ -1,7 +1,9 @@
-﻿using System;
+﻿global using static Reactor.Utilities.Logger<Laboratory.LaboratoryPlugin>;
+
+using System;
 using System.Collections.Generic;
 using BepInEx;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Laboratory.Attributes;
 using Laboratory.Debugging;
@@ -9,6 +11,7 @@ using Laboratory.Player.Attributes;
 using Laboratory.Utils;
 using Reactor;
 using Reactor.Patches;
+using Reactor.Utilities;
 using UnityEngine.SceneManagement;
 
 namespace Laboratory;
@@ -30,7 +33,7 @@ public partial class LaboratoryPlugin : BasePlugin
     /// </summary>
     public List<ServerInfo> Regions { get; } = new()
     {
-        new ServerInfo("Modded", "107.21.178.228", 22023),
+        new ServerInfo("Modded", "64.227.0.249", 22023),
     };
 
     public static LaboratoryPlugin Instance => PluginSingleton<LaboratoryPlugin>.Instance;

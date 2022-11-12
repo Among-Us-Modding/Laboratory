@@ -2,11 +2,11 @@
 
 using System;
 using HarmonyLib;
-using Laboratory.CustomMap;
 using Laboratory.Effects.Managers;
 using Laboratory.Effects.Utils;
 using Laboratory.Enums;
 using Laboratory.Extensions;
+using Laboratory.HudMap;
 using Laboratory.Player;
 using Reactor.Extensions;
 using Reactor.Networking.MethodRpc;

@@ -15,7 +15,7 @@ public class TaskTab : BaseDebugTab
         {
             if (!dataTask.IsComplete && dataTask.TryCast<NormalPlayerTask>() is { } task)
             {
-                StringBuilder? sb = new StringBuilder();
+                StringBuilder sb = new();
                 dataTask.AppendTaskText(sb);
                 if (GUILayout.Button($"{sb.ToString().Replace('\n', ' ')}"))
                 {

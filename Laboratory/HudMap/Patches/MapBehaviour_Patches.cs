@@ -1,7 +1,7 @@
 using HarmonyLib;
 using Laboratory.Extensions;
 
-namespace Laboratory.CustomMap.Patches;
+namespace Laboratory.HudMap.Patches;
 
 [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.Awake))]
 public static class MapBehaviour_Awake_Patch

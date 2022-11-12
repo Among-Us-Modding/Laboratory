@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Laboratory.Extensions;
-using Reactor;
-using Reactor.Extensions;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
-namespace Laboratory.CustomMap;
+namespace Laboratory.Map;
 
 public static class SpriteSwapper
 {
@@ -28,7 +27,6 @@ public static class SpriteSwapper
         CreateGround(replacementSprites);
     }
 
-    // TODO add filtering options
     public static void SwapMapSpritesRaw(AssetBundle bundle)
     {
         IEnumerable<Texture2D>? newTex = bundle.LoadAllAssets().OfIl2CppType<Texture2D>();
@@ -96,7 +94,5 @@ public static class SpriteSwapper
 
             return;
         }
-
-        throw new NotSupportedException();
     }
 }

@@ -1,9 +1,9 @@
 using System;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppSystem.Collections.Generic;
-using UnhollowerBaseLib;
 using UnityEngine;
 
-namespace Laboratory.CustomMap;
+namespace Laboratory.Map;
 
 public static class LavaColorChanger
 {
@@ -34,7 +34,6 @@ public static class LavaColorChanger
     /// <summary>
     /// Reference color scheme for lava colors
     /// </summary>
-    /// <remarks>https://media.discordapp.net/attachments/885556508866265098/890628223862448149/Lava_Recolor_Guide.png</remarks>
     public static Color32[] Reference { get; } =
     {
         new Color32(255, 0, 0, 255),

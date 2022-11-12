@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Laboratory.Extensions;
+using Il2CppInterop.Runtime.Attributes;
 using Laboratory.Utilities;
-using Reactor;
-using Reactor.Extensions;
-using UnhollowerBaseLib.Attributes;
+using Reactor.Utilities.Attributes;
+using Reactor.Utilities.ImGui;
 using UnityEngine;
 
 namespace Laboratory.Debugging;
@@ -92,7 +91,7 @@ public class DebugWindow : MonoBehaviour
         }
         catch (Exception e)
         {
-            Logger<LaboratoryPlugin>.Error(e);
+            Error(e);
         }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Hazel;
-using Laboratory.CustomMap;
+using Laboratory.Map;
 using Reactor;
 using UnhollowerRuntimeLib;
 using UnityEngine;

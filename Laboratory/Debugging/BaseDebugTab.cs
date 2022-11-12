@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using BepInEx.Unity.IL2CPP;
 using Reactor;
 
 namespace Laboratory.Debugging;
@@ -12,14 +13,14 @@ public abstract class BaseDebugTab
 {
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
     }
 
     private static void Register(Assembly assembly)
     {
         foreach (Type? type in assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(BaseDebugTab)) && !t.IsAbstract))
         {
-            BaseDebugTab? debugger = (BaseDebugTab)Activator.CreateInstance(type);
+            BaseDebugTab debugger = (BaseDebugTab)Activator.CreateInstance(type)!;
             DebugWindow.Tabs.Add(debugger);
         }
     }

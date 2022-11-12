@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes;
+using Laboratory.Config;
 using Laboratory.Extensions;
 using Reactor.Utilities.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Laboratory.CustomMap.Patches;
+namespace Laboratory.Map.Patches;
 
 [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Awake))]
 public static class ShipStatus_Awake_Patch

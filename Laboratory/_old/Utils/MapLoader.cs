@@ -39,7 +39,7 @@ public class MapLoader : MonoBehaviour
     {
         if (Instance)
         {
-            Logger<LaboratoryPlugin>.Warning($"{nameof(MapLoader)} spawned twice");
+            Warning($"{nameof(MapLoader)} spawned twice");
             this.Destroy();
             return;
         }

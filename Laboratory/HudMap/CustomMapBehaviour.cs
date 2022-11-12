@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Il2CppInterop.Runtime.Attributes;
-using Reactor;
 using Reactor.Utilities.Attributes;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace Laboratory.CustomMap;
+namespace Laboratory.HudMap;
 
 [RegisterInIl2Cpp]
 public class CustomMapBehaviour : MonoBehaviour
@@ -119,6 +117,7 @@ public class CustomMapBehaviour : MonoBehaviour
 
         foreach ((GameData.PlayerInfo? data, SpriteRenderer rend) in HerePoints)
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (data == null || !data.Object || data.IsDead || data.Disconnected)
             {
                 rend.enabled = false;

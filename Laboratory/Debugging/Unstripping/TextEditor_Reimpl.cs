@@ -5,11 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Reactor;
+using Reactor.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Debugging.Unstripping;
 
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TextEditor_Reimpl
 {
     public TouchScreenKeyboard? keyboardOnScreen = null;
@@ -31,15 +32,16 @@ public class TextEditor_Reimpl
     [Obsolete("Please use 'text' instead of 'content'", false)]
     public GUIContent content
     {
-        get { return m_Content; }
-        set { m_Content = value; }
+        get => m_Content;
+        set => m_Content = value;
     }
 
     public string text
     {
-        get { return m_Content.text; }
+        get => m_Content.text;
         set
         {
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             m_Content.text = value ?? string.Empty;
             EnsureValidCodePointIndex(ref m_CursorIndex);
             EnsureValidCodePointIndex(ref m_SelectIndex);
@@ -48,7 +50,7 @@ public class TextEditor_Reimpl
 
     public Rect position
     {
-        get { return m_Position; }
+        get => m_Position;
         set
         {
             if (m_Position == value)
@@ -63,14 +65,11 @@ public class TextEditor_Reimpl
         }
     }
 
-    internal virtual Rect localPosition
-    {
-        get { return position; }
-    }
+    internal virtual Rect localPosition => position;
 
     public int cursorIndex
     {
-        get { return m_CursorIndex; }
+        get => m_CursorIndex;
         set
         {
             int oldCursorIndex = m_CursorIndex;
@@ -87,7 +86,7 @@ public class TextEditor_Reimpl
 
     public int selectIndex
     {
-        get { return m_SelectIndex; }
+        get => m_SelectIndex;
         set
         {
             int oldSelectIndex = m_SelectIndex;
@@ -110,11 +109,15 @@ public class TextEditor_Reimpl
     bool m_MouseDragSelectsWholeWords;
     int m_DblClickInitPos;
     DblClickSnapping m_DblClickSnap = DblClickSnapping.WORDS;
-    public DblClickSnapping doubleClickSnapping { get { return m_DblClickSnap; } set { m_DblClickSnap = value; } }
+    public DblClickSnapping doubleClickSnapping { get => m_DblClickSnap;
+        set => m_DblClickSnap = value;
+    }
     bool m_bJustSelected;
 
     int m_iAltCursorPos = -1;
-    public int altCursorPosition { get { return m_iAltCursorPos; } set { m_iAltCursorPos = value; } }
+    public int altCursorPosition { get => m_iAltCursorPos;
+        set => m_iAltCursorPos = value;
+    }
 
     public enum DblClickSnapping : byte { WORDS, PARAGRAPHS }
 
@@ -299,7 +302,7 @@ public class TextEditor_Reimpl
     }
 
     /// Does this text field has a selection
-    public bool hasSelection { get { return cursorIndex != selectIndex; } }
+    public bool hasSelection => cursorIndex != selectIndex;
 
     /// Returns the selected text
     public string SelectedText
@@ -595,12 +598,7 @@ public class TextEditor_Reimpl
                 }
                 else
                 {
-                    if (p < text.Length)
-                    {
-                        cursorIndex = IndexOfEndOfLine(p);
-                    }
-                    else
-                        cursorIndex = text.Length;
+                    cursorIndex = p < text.Length ? IndexOfEndOfLine(p) : text.Length;
 
                     selectIndex = text.LastIndexOf('\n', Mathf.Max(0, m_DblClickInitPos - 2)) + 1;
                 }
@@ -614,9 +612,7 @@ public class TextEditor_Reimpl
         if (m_bJustSelected)
             if (cursorIndex > selectIndex)
             { // swap
-                int tmp = cursorIndex;
-                cursorIndex = selectIndex;
-                selectIndex = tmp;
+                (cursorIndex, selectIndex) = (selectIndex, cursorIndex);
             }
         m_bJustSelected = false;
 
@@ -628,9 +624,7 @@ public class TextEditor_Reimpl
         if (m_bJustSelected)
             if (cursorIndex < selectIndex)
             { // swap
-                int tmp = cursorIndex;
-                cursorIndex = selectIndex;
-                selectIndex = tmp;
+                (cursorIndex, selectIndex) = (selectIndex, cursorIndex);
             }
         m_bJustSelected = false;
 
@@ -1137,6 +1131,7 @@ public class TextEditor_Reimpl
         m_Content.text = realText;
     }
 
+    // ReSharper disable once UnusedMethodReturnValue.Local
     bool PerformOperation(TextEditOp operation, bool textIsReadOnly)
     {
         m_RevealCursor = true;
@@ -1211,7 +1206,7 @@ public class TextEditor_Reimpl
                 if (textIsReadOnly) return false;
                 else return DeleteWordForward();
             default:
-                Debug.Log("Unimplemented: " + operation);
+                UnityEngine.Debug.Log("Unimplemented: " + operation);
                 break;
         }
 

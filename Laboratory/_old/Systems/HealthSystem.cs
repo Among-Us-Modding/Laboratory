@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Hazel;
-using Laboratory.CustomMap;
 using Laboratory.Enums;
+using Laboratory.Map;
 using Laboratory.Utils;
 using Reactor;
 using Reactor.Extensions;

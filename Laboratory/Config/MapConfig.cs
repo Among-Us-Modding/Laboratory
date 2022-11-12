@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Laboratory.Map;
 using UnityEngine;
 
-namespace Laboratory.CustomMap;
+namespace Laboratory.Config;
 
 /// <summary>
 /// Configuration options for the appearance of the map
@@ -32,6 +33,7 @@ public static class MapConfig
     /// <summary>
     /// AssetBundles containing the Sprites used to swap textures on the map
     /// </summary>
+    // ReSharper disable once CollectionNeverUpdated.Global
     public static List<AssetBundle> TextureSwapBundles { get; set; } = new();
     
     /// <summary>

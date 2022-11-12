@@ -117,7 +117,7 @@ public sealed class AssetManager
         var asset = Bundle.LoadAsset<T>(name);
         if (!asset)
         {
-            Logger<LaboratoryPlugin>.Message($"Null Asset: {name}");
+            Message($"Null Asset: {name}");
             return null;
         }
 
