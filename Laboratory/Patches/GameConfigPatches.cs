@@ -90,7 +90,7 @@ internal static class GameConfigPatches
 
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.CoShowIntro))]
     [HarmonyPrefix]
-    public static bool CoShowIntroPatch(HudManager __instance, List<PlayerControl> yourTeam, ref Il2CppSystem.Collections.IEnumerator __result)
+    public static bool CoShowIntroPatch(HudManager __instance, ref Il2CppSystem.Collections.IEnumerator __result)
     {
         if (!GameConfig.DisableIntroCutscene)
         {

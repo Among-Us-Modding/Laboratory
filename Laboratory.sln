@@ -5,8 +5,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{095ED6FA-D3D6-4104-8322-EDD1CCCBBD30}"
 ProjectSection(SolutionItems) = preProject
 	nuget.config = nuget.config
-	build.cake = build.cake
-	build.sh = build.sh
 EndProjectSection
 EndProject
 Global
