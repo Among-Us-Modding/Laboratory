@@ -1143,7 +1143,7 @@ public class TextEditor
 
         switch (operation)
         {
-            // NOTE the TODOs below:
+            // NOTE the TO-DOs below:
                 
             case TextEditOp.MoveLeft:           MoveLeft(); break;
             case TextEditOp.MoveRight:          MoveRight(); break;

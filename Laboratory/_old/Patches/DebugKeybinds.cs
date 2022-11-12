@@ -1,6 +1,4 @@
-﻿// TODO cleanup
-
-using System;
+﻿using System;
 using HarmonyLib;
 using Laboratory.Effects.Managers;
 using Laboratory.Effects.Utils;

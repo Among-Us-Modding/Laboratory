@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace Laboratory.Utils;
+namespace Laboratory.Utilities.Reimpl;
 
 /// <summary>
 /// Clone of <see cref="Effects"/> so you can use <see cref="System.Action"/>
@@ -40,7 +40,7 @@ public static class MEffects
 
     public static IEnumerator All(params IEnumerator[] items)
     {
-        Stack<IEnumerator>[]? enums = new Stack<IEnumerator>[items.Length];
+        Stack<IEnumerator>[] enums = new Stack<IEnumerator>[items.Length];
         for (int i = 0; i < items.Length; i++)
         {
             enums[i] = new Stack<IEnumerator>();
@@ -51,7 +51,7 @@ public static class MEffects
         while (cap < 100000)
         {
             bool flag = false;
-            foreach (Stack<IEnumerator>? t in enums)
+            foreach (Stack<IEnumerator> t in enums)
             {
                 if (t.Count <= 0)
                 {
@@ -59,7 +59,7 @@ public static class MEffects
                 }
 
                 flag = true;
-                IEnumerator? enumerator = t.Peek();
+                IEnumerator enumerator = t.Peek();
                 if (enumerator.MoveNext())
                 {
                     if (enumerator.Current is IEnumerator current)

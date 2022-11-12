@@ -8,7 +8,7 @@ using System.Linq;
 using Reactor.Utilities;
 using UnityEngine;
 
-namespace Laboratory.Debugging.Unstripping;
+namespace Laboratory.Debugging.Reimpl;
 
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class TextEditor_Reimpl
@@ -1138,7 +1138,7 @@ public class TextEditor_Reimpl
 
         switch (operation)
         {
-            // NOTE the TODOs below:
+            // NOTE the TO-DOs below:
                 
             case TextEditOp.MoveLeft:           MoveLeft(); break;
             case TextEditOp.MoveRight:          MoveRight(); break;

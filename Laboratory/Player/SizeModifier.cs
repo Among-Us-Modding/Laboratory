@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using HarmonyLib;
-using Reactor;
+using Reactor.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Player;
@@ -13,13 +13,13 @@ public static class SizeModifer
 {
     public static Vector3 DefaultSize { get; set; } = new Vector3(0.7f, 0.7f, 1f);
 
-    private static readonly Dictionary<PlayerPhysics, Dictionary<object?, float>> sizeModifiers = new(Il2CppEqualityComparer<PlayerPhysics>.Instance);
+    private static readonly Dictionary<PlayerPhysics, Dictionary<object, float>> sizeModifiers = new(Il2CppEqualityComparer<PlayerPhysics>.Instance);
 
-    public static IReadOnlyDictionary<PlayerPhysics, Dictionary<object?, float>> SizeModifiers { get; } = new ReadOnlyDictionary<PlayerPhysics, Dictionary<object?, float>>(sizeModifiers);
+    public static IReadOnlyDictionary<PlayerPhysics, Dictionary<object, float>> SizeModifiers { get; } = new ReadOnlyDictionary<PlayerPhysics, Dictionary<object, float>>(sizeModifiers);
 
-    public static void SetSizeModifier(this PlayerPhysics player, float value, object? key)
+    public static void SetSizeModifier(this PlayerPhysics player, float value, object key)
     {
-        Dictionary<object?, float>? set = sizeModifiers[player];
+        Dictionary<object, float> set = sizeModifiers[player];
         if (value == 1)
         {
             set.Remove(key);
@@ -41,7 +41,7 @@ public static class SizeModifer
     {
         Vector3 size = DefaultSize;
 
-        foreach ((object? _, float v) in sizeModifiers[player])
+        foreach ((object _, float v) in sizeModifiers[player])
         {
             size *= v;
         }
@@ -61,7 +61,7 @@ public static class SizeModifer
         public static void Postfix(PlayerControl __instance)
         {
             if (__instance.notRealPlayer) return;
-            sizeModifiers[__instance.MyPhysics] = new Dictionary<object?, float>();
+            sizeModifiers[__instance.MyPhysics] = new Dictionary<object, float>();
         }
     }
 

@@ -1,9 +1,9 @@
-using Laboratory.Effects.Managers;
+using Laboratory.Extensions;
 using Laboratory.Player.AnimationControllers;
 using Laboratory.Player.Managers;
 using UnityEngine;
 
-namespace Laboratory.Extensions;
+namespace Laboratory.Player.Extensions;
 
 public static class PlayerExtensions
 {
@@ -21,10 +21,10 @@ public static class PlayerExtensions
 
     public static PlayerEffectManager GetEffectManager(this Component player) => player.gameObject.GetEffectManager();
 
-    public static IAnimationController? GetAnimationController(this GameObject player)
+    public static IAnimationController GetAnimationController(this GameObject player)
     {
         return player.GetPlayerManager().AnimationController;
     }
 
-    public static IAnimationController? GetAnimationController(this Component player) => player.gameObject.GetAnimationController();
+    public static IAnimationController GetAnimationController(this Component player) => player.gameObject.GetAnimationController();
 }

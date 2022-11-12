@@ -1,12 +1,12 @@
 using System;
-using Laboratory.Effects.Managers;
-using Laboratory.Extensions;
-using Reactor;
+using Laboratory.Player.Extensions;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 
 namespace Laboratory.Player.Managers;
 
 [RegisterInIl2Cpp]
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class CollisionManager : MonoBehaviour
 {
     public CollisionManager(IntPtr ptr) : base(ptr)
@@ -23,13 +23,13 @@ public class CollisionManager : MonoBehaviour
 
     public virtual void Awake()
     {
-        foreach ((string? layerName, int layer) in _layers)
+        foreach ((string layerName, int layer) in _layers)
         {
             GameObject obj = new($"{nameof(CollisionDetector)} ({layerName})") { layer = layer };
             obj.AddComponent<CollisionDetector>().Parent = this;
-            Transform? detectorTransform = obj.transform;
-            BoxCollider2D? box = obj.AddComponent<BoxCollider2D>();
-            Rigidbody2D? body = obj.AddComponent<Rigidbody2D>();
+            Transform detectorTransform = obj.transform;
+            BoxCollider2D box = obj.AddComponent<BoxCollider2D>();
+            Rigidbody2D body = obj.AddComponent<Rigidbody2D>();
 
             body.gravityScale = 0f;
             body.isKinematic = true;

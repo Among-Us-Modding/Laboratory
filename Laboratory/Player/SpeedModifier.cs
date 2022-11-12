@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using HarmonyLib;
-using Reactor;
+using Reactor.Utilities;
 
 namespace Laboratory.Player;
 
@@ -12,13 +12,13 @@ public static class SpeedModifier
 {
     public static float DefaultSpeed { get; set; } = 2.5f;
 
-    private static readonly Dictionary<PlayerPhysics, Dictionary<object?, float>> _speedModifiers = new(Il2CppEqualityComparer<PlayerPhysics>.Instance);
+    private static readonly Dictionary<PlayerPhysics, Dictionary<object, float>> _speedModifiers = new(Il2CppEqualityComparer<PlayerPhysics>.Instance);
 
-    public static IReadOnlyDictionary<PlayerPhysics, Dictionary<object?, float>> SpeedModifiers { get; } = new ReadOnlyDictionary<PlayerPhysics, Dictionary<object?, float>>(_speedModifiers);
+    public static IReadOnlyDictionary<PlayerPhysics, Dictionary<object, float>> SpeedModifiers { get; } = new ReadOnlyDictionary<PlayerPhysics, Dictionary<object, float>>(_speedModifiers);
 
-    public static void SetSpeedModifier(this PlayerPhysics player, float value, object? key)
+    public static void SetSpeedModifier(this PlayerPhysics player, float value, object key)
     {
-        Dictionary<object?, float>? set = _speedModifiers[player];
+        Dictionary<object, float> set = _speedModifiers[player];
         if (value == 1)
         {
             set.Remove(key);
@@ -40,7 +40,7 @@ public static class SpeedModifier
     {
         float speed = DefaultSpeed;
 
-        foreach ((object? _, float v) in _speedModifiers[player])
+        foreach ((object _, float v) in _speedModifiers[player])
         {
             speed *= v;
         }
@@ -60,7 +60,7 @@ public static class SpeedModifier
         public static void Postfix(PlayerControl __instance)
         {
             if (__instance.notRealPlayer) return;
-            _speedModifiers[__instance.MyPhysics] = new Dictionary<object?, float>();
+            _speedModifiers[__instance.MyPhysics] = new Dictionary<object, float>();
         }
     }
 

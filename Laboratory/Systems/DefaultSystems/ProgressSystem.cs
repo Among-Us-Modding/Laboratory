@@ -8,7 +8,7 @@ using UnityEngine;
 using IntPtr = System.IntPtr;
 using Object = Il2CppSystem.Object;
 
-namespace Laboratory.Systems;
+namespace Laboratory.Systems.DefaultSystems;
 
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class ProgressSystem : Object, ICustomSystemType

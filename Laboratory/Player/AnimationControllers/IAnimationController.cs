@@ -15,6 +15,7 @@ public interface IAnimationController
 
     public bool HideHat { get; }
     public bool HideSkin { get; }
+    public bool HideVisor { get; }
     public bool HidePet { get; }
     public bool HideName { get; }
     public bool IsPlayingCustomAnimation { get; }

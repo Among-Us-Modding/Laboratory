@@ -1,4 +1,4 @@
-namespace Laboratory;
+namespace Laboratory.Config;
 
 public static class GameConfig
 {

@@ -6,7 +6,7 @@ namespace Laboratory.Player.Patches;
 [HarmonyPatch]
 internal static class MovementPatches
 {
-    public static PlayerPhysics? LastPhysics = null;
+    public static PlayerPhysics LastPhysics = null;
     
     [HarmonyPatch(typeof(CustomNetworkTransform), nameof(CustomNetworkTransform.FixedUpdate))]
     [HarmonyPrefix]

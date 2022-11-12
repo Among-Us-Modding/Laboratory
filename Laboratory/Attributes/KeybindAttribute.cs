@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using Laboratory.Utils;
+using Laboratory.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Attributes;
@@ -33,7 +33,7 @@ public class KeybindAttribute : Attribute
 
     static KeybindAttribute()
     {
-        UnityEvents.UpdateEvent += CheckInputs;
+        UpdateEvents.UpdateEvent += CheckInputs;
     }
 
     private static List<Assembly> Processed { get; } = new();

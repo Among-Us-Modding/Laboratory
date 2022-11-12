@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
-using Reactor;
+using Reactor.Utilities;
 
 namespace Laboratory.Player;
 
@@ -9,11 +9,11 @@ namespace Laboratory.Player;
 /// </summary>
 public static class Visible
 {
-    private static readonly Dictionary<PlayerControl, HashSet<object?>> _invisible = new(Il2CppEqualityComparer<PlayerControl>.Instance);
+    private static readonly Dictionary<PlayerControl, HashSet<object>> _invisible = new(Il2CppEqualityComparer<PlayerControl>.Instance);
 
-    public static void SetVisible(this PlayerControl player, bool value, object? key)
+    public static void SetVisible(this PlayerControl player, bool value, object key)
     {
-        HashSet<object?>? set = _invisible[player];
+        HashSet<object> set = _invisible[player];
         bool changed = value ? set.Remove(key) : set.Add(key);
 
         if (changed)
@@ -27,7 +27,7 @@ public static class Visible
         player.SetVisible(value, typeof(T));
     }
 
-    public static bool IsVisible(this PlayerControl player, object? key)
+    public static bool IsVisible(this PlayerControl player, object key)
     {
         return !_invisible[player].Contains(key);
     }
@@ -41,15 +41,17 @@ public static class Visible
     {
         bool isVisible = player.Visible;
 
-        player.myRend.enabled = isVisible;
-        player.MyPhysics.Skin.Visible = isVisible;
-        player.HatRenderer.gameObject.SetActive(isVisible);
-        if (player.CurrentPet)
+        player.cosmetics.currentBodySprite.Visible = isVisible;
+        player.cosmetics.skin.Visible = isVisible;
+        player.cosmetics.hat.Visible = isVisible; // Should this disable the entire object?
+        player.cosmetics.visor.Visible = isVisible;
+        player.cosmetics.nameText.gameObject.SetActive(isVisible);
+        player.cosmetics.colorBlindText.enabled = isVisible;
+        
+        if (player.cosmetics.currentPet)
         {
-            player.CurrentPet.Visible = isVisible;
+            player.cosmetics.currentPet.Visible = isVisible;
         }
-
-        player.nameText.gameObject.SetActive(isVisible);
     }
 
     internal static void Clear(PlayerControl player)
@@ -64,7 +66,7 @@ public static class Visible
         public static void Postfix(PlayerControl __instance)
         {
             if (__instance.notRealPlayer) return;
-            _invisible[__instance] = new HashSet<object?>();
+            _invisible[__instance] = new HashSet<object>();
         }
     }
 

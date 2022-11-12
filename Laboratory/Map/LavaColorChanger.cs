@@ -63,7 +63,7 @@ public static class LavaColorChanger
                 List<Color32> currentColors = new();
                 mesh.GetColors(currentColors);
 
-                var replacedColors = new Il2CppStructArray<Color32>(currentColors.Count);
+                Il2CppStructArray<Color32> replacedColors = new Il2CppStructArray<Color32>(currentColors.Count);
                 for (int i = 0; i < currentColors.Count; i++)
                 {
                     for (int j = 0; j < 4; j++)

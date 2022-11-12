@@ -1,8 +1,8 @@
 using System;
+using Il2CppInterop.Runtime.Attributes;
 using Laboratory.Player.AnimationControllers;
 using Laboratory.Player.Attributes;
-using Reactor;
-using UnhollowerBaseLib.Attributes;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 
 namespace Laboratory.Player.Managers;
@@ -21,7 +21,7 @@ public class PlayerManager : MonoBehaviour
     public bool AmOwner => Player.AmOwner;
 
     [HideFromIl2Cpp]
-    public IAnimationController? AnimationController { get; set; }
+    public IAnimationController AnimationController { get; set; }
 
     public void Awake()
     {
@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour
     public void Start()
     {
         if (Physics.body) Physics.EnableInterpolation();
-        Physics.Skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
+        Player.cosmetics.skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
 
         AnimationController = new DefaultController(this, DefaultController.MaterialType.Player);
     }
@@ -47,15 +47,16 @@ public class PlayerManager : MonoBehaviour
     {
         if (AnimationController == null) return;
 
-        GameData.PlayerInfo? data = Player.Data;
+        GameData.PlayerInfo data = Player.Data;
         if (data == null) return;
 
-        Player.nameText.enabled = !AnimationController.HideName;
-        Physics.Skin.gameObject.SetActive(!AnimationController.HideSkin && Player.Visible);
-        Player.HatRenderer.gameObject.SetActive(!AnimationController.HideHat && !data.IsDead && Player.Visible);
-        if (Player.CurrentPet) Player.CurrentPet.gameObject.SetActive(!AnimationController.HidePet && Player.Visible);
+        Player.cosmetics.nameText.enabled = !AnimationController.HideName;
+        Player.cosmetics.skin.gameObject.SetActive(!AnimationController.HideSkin && Player.Visible);
+        Player.cosmetics.hat.gameObject.SetActive(!AnimationController.HideHat && !data.IsDead && Player.Visible);
+        Player.cosmetics.visor.gameObject.SetActive(!AnimationController.HideVisor && !data.IsDead && Player.Visible);
+        if (Player.cosmetics.currentPet) Player.cosmetics.currentPet.gameObject.SetActive(!AnimationController.HidePet && Player.Visible);
 
         Player.Collider.offset = new Vector2(0, AnimationController.ColliderYOffset);
-        Player.myRend.transform.localPosition = new Vector3(AnimationController.RendererOffset.x * (Player.myRend.flipX ? -1 : 1), AnimationController.RendererOffset.y, 0);
+        Player.cosmetics.currentBodySprite.BodySprite.transform.localPosition = new Vector3(AnimationController.RendererOffset.x * (Player.cosmetics.FlipX ? -1 : 1), AnimationController.RendererOffset.y, 0);
     }
 }

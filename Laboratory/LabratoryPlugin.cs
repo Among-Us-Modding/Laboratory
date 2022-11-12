@@ -5,6 +5,7 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Laboratory.Attributes;
 using Laboratory.Debugging;
+using Laboratory.Utilities;
 using Reactor;
 using Reactor.Patches;
 using Reactor.Utilities;
@@ -45,9 +46,8 @@ public partial class LaboratoryPlugin : BasePlugin
         Harmony.PatchAll();
         DebugWindow.Instance = AddComponent<DebugWindow>();
         
-        // TODO
-        // AddComponent<MapLoader>();
-        // AddComponent<UnityEvents>();
+        AddComponent<MapLoader>();
+        AddComponent<UpdateEvents>();
 
         ReactorVersionShower.TextUpdated += text => text.text += "\nLaboratory " + Version;
     }

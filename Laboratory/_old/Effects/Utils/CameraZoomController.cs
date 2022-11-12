@@ -78,7 +78,7 @@ public class CameraZoomController : MonoBehaviour
         Cam.CopyFrom(mainCam);
         Cam.depth += 1;
         _aspect = mainCam.aspect;
-        mainCam.ResetReplacementShader(); // TODO Review This
+        mainCam.ResetReplacementShader();
     }
         
     private void Update()

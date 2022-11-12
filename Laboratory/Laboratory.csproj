@@ -27,19 +27,7 @@
         <None Update="packages.lock.json" Visible="false" />
 
         <Compile Remove="_old\**" />
-
-        <None Include="Systems\CounterSystem.cs" />
-
-        <None Include="Systems\HealthSystem.cs" />
-
-        <None Include="Systems\ICustomSystemType.cs" />
-
-        <None Include="Systems\ProgressSystem.cs" />
-
-        <None Include="Utilities\CustomMurder.cs" />
-
         <None Include="_old\**" />
-        <Compile Remove="Extensions\PlayerExtensions.cs" />
     </ItemGroup>
 
     <ItemGroup>

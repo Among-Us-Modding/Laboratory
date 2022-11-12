@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
-using Laboratory.Debugging.Unstripping;
+using Laboratory.Debugging.Reimpl;
 using UnityEngine;
 
 namespace Laboratory.Debugging.Patches;

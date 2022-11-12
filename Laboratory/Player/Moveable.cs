@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using HarmonyLib;
-using Reactor;
+using Reactor.Utilities;
 using UnityEngine;
 
 namespace Laboratory.Player;
@@ -14,7 +14,7 @@ public static class Moveable
 
     public static void SetMoveable(this PlayerControl player, bool canMove, object key)
     {
-        HashSet<object>? set = _immovable[player];
+        HashSet<object> set = _immovable[player];
         bool changed = canMove ? set.Remove(key) : set.Add(key);
 
         if (changed && !canMove)

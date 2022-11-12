@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using Reactor;
-using UnhollowerRuntimeLib;
+using Il2CppInterop.Runtime;
 
 namespace Laboratory.Player.Attributes;
 
@@ -14,13 +14,13 @@ public class PlayerComponentAttribute : Attribute
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
     }
 
     private static void Register(Assembly assembly)
     {
-        Type[]? types = assembly.GetTypes();
-        foreach (Type? type in types)
+        Type[] types = assembly.GetTypes();
+        foreach (Type type in types)
         {
             if (type.GetCustomAttribute<PlayerComponentAttribute>() is not null)
             {
@@ -39,9 +39,9 @@ public class PlayerComponentAttribute : Attribute
                 return;
             }
 
-            foreach (Type? type in _types)
+            foreach (Type type in _types)
             {
-                var il2cppType = Il2CppType.From(type);
+                Il2CppSystem.Type il2cppType = Il2CppType.From(type);
                 if (!__instance.GetComponent(il2cppType)) __instance.gameObject.AddComponent(il2cppType);
             }
         }

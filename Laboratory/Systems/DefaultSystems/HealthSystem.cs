@@ -13,7 +13,7 @@ using IntPtr = System.IntPtr;
 using Math = System.Math;
 using Object = Il2CppSystem.Object;
 
-namespace Laboratory.Systems;
+namespace Laboratory.Systems.DefaultSystems;
 
 /// <summary>
 /// Generic system to manage player healths

@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Laboratory.Player.AnimationControllers;
 
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class DefaultController : IAnimationController
 {
     public PlayerManager Owner { get; }
@@ -13,12 +14,12 @@ public class DefaultController : IAnimationController
     public DefaultController(PlayerManager owner, MaterialType? materialType)
     {
         Owner = owner;
-        PlayerControl? player = owner.Player;
+        PlayerControl player = owner.Player;
         Anim = player.MyAnim;
 
         if (materialType != null)
         {
-            player.MyRend.material = new Material(Shader.Find(materialType switch
+            player.cosmetics.currentBodySprite.BodySprite.material = new Material(Shader.Find(materialType switch
             {
                 MaterialType.Player => "Unlit/PlayerShader",
                 MaterialType.Sprite => "Sprites/Default",
@@ -27,25 +28,26 @@ public class DefaultController : IAnimationController
 
             if (materialType == MaterialType.Player)
             {
-                player.SetPlayerMaterialColors(player.MyRend);
+                player.SetPlayerMaterialColors(player.cosmetics.currentBodySprite.BodySprite);
             }
         }
     }
 
-    public virtual AnimationClip SpawnAnim => Physics.SpawnAnim;
-    public virtual AnimationClip ClimbDownAnim => Physics.ClimbDownAnim;
-    public virtual AnimationClip ClimbAnim => Physics.ClimbAnim;
-    public virtual AnimationClip IdleAnim => Physics.IdleAnim;
-    public virtual AnimationClip GhostIdleAnim => Physics.GhostIdleAnim;
-    public virtual AnimationClip RunAnim => Physics.RunAnim;
-    public virtual AnimationClip EnterVentAnim => Physics.EnterVentAnim;
-    public virtual AnimationClip ExitVentAnim => Physics.ExitVentAnim;
+    public virtual AnimationClip SpawnAnim => Physics.CurrentAnimationGroup.SpawnAnim;
+    public virtual AnimationClip ClimbDownAnim => Physics.CurrentAnimationGroup.ClimbDownAnim;
+    public virtual AnimationClip ClimbAnim => Physics.CurrentAnimationGroup.ClimbAnim;
+    public virtual AnimationClip IdleAnim => Physics.CurrentAnimationGroup.IdleAnim;
+    public virtual AnimationClip GhostIdleAnim => Physics.CurrentAnimationGroup.GhostIdleAnim;
+    public virtual AnimationClip RunAnim => Physics.CurrentAnimationGroup.RunAnim;
+    public virtual AnimationClip EnterVentAnim => Physics.CurrentAnimationGroup.EnterVentAnim;
+    public virtual AnimationClip ExitVentAnim => Physics.CurrentAnimationGroup.ExitVentAnim;
 
     public SpriteAnim Anim { get; }
     public AnimationClip Current => Anim.Clip;
 
     public virtual bool HideHat => HideCosmetics;
     public virtual bool HideSkin => HideCosmetics;
+    public virtual bool HideVisor => HideCosmetics;
     public virtual bool HidePet => HideCosmetics;
     public virtual bool HideCosmetics => false;
     public virtual bool HideName => false;

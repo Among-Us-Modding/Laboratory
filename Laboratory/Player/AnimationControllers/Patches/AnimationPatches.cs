@@ -1,22 +1,21 @@
 using System;
 using HarmonyLib;
-using Laboratory.Extensions;
+using Laboratory.Player.Extensions;
 using Laboratory.Player.Managers;
 using PowerTools;
-using Reactor;
 using UnityEngine;
 
-namespace Laboratory.Player.AnimationControllers;
+namespace Laboratory.Player.AnimationControllers.Patches;
 
 [HarmonyPatch]
 internal static class AnimationPatches
 {
     public static AnimationClip GetChangedClip(PlayerManager playerManager, AnimationClip original)
     {
-        IAnimationController? animationController = playerManager.AnimationController;
+        IAnimationController animationController = playerManager.AnimationController;
         if (animationController == null) return original;
 
-        PlayerPhysics? playerPhysics = playerManager.Physics;
+        PlayerPhysics.AnimationGroup playerPhysics = playerManager.Physics.CurrentAnimationGroup;
         if (playerPhysics == null) return original;
 
         if (original == playerPhysics.IdleAnim) return animationController.IdleAnim;
@@ -31,14 +30,14 @@ internal static class AnimationPatches
         return original;
     }
 
-    public static AnimationClip? GetOriginalClip(PlayerManager playerManager, AnimationClip? changed)
+    public static AnimationClip GetOriginalClip(PlayerManager playerManager, AnimationClip changed)
     {
         if (!changed) return changed;
 
-        IAnimationController? animationController = playerManager.AnimationController;
+        IAnimationController animationController = playerManager.AnimationController;
         if (animationController == null) return changed;
 
-        PlayerPhysics? playerPhysics = playerManager.Physics;
+        PlayerPhysics.AnimationGroup playerPhysics = playerManager.Physics.CurrentAnimationGroup;
         if (playerPhysics == null) return changed;
 
         if (changed == animationController.IdleAnim) return playerPhysics.IdleAnim;
@@ -57,37 +56,37 @@ internal static class AnimationPatches
     // SpriteAnim.GetCurrentAnimation is too short to patch
     // Imagine this is a prefix which is enabled before PlayerPhysics.HandleAnimation and disabled afterwards
     // As such we will just call this in the reimplemented version of HandleAnimation as would be done in a postfix
-    public static void GetCurrentAnimationPatch(SpriteAnim __instance, ref AnimationClip? __result)
+    public static void GetCurrentAnimationPatch(SpriteAnim __instance, ref AnimationClip __result)
     {
         if (__result == null) return;
 
-        Transform? parent = __instance.transform.parent;
+        Transform parent = __instance.transform.parent;
         if (!parent) return;
 
-        PlayerManager? playerManager = parent.GetPlayerManager();
+        PlayerManager playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
         
         // This ensures that when a custom animation finishes it will allow the normal animation cycle to continue
         bool actuallyPlaying = __instance.Clip is {isLooping: true} || __instance.IsPlaying();
-        __result = actuallyPlaying ? playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.ClimbAnim : GetOriginalClip(playerManager, __result) : null;
+        __result = actuallyPlaying ? playerManager.AnimationController.IsPlayingCustomAnimation ? playerManager.Physics.CurrentAnimationGroup.ClimbAnim : GetOriginalClip(playerManager, __result) : null;
     }
 
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.HandleAnimation))]
     [HarmonyPrefix]
     public static bool HandleAnimationReimplemented(PlayerPhysics __instance, [HarmonyArgument(0)] bool amDead)
     {
-        if (__instance.Animator.IsPlaying(__instance.SpawnAnim) || !GameData.Instance)
+        if (__instance.Animator.IsPlaying(__instance.CurrentAnimationGroup.SpawnAnim) || !GameData.Instance)
         {
             return false;
         }
 
         Vector2 velocity = __instance.body.velocity;
-        AnimationClip? currentAnimation = __instance.Animator.GetCurrentAnimation();
+        AnimationClip currentAnimation = __instance.Animator.GetCurrentAnimation();
         // PATCH START
         // Here we image that we are running GetCurrentAnimationPatch as a postifx patch for GetCurrentAnimation
         GetCurrentAnimationPatch(__instance.Animator, ref currentAnimation);
         // PATCH END
-        if (currentAnimation == __instance.ClimbAnim || currentAnimation == __instance.ClimbDownAnim)
+        if (currentAnimation == __instance.CurrentAnimationGroup.ClimbAnim || currentAnimation == __instance.CurrentAnimationGroup.ClimbDownAnim)
         {
             return false;
         }
@@ -96,64 +95,71 @@ internal static class AnimationPatches
         {
             if (velocity.sqrMagnitude >= 0.05f)
             {
-                bool flipX = __instance.rend.flipX;
+                bool flipX = __instance.FlipX;
                 if (velocity.x < -0.01f)
                 {
-                    __instance.rend.flipX = true;
+                    __instance.FlipX = true;
                 }
                 else if (velocity.x > 0.01f)
                 {
-                    __instance.rend.flipX = false;
+                    __instance.FlipX = false;
                 }
-
-                if (currentAnimation != __instance.RunAnim || flipX != __instance.rend.flipX)
+                if (currentAnimation != __instance.CurrentAnimationGroup.RunAnim || flipX != __instance.FlipX)
                 {
-                    __instance.Animator.Play(__instance.RunAnim);
-                    __instance.Animator.Time = 11f / 24f;
-                    __instance.Skin.SetRun(__instance.rend.flipX);
+                    __instance.Animator.Play(__instance.CurrentAnimationGroup.RunAnim, 1f);
+                    if (!Constants.ShouldHorseAround())
+                    {
+                        __instance.Animator.Time = 0.45833334f;
+                    }
+                    __instance.myPlayer.cosmetics.AnimateSkinRun();
                 }
             }
-            else if (currentAnimation == __instance.RunAnim || currentAnimation == __instance.SpawnAnim || !currentAnimation)
+            else if (currentAnimation == __instance.CurrentAnimationGroup.RunAnim || currentAnimation == __instance.CurrentAnimationGroup.SpawnAnim || !currentAnimation)
             {
-                __instance.Skin.SetIdle(__instance.rend.flipX);
-                __instance.Animator.Play(__instance.IdleAnim);
-                __instance.myPlayer.SetHatAlpha(1f);
+                __instance.myPlayer.cosmetics.AnimateSkinIdle();
+                __instance.Animator.Play(__instance.CurrentAnimationGroup.IdleAnim, 1f);
+                __instance.myPlayer.SetHatAndVisorAlpha(1f);
             }
         }
         else
         {
-            __instance.Skin.SetGhost();
-            if (currentAnimation != __instance.GhostIdleAnim)
+            __instance.myPlayer.cosmetics.SetGhost();
+            if (__instance.myPlayer.Data.Role.Role == RoleTypes.GuardianAngel)
             {
-                __instance.Animator.Play(__instance.GhostIdleAnim);
-                __instance.myPlayer.SetHatAlpha(0.5f);
+                if (currentAnimation != __instance.CurrentAnimationGroup.GhostGuardianAngelAnim)
+                {
+                    __instance.Animator.Play(__instance.CurrentAnimationGroup.GhostGuardianAngelAnim, 1f);
+                    __instance.myPlayer.SetHatAndVisorAlpha(0.5f);
+                }
             }
-
+            else if (currentAnimation != __instance.CurrentAnimationGroup.GhostIdleAnim)
+            {
+                __instance.Animator.Play(__instance.CurrentAnimationGroup.GhostIdleAnim, 1f);
+                __instance.myPlayer.SetHatAndVisorAlpha(0.5f);
+            }
             if (velocity.x < -0.01f)
             {
-                __instance.rend.flipX = true;
+                __instance.FlipX = true;
             }
             else if (velocity.x > 0.01f)
             {
-                __instance.rend.flipX = false;
+                __instance.FlipX = false;
             }
         }
-
-        __instance.Skin.Flipped = __instance.rend.flipX;
 
         return false;
     }
 
     [HarmonyPatch(typeof(SpriteAnim), nameof(SpriteAnim.Play))]
     [HarmonyPrefix]
-    public static void PlayChangedClipPatch(SpriteAnim __instance, ref AnimationClip? anim)
+    public static void PlayChangedClipPatch(SpriteAnim __instance, ref AnimationClip anim)
     {
         if (anim == null) return;
 
-        Transform? parent = __instance.transform.parent;
+        Transform parent = __instance.transform.parent;
         if (!parent) return;
 
-        PlayerManager? playerManager = parent.GetPlayerManager();
+        PlayerManager playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
 
         anim = GetChangedClip(playerManager, anim);
@@ -167,10 +173,10 @@ internal static class AnimationPatches
 
         if (__instance.clip == null || __instance.animator == null) return;
 
-        Transform? parent = __instance.animator.transform.parent;
+        Transform parent = __instance.animator.transform.parent;
         if (!parent) return;
 
-        PlayerManager? playerManager = parent.GetPlayerManager();
+        PlayerManager playerManager = parent.GetPlayerManager();
         if (playerManager is not { AnimationController: { } }) return;
 
         __instance.clip = GetChangedClip(playerManager, __instance.clip);
@@ -180,10 +186,10 @@ internal static class AnimationPatches
     [HarmonyPrefix]
     public static bool AdjustOffsets(PlayerPhysics __instance)
     {
-        IAnimationController? anim = __instance.myPlayer.GetPlayerManager().AnimationController;
+        IAnimationController anim = __instance.myPlayer.GetPlayerManager().AnimationController;
         if (anim == null) return true;
 
-        Transform? transform = __instance.transform;
+        Transform transform = __instance.transform;
         Vector3 position = transform.position;
         position.z = (position.y - anim.RendererOffset.y) / 1000f + anim.ZOffset;
         transform.position = position;
