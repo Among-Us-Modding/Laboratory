@@ -13,7 +13,7 @@ internal static class SaveDataPatches
         __result = false;
     }
     
-    [HarmonyPatch(typeof(PlatformPaths), nameof(PlatformPaths.persistentDataPath), MethodType.Getter)]
+    /*[HarmonyPatch(typeof(PlatformPaths), nameof(PlatformPaths.persistentDataPath), MethodType.Getter)]
     [HarmonyPrepare]
     public static void PreparePersistentDataPatch()
     {
@@ -40,5 +40,5 @@ internal static class SaveDataPatches
     public static bool SetPurchasedPatch()
     {
         return false;
-    }
+    }*/
 }

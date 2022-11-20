@@ -30,12 +30,12 @@ internal static class UIPatches
         return false;
     }
     
-    [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
+    /*[HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     [HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void DisablePingTrackerPatch(PingTracker __instance)
     {
         __instance.gameObject.SetActive(false);
-    }
+    }*/
     
     [HarmonyPatch(typeof(StoreMenu), nameof(StoreMenu.Open))]
     [HarmonyPrefix]
