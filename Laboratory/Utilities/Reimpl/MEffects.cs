@@ -13,9 +13,9 @@ public static class MEffects
 {
     private static readonly HashSet<Transform> _activeShakes = new();
 
-    public static IEnumerator Action(Action to_do)
+    public static IEnumerator Action(Action todo)
     {
-        to_do();
+        todo();
         yield break;
     }
 

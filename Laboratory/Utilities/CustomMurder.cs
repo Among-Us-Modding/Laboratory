@@ -11,7 +11,7 @@ namespace Laboratory.Utilities;
 public static class CustomMurder
 {
     [MethodRpc((uint)CustomRPCs.CustomMurder)]
-    public static void RpcCustomMurder(this PlayerControl murderer, PlayerControl target, bool silent = false, bool leaveBody = true)
+    public static void RpcCustomMurder(this PlayerControl murderer, PlayerControl target, bool silent = false)
     {
         if (AmongUsClient.Instance.IsGameOver)
         {
@@ -73,10 +73,10 @@ public static class CustomMurder
             target.myTasks.Insert(0, importantTextTask);
         }
 
-        murderer.MyPhysics.StartCoroutine(CoPerformKill(murderer.KillAnimations.Random()!, murderer, target, silent, leaveBody));
+        murderer.MyPhysics.StartCoroutine(CoPerformKill(murderer.KillAnimations.Random()!, murderer, target, silent));
     }
 
-    private static IEnumerator CoPerformKill(KillAnimation killAnimation, PlayerControl murderer, PlayerControl target, bool silent, bool leaveBody)
+    private static IEnumerator CoPerformKill(KillAnimation killAnimation, PlayerControl murderer, PlayerControl target, bool silent)
     {
         FollowerCamera cam = Camera.main!.GetComponent<FollowerCamera>();
         bool isParticipant = PlayerControl.LocalPlayer == murderer || PlayerControl.LocalPlayer == target;
@@ -87,18 +87,14 @@ public static class CustomMurder
             KillAnimation.SetMovement(target, false);
         }
 
-        DeadBody deadBody = null;
-        if (leaveBody)
-        {
-            deadBody = Object.Instantiate(killAnimation.bodyPrefab);
-            deadBody.enabled = false;
-            deadBody.ParentId = target.PlayerId;
-            target.SetPlayerMaterialColors(deadBody.bodyRenderer);
-            target.SetPlayerMaterialColors(deadBody.bloodSplatter);
-            Vector3 position = target.transform.position + killAnimation.BodyOffset;
-            position.z = position.y / 1000f;
-            deadBody.transform.position = position;
-        }
+        DeadBody deadBody = Object.Instantiate(killAnimation.bodyPrefab);
+        deadBody.enabled = false;
+        deadBody.ParentId = target.PlayerId;
+        target.SetPlayerMaterialColors(deadBody.bodyRenderer);
+        target.SetPlayerMaterialColors(deadBody.bloodSplatter);
+        Vector3 position = target.transform.position + killAnimation.BodyOffset;
+        position.z = position.y / 1000f;
+        deadBody.transform.position = position;
 
         if (isParticipant)
         {
@@ -120,11 +116,7 @@ public static class CustomMurder
             KillAnimation.SetMovement(target, true);
         }
 
-        if (leaveBody)
-        {
-            deadBody.enabled = true;
-        }
-        
+        deadBody.enabled = true;
         if (isParticipant)
         {
             cam.Locked = false;
