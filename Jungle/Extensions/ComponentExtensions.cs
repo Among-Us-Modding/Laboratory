@@ -12,7 +12,7 @@ public static class ComponentExtensions
     /// </summary>
     public static T EnsureComponent<T>(this GameObject obj) where T : Component
     {
-        T comp = obj.GetComponent<T>();
+        var comp = obj.GetComponent<T>();
         if (!comp) comp = obj.AddComponent<T>();
         return comp;
     }
@@ -24,15 +24,15 @@ public static class ComponentExtensions
 
     public static T GetCachedComponent<T>(this GameObject gameObject) where T : Component
     {
-        if (CachedComponentStore<T>.Map.TryGetValue(gameObject, out T result))
+        if (CachedComponentStore<T>.Map.TryGetValue(gameObject, out var result))
         {
             return result;
         }
 
-        T component = gameObject.GetComponent<T>();
+        var component = gameObject.GetComponent<T>();
         if (!component) return component;
         
-        Dictionary<GameObject, T> map = CachedComponentStore<T>.Map;
+        var map = CachedComponentStore<T>.Map;
         map[gameObject] = component;
 
         gameObject.EnsureComponent<DestroyEventListener>().OnDestroyEvent += () => map.Remove(gameObject);

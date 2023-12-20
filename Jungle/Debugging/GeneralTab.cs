@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Jungle.Buttons;
+using Jungle.HUDMap;
 using Jungle.Utils;
 using UnityEngine;
 
@@ -15,6 +17,26 @@ public class GeneralTab : BaseDebugTab
         {
             Screen.SetResolution(2560, 1080, true);
             ResolutionManager.SetResolution(2560, 1080, true);
+        }
+        
+        if (GUILayout.Button("Test Button"))
+        {
+            CooldownButton.Create<ClimbButton>();
+        }
+
+        if (GUILayout.Button("Teleport"))
+        {
+            void MouseUpEvent(CustomMapBehaviour instance, int mousebutton, Vector2 worldposition)
+            {
+                if (mousebutton != 1) return;
+                instance.MouseUpEvent -= MouseUpEvent;
+                instance.Parent!.Close();
+                PlayerControl.LocalPlayer.moveable = true;
+                Message(PlayerControl.LocalPlayer.NetTransform.transform.position.ToString());
+                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(worldposition);
+                Message(PlayerControl.LocalPlayer.NetTransform.transform.position.ToString());
+            }
+            CustomMapBehaviour.ShowWithAllPlayers(new Color32(158, 240, 103, 255), MouseUpEvent);
         }
         
         if (CameraZoomController.Instance != null)

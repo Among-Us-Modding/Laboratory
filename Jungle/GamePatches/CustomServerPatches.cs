@@ -12,7 +12,7 @@ internal static class CustomServerPatches
     [HarmonyPrefix]
     public static bool LoadServersPatch(ServerManager __instance)
     {
-        Il2CppReferenceArray<IRegionInfo> regions = ServerManager.DefaultRegions = __instance.AvailableRegions = JunglePlugin.Instance.Regions.Select(s =>
+        var regions = ServerManager.DefaultRegions = __instance.AvailableRegions = JunglePlugin.Instance.Regions.Select(s =>
         {
             return new StaticRegionInfo(s.Name, StringNames.NoTranslation, s.Ip, new[]
             {
@@ -20,7 +20,7 @@ internal static class CustomServerPatches
             }).Cast<IRegionInfo>();
         }).ToArray();
 
-        IRegionInfo currentRegion = __instance.CurrentRegion = regions.First();
+        var currentRegion = __instance.CurrentRegion = regions.First();
         __instance.CurrentUdpServer = currentRegion.Servers.Random();
 
         return false;

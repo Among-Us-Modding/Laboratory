@@ -70,7 +70,7 @@ public class DebugWindow : MonoBehaviour
 
             GUILayout.BeginHorizontal();
 
-            foreach (BaseDebugTab tab in Tabs)
+            foreach (var tab in Tabs)
             {
                 if (GUILayout.Toggle(SelectedTab == tab, tab.Name, GUI.skin.button))
                 {

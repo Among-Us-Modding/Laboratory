@@ -43,7 +43,7 @@ public static class MapConfigPatches
         {
             HudManager.Instance.ShadowQuad.material.color = Color.clear;
 
-            foreach (Collider2D collider2D in Object.FindObjectsOfType<Collider2D>())
+            foreach (var collider2D in Object.FindObjectsOfType<Collider2D>())
             {
                 if (collider2D.gameObject.layer == 10) collider2D.isTrigger = true;
             }
