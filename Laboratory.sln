@@ -5,6 +5,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{095ED6FA-D3D6-4104-8322-EDD1CCCBBD30}"
 ProjectSection(SolutionItems) = preProject
 	nuget.config = nuget.config
+	.github\workflows\main.yml = .github\workflows\main.yml
+	build.cake = build.cake
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jungle", "Jungle\Jungle.csproj", "{FF52FA64-C72D-4F56-846F-FE9B4EA92653}"

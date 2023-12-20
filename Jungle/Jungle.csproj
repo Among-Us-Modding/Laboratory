@@ -9,7 +9,7 @@
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/Among-Us-Modding/Laboratory.git</RepositoryUrl>
 
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <DebugType>embedded</DebugType>

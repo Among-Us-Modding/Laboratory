@@ -40,5 +40,15 @@ jobs:
           name: Laboratory.nupkg
           path: Laboratory/bin/Release/Laboratory.*.nupkg
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Jungle.dll
+          path: Jungle/bin/Release/net6.0/Jungle.dll
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Jungle.nupkg
+          path: Jungle/bin/Release/Jungle.*.nupkg
+
       - name: Push
         run: dotnet nuget push **/bin/Release/*.nupkg --source https://nuget.pkg.github.com/Among-Us-Modding/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
