@@ -2,6 +2,7 @@ using System;
 using Hazel;
 using InnerNet;
 using Jungle.Effects.Managers;
+using Jungle.Enums;
 using Jungle.Player.Extensions;
 using Reactor.Networking.Attributes;
 using Reactor.Networking.Rpc;
@@ -9,9 +10,9 @@ using Reactor.Networking.Rpc;
 namespace Jungle.Effects;
 
 [RegisterCustomRpc((uint)CustomRPCs.AddEffect)]
-public class RpcAddEffect : PlayerCustomRpc<LaboratoryPlugin, RpcAddEffect.EffectInfo>
+public class RpcAddEffect : PlayerCustomRpc<JunglePlugin, RpcAddEffect.EffectInfo>
 {
-    public RpcAddEffect(LaboratoryPlugin plugin, uint id) : base(plugin, id)
+    public RpcAddEffect(JunglePlugin plugin, uint id) : base(plugin, id)
     {
     }
 

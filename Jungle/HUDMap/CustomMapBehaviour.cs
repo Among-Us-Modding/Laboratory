@@ -178,6 +178,7 @@ public class CustomMapBehaviour : MonoBehaviour
         if (MouseUpEvent != null) InvokeEvent(MouseUpEvent);
         return;
 
+        [HideFromIl2Cpp]
         void InvokeEvent(MouseClickEvent mouseEvent)
         {
             if (Input.GetMouseButtonDown(0)) mouseEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
