@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Laboratory.Extensions;
 using Laboratory.Player.Managers;
 using PowerTools;
 using UnityEngine;
@@ -9,14 +12,14 @@ namespace Laboratory.Player.AnimationControllers;
 public class DefaultController : IAnimationController
 {
     public PlayerManager Owner { get; }
+    public PlayerAnimations Animations => Owner.Physics.Animations;
     public PlayerPhysics Physics => Owner.Physics;
 
     public DefaultController(PlayerManager owner, MaterialType? materialType)
     {
         Owner = owner;
+        
         PlayerControl player = owner.Player;
-        Anim = player.MyAnim;
-
         if (materialType != null)
         {
             player.cosmetics.currentBodySprite.BodySprite.material = new Material(Shader.Find(materialType switch
@@ -33,17 +36,31 @@ public class DefaultController : IAnimationController
         }
     }
 
-    public virtual AnimationClip SpawnAnim => Physics.CurrentAnimationGroup.SpawnAnim;
-    public virtual AnimationClip ClimbDownAnim => Physics.CurrentAnimationGroup.ClimbDownAnim;
-    public virtual AnimationClip ClimbAnim => Physics.CurrentAnimationGroup.ClimbAnim;
-    public virtual AnimationClip IdleAnim => Physics.CurrentAnimationGroup.IdleAnim;
-    public virtual AnimationClip GhostIdleAnim => Physics.CurrentAnimationGroup.GhostIdleAnim;
-    public virtual AnimationClip RunAnim => Physics.CurrentAnimationGroup.RunAnim;
-    public virtual AnimationClip EnterVentAnim => Physics.CurrentAnimationGroup.EnterVentAnim;
-    public virtual AnimationClip ExitVentAnim => Physics.CurrentAnimationGroup.ExitVentAnim;
+    private PlayerAnimationGroup _group;
+    public PlayerAnimationGroup Group
+    {
+        get => _group;
+        set
+        {
+            _group = value;
 
-    public SpriteAnim Anim { get; }
-    public AnimationClip Current => Anim.Clip;
+            var groups = new List<PlayerAnimationGroup>();
+            foreach (var animationsAnimationGroup in Animations.animationGroups)
+            {
+                if (animationsAnimationGroup.BodyType != value.BodyType)
+                {
+                    groups.Add(animationsAnimationGroup);
+                }
+            }
+            groups.Add(value);
+            
+            Animations.animationGroups = groups.ToIl2CppList();
+            Physics.bodyType = value.BodyType;
+            Physics.myPlayer.cosmetics.EnsureInitialized(value.BodyType);
+            Animations.SetBodyType(value.BodyType, Physics.myPlayer.cosmetics.FlippedCosmeticOffset);
+            Animations.PlayIdleAnimation();
+        }
+    }
 
     public virtual bool HideHat => HideCosmetics;
     public virtual bool HideSkin => HideCosmetics;

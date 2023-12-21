@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AmongUs.GameOptions;
 using HarmonyLib;
+using Il2CppSystem;
 using Laboratory.Extensions;
 
 namespace Laboratory.Debugging.Patches;
@@ -23,15 +25,19 @@ public static class SelectRolesPatch
             if (match == null || match.Disconnected) continue;
             impostors.Add(match);
         }
-
-        int num1 = 0;
-        RoleManager.AssignRolesFromList(impostors.ToIl2CppList(), impostors.Count, 
-            Enumerable.Repeat(RoleTypes.Impostor, impostors.Count).ToList().ToIl2CppList(), ref num1);
-
-        int num2 = 0;
+        
         List<GameData.PlayerInfo> crew = list.Where(e => !impostors.Contains(e)).ToList();
-        RoleManager.AssignRolesFromList(crew.ToIl2CppList(), crew.Count,
-            Enumerable.Repeat(RoleTypes.Crewmate, crew.Count).ToList().ToIl2CppList(), ref num2);
+        
+        IGameOptions currentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
+        int numImpostors = impostors.Count;
+        
+        GameManager.Instance.LogicRoleSelection.AssignRolesForTeam(
+            impostors.ToIl2CppList(), currentGameOptions, 
+            RoleTeamTypes.Impostor, numImpostors, new Nullable<RoleTypes>(RoleTypes.Impostor));
+        GameManager.Instance.LogicRoleSelection.AssignRolesForTeam(
+            crew.ToIl2CppList(), currentGameOptions, RoleTeamTypes.Crewmate, int.MaxValue,
+            new Nullable<RoleTypes>(RoleTypes.Crewmate));
+
         
         return false;
     }

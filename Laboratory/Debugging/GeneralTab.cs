@@ -15,6 +15,12 @@ public class GeneralTab : BaseDebugTab
 
     public override void BuildUI()
     {
+        if (GUILayout.Button("Widescreen Fullscreen"))
+        {
+            Screen.SetResolution(2560, 1080, true);
+            ResolutionManager.SetResolution(2560, 1080, true);
+        }
+        
         if (CameraZoomController.Instance != null)
         {
             GUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");

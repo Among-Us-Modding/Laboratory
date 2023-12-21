@@ -18,6 +18,8 @@ public class CustomMapBehaviour : MonoBehaviour
     public MouseClickEvent MouseHeldEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
     public MouseClickEvent MouseUpEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
 
+    public Action DisableEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
+    
     private Dictionary<GameData.PlayerInfo, SpriteRenderer> HerePoints { [HideFromIl2Cpp] get; } = new();
 
     public MapBehaviour Parent { get; set; }
@@ -48,7 +50,18 @@ public class CustomMapBehaviour : MonoBehaviour
 
     public static void ShowWithAllPlayers(Color mapColor, MouseClickEvent mouseUpEvent)
     {
-        HudManager.Instance.ShowMap((Action<MapBehaviour>)(map =>
+        if (MapBehaviour.Instance && MapBehaviour.Instance.gameObject.activeSelf)
+        {
+            MapBehaviour.Instance.Close();
+            return;
+        }
+        if (HudManager.Instance.IsIntroDisplayed) return;
+        
+        if (!ShipStatus.Instance)  return;
+        
+        HudManager.Instance.InitMap();
+        
+        var action = (Action<MapBehaviour>)(map =>
         {
             if (map.IsOpen)
             {
@@ -63,20 +76,32 @@ public class CustomMapBehaviour : MonoBehaviour
             PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
             map.ColorControl.SetColor(mapColor);
             DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-            CustomMapBehaviour customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
+            var customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
             customMapBehaviour.ShowAllPlayers();
 
             // sketchy hack to remove the delegate when done
-            MouseClickEvent[] clicks = new MouseClickEvent[2];
+            var clicks = new MouseClickEvent[2];
             customMapBehaviour.MouseUpEvent += clicks[0] = mouseUpEvent;
             customMapBehaviour.MouseUpEvent += clicks[1] = delegate(CustomMapBehaviour instance, int _, Vector2 _)
             {
-                foreach (MouseClickEvent mouseClickEvent in clicks)
+                foreach (var mouseClickEvent in clicks)
                 {
                     instance.MouseUpEvent -= mouseClickEvent;
                 }
             };
-        }));
+            
+            var disables = new Action[2];
+            customMapBehaviour.DisableEvent += disables[0] = () =>
+            {
+                foreach (var mouseClickEvent in clicks) customMapBehaviour.MouseUpEvent -= mouseClickEvent;
+            };
+            customMapBehaviour.DisableEvent += disables[1] = () =>
+            {
+                foreach (var disable in disables) customMapBehaviour.DisableEvent -= disable;
+            };
+        });
+        
+        action(MapBehaviour.Instance);
     }
         
     [HideFromIl2Cpp]
@@ -86,16 +111,17 @@ public class CustomMapBehaviour : MonoBehaviour
         set = true;
 
         if (Parent == null) return default;
-            
+        
         Vector2 offset = ShipStatus.Instance.Type switch
         {
             ShipStatus.MapType.Ship => new Vector2(-2.3f, -5.4f),
             ShipStatus.MapType.Hq => new Vector2(9.1f, 11.1f),
             ShipStatus.MapType.Pb => new Vector2(20.7f, -12.0f),
-            (ShipStatus.MapType) 3 => new Vector2(7.3f, 0.2f),
+            ShipStatus.MapType.Fungle => new Vector2(0.7f, 0.2f),
+            (ShipStatus.MapType) 4 => new Vector2(7.3f, 0.2f),
             _ => Vector2.zero
         };
-
+        
         Vector2 mousePos = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
         Vector2 pointOnMap = Parent.transform.InverseTransformPoint(mousePos);
         pointOnMap.x /= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
@@ -134,33 +160,27 @@ public class CustomMapBehaviour : MonoBehaviour
         
     private void Update()
     {
-        Vector2 mapPosition = Vector2.zero;
-        bool mapPositionSet = false;
-        if (MouseDownEvent != null)
+        var mapPosition = Vector2.zero;
+        var mapPositionSet = false;
+
+        if (MouseDownEvent != null) InvokeEvent(MouseDownEvent);
+        if (MouseHeldEvent != null) InvokeEvent(MouseHeldEvent);  
+        if (MouseUpEvent != null) InvokeEvent(MouseUpEvent);
+        return;
+
+        [HideFromIl2Cpp]
+        void InvokeEvent(MouseClickEvent mouseEvent)
         {
-            if (Input.GetMouseButtonDown(0)) MouseDownEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
-            if (Input.GetMouseButtonDown(1)) MouseDownEvent(this, 1, GetMapPosition(ref mapPositionSet, ref mapPosition));
-            if (Input.GetMouseButtonDown(2)) MouseDownEvent(this, 2, GetMapPosition(ref mapPositionSet, ref mapPosition));
-        }
-            
-        if (MouseHeldEvent != null)
-        {
-            if (Input.GetMouseButton(0)) MouseHeldEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
-            if (Input.GetMouseButton(1)) MouseHeldEvent(this, 1, GetMapPosition(ref mapPositionSet, ref mapPosition));
-            if (Input.GetMouseButton(2)) MouseHeldEvent(this, 2, GetMapPosition(ref mapPositionSet, ref mapPosition));
-        }
-            
-        if (MouseUpEvent != null)
-        {
-            if (Input.GetMouseButtonUp(0)) MouseUpEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
-            if (Input.GetMouseButtonUp(1)) MouseUpEvent(this, 1, GetMapPosition(ref mapPositionSet, ref mapPosition));
-            if (Input.GetMouseButtonUp(2)) MouseUpEvent(this, 2, GetMapPosition(ref mapPositionSet, ref mapPosition));
+            if (Input.GetMouseButtonDown(0)) mouseEvent(this, 0, GetMapPosition(ref mapPositionSet, ref mapPosition));
+            if (Input.GetMouseButtonDown(1)) mouseEvent(this, 1, GetMapPosition(ref mapPositionSet, ref mapPosition));
+            if (Input.GetMouseButtonDown(2)) mouseEvent(this, 2, GetMapPosition(ref mapPositionSet, ref mapPosition));
         }
     }
         
     private void OnDisable()
     {
-        foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
+        DisableEvent?.Invoke();
+        foreach (var (_, value) in HerePoints)
         {
             Destroy(value.gameObject);
         }
