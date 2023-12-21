@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Il2CppInterop.Runtime.Attributes;
 using Jungle.Utils;
 using Reactor.Utilities.Attributes;
@@ -25,7 +26,7 @@ public class DebugWindow : MonoBehaviour
     /// If the debug window is enabled
     /// </summary>
     [HideFromIl2Cpp]
-    public bool Enabled { get; set; } = true;
+    public bool Enabled { get; set; } = false;
 
     /// <summary>
     /// Index into the tabs array which is currently active
@@ -44,9 +45,14 @@ public class DebugWindow : MonoBehaviour
         Window = new DragWindow(new Rect(20, 20, 100, 100), "Debug", BuildWindow);
     }
 
+    private void Awake()
+    {
+        Tabs.Reverse();
+    }
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1)) Enabled = !Enabled;
+        if (Input.GetKeyDown(KeyCode.F2)) Enabled = !Enabled;
     }
 
     private void OnGUI()

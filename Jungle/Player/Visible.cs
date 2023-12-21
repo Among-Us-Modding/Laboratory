@@ -7,7 +7,7 @@ namespace Jungle.Player;
 /// <summary>
 /// Race condition-free invisible players
 /// </summary>
-[HarmonyPatch]
+// [HarmonyPatch]
 public static class Visible
 {
     private static readonly Dictionary<PlayerControl, HashSet<object>> _invisible = new(Il2CppEqualityComparer<PlayerControl>.Instance);

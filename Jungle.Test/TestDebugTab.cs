@@ -1,15 +1,13 @@
-using System;
-using System.Collections.Generic;
-using Jungle.Buttons;
+﻿using Jungle.Debugging;
 using Jungle.HUDMap;
 using Jungle.Utils;
 using UnityEngine;
 
-namespace Jungle.Debugging;
+namespace Jungle.Test;
 
-public class GeneralTab : BaseDebugTab
+public class TemplateDebugTab : BaseDebugTab
 {
-    public override string Name => "General";
+    public override string Name => TestPlugin.Name;
 
     public override void BuildUI()
     {
@@ -19,11 +17,6 @@ public class GeneralTab : BaseDebugTab
             ResolutionManager.SetResolution(2560, 1080, true);
         }
         
-        if (GUILayout.Button("Test Button"))
-        {
-            CooldownButton.Create<ClimbButton>();
-        }
-
         if (GUILayout.Button("Teleport"))
         {
             void MouseUpEvent(CustomMapBehaviour instance, int mousebutton, Vector2 worldposition)
