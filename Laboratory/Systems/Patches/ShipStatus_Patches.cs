@@ -36,7 +36,7 @@ public static class SystemPatches
 
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.Deserialize))]
     [HarmonyPrefix]
-    public static void Deserialize(ShipStatus __instance, MessageReader reader, bool initialState)
+    public static bool Deserialize(ShipStatus __instance, MessageReader reader, bool initialState)
     {
         while (reader.Position < reader.Length)
         {
@@ -48,15 +48,17 @@ public static class SystemPatches
                 else value.Deserialize(messageReader, initialState);
             }
         }
+
+        return false;
     }
     
     [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.FixedUpdate))]
     [HarmonyPrefix]
-    public static void FixedUpdate(ShipStatus __instance)
+    public static bool FixedUpdate(ShipStatus __instance)
     {
         if (!AmongUsClient.Instance || !PlayerControl.LocalPlayer)
         {
-            return;
+            return false;
         }
         __instance.Timer += Time.fixedDeltaTime;
         __instance.EmergencyCooldown -= Time.fixedDeltaTime;
@@ -66,7 +68,7 @@ public static class SystemPatches
         }
         if (!AmongUsClient.Instance.AmClient)
         {
-            return;
+            return false;
         }
         for (int i = 0; i < SystemTypeHelpers.AllTypes.Length; i++)
         {
@@ -77,6 +79,8 @@ public static class SystemPatches
                 else value.Deteriorate(Time.fixedDeltaTime);
             }
         }
+
+        return false;
     }
 }
 
