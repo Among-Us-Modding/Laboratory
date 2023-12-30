@@ -30,6 +30,11 @@ internal static class AnimationPatches
         Vector3 position = transform.position;
         position.z = (position.y - anim.RendererOffset.y) / 1000f + anim.ZOffset;
         transform.position = position;
+        
+        foreach (var spriteAnimNodeSync in __instance.GetComponentsInChildren<SpriteAnimNodeSync>())
+        {
+            spriteAnimNodeSync.LateUpdate();
+        }
 
         return false;
     }

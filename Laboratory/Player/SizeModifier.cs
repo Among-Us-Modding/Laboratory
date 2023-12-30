@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using HarmonyLib;
@@ -20,7 +21,7 @@ public static class SizeModifer
     public static void SetSizeModifier(this PlayerPhysics player, float value, object key)
     {
         Dictionary<object, float> set = sizeModifiers[player];
-        if (value == 1)
+        if (Math.Abs(value - 1) < 0.001)
         {
             set.Remove(key);
         }
@@ -39,13 +40,14 @@ public static class SizeModifer
 
     public static void Update(PlayerPhysics player)
     {
-        Vector3 size = DefaultSize;
+        var size = DefaultSize;
 
-        foreach ((object _, float v) in sizeModifiers[player])
+        foreach (var (_, v) in sizeModifiers[player])
         {
             size *= v;
         }
 
+        player.myPlayer.Collider.Cast<CircleCollider2D>().radius = 0.2233912f / (size.x / DefaultSize.x);
         player.transform.localScale = size;
     }
 

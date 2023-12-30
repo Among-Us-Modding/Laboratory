@@ -1,3 +1,5 @@
+using System.Collections;
+using BepInEx.Unity.IL2CPP.Utils;
 using Laboratory.Effects.Managers;
 using Laboratory.Extensions;
 using Laboratory.Player.Managers;
@@ -19,4 +21,21 @@ public static class PlayerExtensions
         return player.GetCachedComponent<PlayerEffectManager>();
     }
 
-    public static PlayerEffectManager GetEffectManager(this Component player) => player.gameObject.GetEffectManager(); }
+    public static PlayerEffectManager GetEffectManager(this Component player) => player.gameObject.GetEffectManager();
+
+    public static Coroutine AnimateCustom(this PlayerControl player, AnimationClip clip)
+    {
+        return player.StartCoroutine(player.CoAnimateCustom(clip));
+    }
+
+    private static IEnumerator CoAnimateCustom(this PlayerControl player, AnimationClip clip)
+    {
+        player.MyPhysics.DoingCustomAnimation = true;
+
+        yield return player.MyPhysics.Animations.CoPlayCustomAnimation(clip);
+        player.cosmetics.AnimateSkinIdle();
+        player.MyPhysics.Animations.PlayIdleAnimation();
+        player.cosmetics.SetBodyCosmeticsVisible(b: true);
+        player.MyPhysics.DoingCustomAnimation = false;
+    }
+}

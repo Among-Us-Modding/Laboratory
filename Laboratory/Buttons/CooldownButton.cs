@@ -157,7 +157,7 @@ public class CooldownButton : MonoBehaviour
     public virtual bool ShouldBeVisible()
     {
         if (!ShipStatus.Instance) return false;
-        if (!HudManager.Instance.UseButton.gameObject.active) return false;
+        if (!HudManager.Instance.UseButton.gameObject.active && !HudManager.Instance.PetButton.gameObject.active) return false;
         PlayerControl localPlayer = PlayerControl.LocalPlayer;
         if (!localPlayer || localPlayer.Data == null) return false;
         if (localPlayer.Data.IsDead) return false;
