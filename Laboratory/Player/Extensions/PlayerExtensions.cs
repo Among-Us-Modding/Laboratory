@@ -23,7 +23,7 @@ public static class PlayerExtensions
 
     public static PlayerEffectManager GetEffectManager(this Component player) => player.gameObject.GetEffectManager();
 
-    public static Coroutine AnimateCustom(this PlayerControl player, AnimationClip clip)
+    public static Coroutine CustomAnimateCustom(this PlayerControl player, AnimationClip clip)
     {
         return player.StartCoroutine(player.CoAnimateCustom(clip));
     }
