@@ -25,11 +25,29 @@ public static class GameConfigPatches
         return !GameConfig.DisableMeetings;
     }
 
+    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.FixedUpdate))]
+    [HarmonyPostfix]
+    public static void DisableUIElementsPlayer()
+    {
+        if (!HudManager.InstanceExists) return;
+        DisableUIElementsPatch(HudManager.Instance);
+    }
+    
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour), typeof(bool))]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     [HarmonyPostfix]
     public static void DisableUIElementsPatch(HudManager __instance)
     {
+        if (GameConfig.DisableVentButton)
+        {
+            __instance.ImpostorVentButton.gameObject.SetActive(false);
+        }
+
+        if (GameConfig.DisableSabotageButton)
+        {
+            __instance.SabotageButton.gameObject.SetActive(false);
+        }
+        
         if (GameConfig.DisableKillButton)
         {
             __instance.KillButton.gameObject.SetActive(false);

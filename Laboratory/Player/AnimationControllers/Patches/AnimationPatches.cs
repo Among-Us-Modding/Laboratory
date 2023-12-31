@@ -10,6 +10,20 @@ namespace Laboratory.Player.AnimationControllers.Patches;
 [HarmonyPatch]
 internal static class AnimationPatches
 {
+    [HarmonyPatch(typeof(HatParent), nameof(HatParent.SetClimbAnim))]
+    [HarmonyPrefix]
+    public static bool FixClimbingNre(HatParent __instance)
+    {
+        if (__instance.options.ShowForClimb)
+        {
+            __instance.BackLayer.enabled = false;
+            __instance.FrontLayer.enabled = true;
+            __instance.FrontLayer.sprite = __instance.hatDataAsset?.GetAsset()?.ClimbImage;
+        }
+
+        return false;
+    }
+    
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.DoingCustomAnimation), MethodType.Getter)]
     [HarmonyPrefix]
     public static bool DoingCustomAnimationGetPatch(PlayerPhysics __instance, ref bool __result)
