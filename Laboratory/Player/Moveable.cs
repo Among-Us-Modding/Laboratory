@@ -56,12 +56,35 @@ public static class Moveable
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CanMove), MethodType.Getter)]
     private static class GetCanMovePatch
     {
-        public static void Postfix(PlayerControl __instance, ref bool __result)
+        public static bool Prefix(PlayerControl __instance, ref bool __result)
         {
             if (_immovable[__instance].Count > 0)
             {
                 __result = false;
+                return false;
             }
+            
+            if (__instance.moveable 
+                && !__instance.inVent 
+                && !__instance.shapeshifting
+                && !__instance.waitingForShapeshiftResponse
+                && !Minigame.Instance
+                && (
+                    !DestroyableSingleton<HudManager>.InstanceExists || 
+                    (!DestroyableSingleton<HudManager>.Instance.Chat.IsOpenOrOpening 
+                     && !DestroyableSingleton<HudManager>.Instance.KillOverlay.IsOpen 
+                     && !DestroyableSingleton<HudManager>.Instance.GameMenu.IsOpen 
+                     && !DestroyableSingleton<HudManager>.Instance.IsIntroDisplayed)) 
+                && (!ControllerManager.Instance || !ControllerManager.Instance.IsUiControllerActive) 
+                && (!MapBehaviour.Instance || !MapBehaviour.Instance.IsOpenStopped) 
+                && !MeetingHud.Instance && !PlayerCustomizationMenu.Instance && !ExileController.Instance)
+            {
+                __result = !IntroCutscene.Instance;
+                return false;
+            }
+
+            __result = false;
+            return false;
         }
     }
 

@@ -25,7 +25,7 @@ public static class PlayerExtensions
 
     public static Coroutine CustomAnimateCustom(this PlayerControl player, AnimationClip clip)
     {
-        return player.StartCoroutine(player.CoAnimateCustom(clip));
+        return player.StartCoroutine(CoAnimateCustom(player, clip));
     }
 
     private static IEnumerator CoAnimateCustom(this PlayerControl player, AnimationClip clip)
