@@ -13,7 +13,10 @@ public static class Visible
 
     public static void SetVisible(this PlayerControl player, bool value, object key)
     {
-        HashSet<object> set = _invisible[player];
+        if (!_invisible.TryGetValue(player, out var set))
+        {
+            _invisible[player] = set = new HashSet<object>();
+        }
         bool changed = value ? set.Remove(key) : set.Add(key);
 
         if (changed)

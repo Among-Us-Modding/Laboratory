@@ -111,6 +111,10 @@ public static class GameConfigPatches
         hudManager.CrewmatesKilled.gameObject.SetActive(GameManager.Instance.ShowCrewmatesKilled());
         GameManager.Instance.StartGame();
     }
+
+    [HarmonyPatch(typeof(KillButton), nameof(KillButton.SetTarget))]
+    [HarmonyPrefix]
+    public static bool DisableOutlinePatch() => false;
     
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     [HarmonyPostfix, HarmonyPriority(Priority.Last)]

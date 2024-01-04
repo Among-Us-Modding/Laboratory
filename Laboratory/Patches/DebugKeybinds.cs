@@ -4,6 +4,7 @@ using Laboratory.Effects.Managers;
 using Laboratory.Enums;
 using Laboratory.HUDMap;
 using Laboratory.Player;
+using Laboratory.Player.AnimationControllers;
 using Laboratory.Player.Extensions;
 using Laboratory.Utilities;
 using Reactor.Networking.Attributes;
@@ -33,7 +34,11 @@ public static class KeyboardJoystick_Update_Patch
         Moveable.Clear(player);
         Visible.Clear(player);
         SpeedModifier.Clear(player.MyPhysics);
-        SizeModifer.Clear(player.MyPhysics);
+        SizeModifer.Clear(player.MyPhysics, o =>
+        {
+            if (o is not Type t) return false;
+            return t == typeof(IAnimationController);
+        });
         player.moveable = true;
         player.Visible = true;
         player.Collider.enabled = true;
@@ -68,7 +73,7 @@ public static class KeyboardJoystick_Update_Patch
             RpcEndGame(PlayerControl.LocalPlayer);
         }
 
-        if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F2) || Input.GetKey(KeyCode.F2) && Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F3) || Input.GetKey(KeyCode.F3) && Input.GetKeyDown(KeyCode.F1))
         {
             HardReset(PlayerControl.LocalPlayer);
         }

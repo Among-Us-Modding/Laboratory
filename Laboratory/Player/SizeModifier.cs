@@ -51,9 +51,16 @@ public static class SizeModifer
         player.transform.localScale = size;
     }
 
-    internal static void Clear(PlayerPhysics player)
+    internal static void Clear(PlayerPhysics player, Func<object, bool> checker = null)
     {
-        sizeModifiers[player].Clear();
+        var newDict = new Dictionary<object, float>();
+        var modifiers = sizeModifiers[player];
+        foreach (var (k, _) in modifiers)
+        {
+            if (checker is null || !checker(k)) continue;
+            newDict[k] = modifiers[k];
+        }
+        sizeModifiers[player] = newDict;
         Update(player);
     }
 

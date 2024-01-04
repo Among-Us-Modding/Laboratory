@@ -28,17 +28,15 @@ public static class SelectRolesPatch
         
         List<GameData.PlayerInfo> crew = list.Where(e => !impostors.Contains(e)).ToList();
         
-        IGameOptions currentGameOptions = GameOptionsManager.Instance.CurrentGameOptions;
-        int numImpostors = impostors.Count;
-        
-        GameManager.Instance.LogicRoleSelection.AssignRolesForTeam(
-            impostors.ToIl2CppList(), currentGameOptions, 
-            RoleTeamTypes.Impostor, numImpostors, new Nullable<RoleTypes>(RoleTypes.Impostor));
-        GameManager.Instance.LogicRoleSelection.AssignRolesForTeam(
-            crew.ToIl2CppList(), currentGameOptions, RoleTeamTypes.Crewmate, int.MaxValue,
-            new Nullable<RoleTypes>(RoleTypes.Crewmate));
+        foreach (var playerInfo in impostors)
+        {
+            playerInfo.Object.RpcSetRole(RoleTypes.Impostor);
+        }
 
-        
+        foreach (var playerInfo in crew)
+        {
+            playerInfo.Object.RpcSetRole(RoleTypes.Crewmate);
+        }
         return false;
     }
 }
