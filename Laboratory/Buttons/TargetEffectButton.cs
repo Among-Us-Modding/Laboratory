@@ -12,7 +12,7 @@ public class TargetEffectButton : EffectButton
         
     public PlayerControl Target { get; set; }
         
-    public virtual float TargetRange() => GameOptionsData.KillDistances[Mathf.Clamp(PlayerControl.GameOptions.KillDistance, 0, 2)];
+    public virtual float TargetRange() => GameManager.Instance.LogicOptions.GetKillDistance();
 
     public virtual PlayerControl GetClosest()
     {

@@ -28,9 +28,16 @@ public partial class LaboratoryPlugin : BasePlugin
     /// <summary>
     /// Custom regions which will be added
     /// </summary>
-    public List<ServerInfo> Regions { get; } = new()
+    public IRegionInfo[] Regions { get; } = new[]
     {
-        new ServerInfo("Modded", "64.227.0.249", 22023),
+        new StaticHttpRegionInfo("Modded", StringNames.NoTranslation, "au-eu.duikbo.at", new ServerInfo[]
+        {
+            new ServerInfo("Http-1", "https://au-eu.duikbo.at", 443, false),
+        }).Cast<IRegionInfo>(),
+        new StaticRegionInfo("Local", StringNames.NoTranslation, "localhost", new ServerInfo[]
+        {
+            new ServerInfo("Localhost", "127.0.0.1", 22023, false),
+        }).Cast<IRegionInfo>(),
     };
 
     public static LaboratoryPlugin Instance => PluginSingleton<LaboratoryPlugin>.Instance;

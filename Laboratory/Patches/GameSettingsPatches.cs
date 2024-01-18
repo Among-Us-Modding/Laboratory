@@ -27,6 +27,6 @@ internal static class GameSettingsPatches
     [HarmonyPrefix]
     public static void ChatMessagesRatePatch(ChatController __instance)
     {
-        __instance.TimeSinceLastMessage = 5;
+        __instance.timeSinceLastMessage = 5;
     }
 }

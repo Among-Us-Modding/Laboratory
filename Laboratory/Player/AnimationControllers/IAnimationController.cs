@@ -4,15 +4,8 @@ namespace Laboratory.Player.AnimationControllers;
 
 public interface IAnimationController
 {
-    public AnimationClip SpawnAnim { get; }
-    public AnimationClip ClimbDownAnim { get; }
-    public AnimationClip ClimbAnim { get; }
-    public AnimationClip IdleAnim { get; }
-    public AnimationClip GhostIdleAnim { get; }
-    public AnimationClip RunAnim { get; }
-    public AnimationClip EnterVentAnim { get; }
-    public AnimationClip ExitVentAnim { get; }
-
+    public PlayerAnimationGroup Group { get; set; }
+    
     public bool HideHat { get; }
     public bool HideSkin { get; }
     public bool HideVisor { get; }

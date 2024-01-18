@@ -14,6 +14,7 @@ public class PlayerManager : MonoBehaviour
     {
     }
 
+    public PlayerAnimationGroup DefaultAnimationGroup { get; set; } = null!;
     public PlayerControl Player { get; private set; } = null!;
     public PlayerPhysics Physics { get; private set; } = null!;
     public CustomNetworkTransform NetTransform { get; private set; } = null!;
@@ -35,6 +36,7 @@ public class PlayerManager : MonoBehaviour
         if (Physics.body) Physics.EnableInterpolation();
         Player.cosmetics.skin.transform.Find("SpawnInGlow").gameObject.SetActive(false);
 
+        DefaultAnimationGroup = Player.MyPhysics.Animations.group;
         AnimationController = new DefaultController(this, DefaultController.MaterialType.Player);
     }
 

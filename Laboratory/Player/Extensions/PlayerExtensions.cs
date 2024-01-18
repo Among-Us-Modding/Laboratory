@@ -1,6 +1,7 @@
+using System.Collections;
+using BepInEx.Unity.IL2CPP.Utils;
 using Laboratory.Effects.Managers;
 using Laboratory.Extensions;
-using Laboratory.Player.AnimationControllers;
 using Laboratory.Player.Managers;
 using UnityEngine;
 
@@ -22,10 +23,19 @@ public static class PlayerExtensions
 
     public static PlayerEffectManager GetEffectManager(this Component player) => player.gameObject.GetEffectManager();
 
-    public static IAnimationController GetAnimationController(this GameObject player)
+    public static Coroutine CustomAnimateCustom(this PlayerControl player, AnimationClip clip)
     {
-        return player.GetPlayerManager().AnimationController;
+        return player.StartCoroutine(CoAnimateCustom(player, clip));
     }
 
-    public static IAnimationController GetAnimationController(this Component player) => player.gameObject.GetAnimationController();
+    private static IEnumerator CoAnimateCustom(this PlayerControl player, AnimationClip clip)
+    {
+        player.MyPhysics.DoingCustomAnimation = true;
+
+        yield return player.MyPhysics.Animations.CoPlayCustomAnimation(clip);
+        player.cosmetics.AnimateSkinIdle();
+        player.MyPhysics.Animations.PlayIdleAnimation();
+        player.cosmetics.SetBodyCosmeticsVisible(b: true);
+        player.MyPhysics.DoingCustomAnimation = false;
+    }
 }

@@ -54,5 +54,13 @@ public static class ShipStatus_Awake_Patch
             LavaColorChanger.ChangeColors(MapConfig.LavaColors);
             if (MapConfig.DisableSnow) Object.FindObjectOfType<SnowManager>()?.gameObject.SetActive(false);
         }
+
+        if (GameConfig.DisableVents)
+        {
+            foreach (var instanceAllVent in __instance.AllVents)
+            {
+                instanceAllVent.gameObject.SetActive(false);   
+            }
+        }
     }
 }

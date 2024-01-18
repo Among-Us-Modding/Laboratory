@@ -22,7 +22,7 @@ public static class SoundManagerExtensions
         }
 
         DynamicSound.GetDynamicsFunction func = (Action<AudioSource, float>)PointSoundFunc;
-        return soundManager.PlayDynamicSound(Random.RandomRangeInt(0, int.MaxValue).ToString(), audioClip, false, func, true);
+        return soundManager.PlayDynamicSound(Random.RandomRangeInt(0, int.MaxValue).ToString(), audioClip, false, func, soundManager.SfxChannel);
     }
 
     public static AudioSource PlaySoundAtTransform(this SoundManager soundManager, AudioClip audioClip, Transform trns, float volume = 1f)
@@ -47,6 +47,6 @@ public static class SoundManagerExtensions
         }
 
         DynamicSound.GetDynamicsFunction func = (Action<AudioSource, float>)PointSoundFunc;
-        return soundManager.PlayDynamicSound(Random.RandomRangeInt(0, int.MaxValue).ToString(), audioClip, false, func, true);
+        return soundManager.PlayDynamicSound(Random.RandomRangeInt(0, int.MaxValue).ToString(), audioClip, false, func, soundManager.SfxChannel);
     }
 }

@@ -4,6 +4,7 @@ using Laboratory.Effects.Managers;
 using Laboratory.Enums;
 using Laboratory.HUDMap;
 using Laboratory.Player;
+using Laboratory.Player.AnimationControllers;
 using Laboratory.Player.Extensions;
 using Laboratory.Utilities;
 using Reactor.Networking.Attributes;
@@ -33,7 +34,11 @@ public static class KeyboardJoystick_Update_Patch
         Moveable.Clear(player);
         Visible.Clear(player);
         SpeedModifier.Clear(player.MyPhysics);
-        SizeModifer.Clear(player.MyPhysics);
+        SizeModifer.Clear(player.MyPhysics, o =>
+        {
+            if (o is not Type t) return false;
+            return t == typeof(IAnimationController);
+        });
         player.moveable = true;
         player.Visible = true;
         player.Collider.enabled = true;
@@ -57,7 +62,7 @@ public static class KeyboardJoystick_Update_Patch
     {
         if (AmongUsClient.Instance.AmHost)
         {
-            ShipStatus.RpcEndGame(GameOverReason.HumansByTask, false);
+            GameManager.Instance.RpcEndGame(GameOverReason.HumansByTask, false);
         }
     }
 
@@ -68,7 +73,7 @@ public static class KeyboardJoystick_Update_Patch
             RpcEndGame(PlayerControl.LocalPlayer);
         }
 
-        if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F2) || Input.GetKey(KeyCode.F2) && Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKey(KeyCode.F1) && Input.GetKeyDown(KeyCode.F3) || Input.GetKey(KeyCode.F3) && Input.GetKeyDown(KeyCode.F1))
         {
             HardReset(PlayerControl.LocalPlayer);
         }
@@ -87,38 +92,15 @@ public static class KeyboardJoystick_Update_Patch
         // Teleport
         if (Input.GetKey(KeyCode.F5) && Input.GetKeyDown(KeyCode.F6) || Input.GetKey(KeyCode.F6) && Input.GetKeyDown(KeyCode.F5))
         {
-            HudManager.Instance.ShowMap((Action<MapBehaviour>)(map =>
-            {
-                if (map.IsOpen)
-                {
-                    map.Close();
-                    return;
-                }
-
-                if (!PlayerControl.LocalPlayer.CanMove) return;
-
-                map.countOverlay.gameObject.SetActive(false);
-                map.infectedOverlay.gameObject.SetActive(false);
-                map.taskOverlay.Hide();
-                map.GenericShow();
-                PlayerControl.LocalPlayer.SetPlayerMaterialColors(map.HerePoint);
-                map.ColorControl.SetColor(new Color32(158, 240, 103, 255));
-                DestroyableSingleton<HudManager>.Instance.SetHudActive(false);
-                CustomMapBehaviour customMapBehaviour = map.gameObject.GetComponent<CustomMapBehaviour>();
-                customMapBehaviour.ShowAllPlayers();
-                customMapBehaviour.MouseUpEvent += MouseUpEvent;
-            }));
-
             void MouseUpEvent(CustomMapBehaviour instance, int mousebutton, Vector2 worldposition)
             {
-                if (mousebutton == 1)
-                {
-                    instance.MouseUpEvent -= MouseUpEvent;
-                    instance.Parent!.Close();
-                    PlayerControl.LocalPlayer.moveable = true;
-                    PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(worldposition);
-                }
+                if (mousebutton != 1) return;
+                instance.MouseUpEvent -= MouseUpEvent;
+                instance.Parent!.Close();
+                PlayerControl.LocalPlayer.moveable = true;
+                PlayerControl.LocalPlayer.NetTransform.RpcSnapTo(worldposition);
             }
+            CustomMapBehaviour.ShowWithAllPlayers(new Color32(158, 240, 103, 255), MouseUpEvent);
         }
     }
 }

@@ -12,13 +12,7 @@ internal static class CustomServerPatches
     [HarmonyPrefix]
     public static bool LoadServersPatch(ServerManager __instance)
     {
-        Il2CppReferenceArray<IRegionInfo> regions = ServerManager.DefaultRegions = __instance.AvailableRegions = LaboratoryPlugin.Instance.Regions.Select(s =>
-        {
-            return new StaticRegionInfo(s.Name, StringNames.NoTranslation, s.Ip, new[]
-            {
-                new ServerInfo(s.Name + "-Master-1", s.Ip, s.Port, false)
-            }).Cast<IRegionInfo>();
-        }).ToArray();
+        Il2CppReferenceArray<IRegionInfo> regions = ServerManager.DefaultRegions = __instance.AvailableRegions = LaboratoryPlugin.Instance.Regions;
 
         IRegionInfo currentRegion = __instance.CurrentRegion = regions.First();
         __instance.CurrentUdpServer = currentRegion.Servers.Random();
