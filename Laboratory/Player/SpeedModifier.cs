@@ -18,7 +18,10 @@ public static class SpeedModifier
 
     public static void SetSpeedModifier(this PlayerPhysics player, float value, object key)
     {
-        Dictionary<object, float> set = _speedModifiers[player];
+        if (!_speedModifiers.TryGetValue(player, out var set))
+        {
+            _speedModifiers[player] = set = new  Dictionary<object, float>();
+        }
         if (value == 1)
         {
             set.Remove(key);

@@ -35,6 +35,10 @@
         <PackageReference Include="Reactor" Version="2.2.0-ci.238" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Effects\EffectBuilder\" />
+    </ItemGroup>
+
     <Target Name="Copy" AfterTargets="Build" Condition="'$(AmongUs)' != ''">
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(AmongUs)/BepInEx/plugins/" UseSymboliclinksIfPossible="true" />
     </Target>

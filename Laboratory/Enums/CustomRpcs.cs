@@ -10,4 +10,5 @@ public enum CustomRPCs : uint
     EndGame,
     SetCount,
     ChangeCount,
+    ForceNoEffect,
 }
