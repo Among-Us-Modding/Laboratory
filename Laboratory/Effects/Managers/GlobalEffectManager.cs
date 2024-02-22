@@ -4,6 +4,7 @@ using Il2CppInterop.Runtime.Attributes;
 using Reactor.Networking.Rpc;
 using Reactor.Utilities.Attributes;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Laboratory.Effects.Managers;
 
@@ -18,7 +19,7 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
 
     public static List<PlayerEffectManager> PlayerEffectManagers { get; } = new();
 
-    private IEffect _primaryEffect;
+    public IEffect _primaryEffect;
 
     [HideFromIl2Cpp]
     public IEffect PrimaryEffect
@@ -31,7 +32,15 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
             IEffect current = PrimaryEffect;
             if (current is not null)
             {
-                current.Cancel();
+                try
+                {
+                    current.Cancel();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                
                 RemoveEffect(current);
             }
 
@@ -85,12 +94,32 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
 
     private void FixedUpdate()
     {
-        foreach (IEffect effect in Effects) effect.FixedUpdate();
+        foreach (IEffect effect in Effects)
+        {
+            try
+            {
+                effect.FixedUpdate();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
+        }
     }
 
     private void Update()
     {
-        foreach (IEffect effect in Effects) effect.Update();
+        foreach (IEffect effect in Effects)
+        {
+            try
+            {
+                effect.Update();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
+        }
     }
 
     private void LateUpdate()
@@ -98,7 +127,14 @@ public class GlobalEffectManager : MonoBehaviour, IEffectManager
         List<IEffect> effects = new();
         foreach (IEffect effect in Effects)
         {
-            effect.LateUpdate();
+            try
+            {
+                effect.LateUpdate();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
             if (effect.Timer < 0) effects.Add(effect);
         }
 

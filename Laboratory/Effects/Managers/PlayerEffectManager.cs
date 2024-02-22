@@ -7,6 +7,7 @@ using Laboratory.Player.Managers;
 using Reactor.Networking.Rpc;
 using Reactor.Utilities.Attributes;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Laboratory.Effects.Managers;
 
@@ -20,7 +21,7 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
     [HideFromIl2Cpp]
     public PlayerManager Manager { get; private set; } = null!;
 
-    private IEffect _primaryEffect;
+    public IEffect _primaryEffect;
 
     [HideFromIl2Cpp]
     public IEffect PrimaryEffect
@@ -28,10 +29,19 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
         get => GlobalEffectManager.Instance != null ? GlobalEffectManager.Instance.PrimaryEffect ?? _primaryEffect : _primaryEffect;
         set
         {
+            
             IEffect current = PrimaryEffect;
             if (current is not null)
             {
-                current.Cancel();
+                try
+                {
+                    current.Cancel();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.ToString());
+                }
+                
                 RemoveEffect(current);
             }
 
@@ -95,12 +105,32 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
 
     private void FixedUpdate()
     {
-        foreach (IEffect effect in Effects) effect.FixedUpdate();
+        foreach (IEffect effect in Effects)
+        {
+            try
+            {
+                effect.FixedUpdate();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
+        }
     }
 
     private void Update()
     {
-        foreach (IEffect effect in Effects) effect.Update();
+        foreach (IEffect effect in Effects)
+        {
+            try
+            {
+                effect.Update();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
+        }
     }
 
     private void LateUpdate()
@@ -108,7 +138,14 @@ public class PlayerEffectManager : MonoBehaviour, IEffectManager
         List<IEffect> effects = new();
         foreach (IEffect effect in Effects)
         {
-            effect.LateUpdate();
+            try
+            {
+                effect.LateUpdate();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
             if (effect.Timer < 0) effects.Add(effect);
         }
 

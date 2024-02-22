@@ -30,6 +30,10 @@ public partial class LaboratoryPlugin : BasePlugin
     /// </summary>
     public IRegionInfo[] Regions { get; } = new[]
     {
+        // new StaticRegionInfo("Modded", StringNames.NoTranslation, "24.199.75.98", new ServerInfo[]
+        // {
+        //     new ServerInfo("Localhost", "24.199.75.98", 22023, false),
+        // }).Cast<IRegionInfo>(),
         new StaticHttpRegionInfo("Modded", StringNames.NoTranslation, "au-eu.duikbo.at", new ServerInfo[]
         {
             new ServerInfo("Http-1", "https://au-eu.duikbo.at", 443, false),

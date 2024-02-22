@@ -20,7 +20,10 @@ public static class SizeModifer
 
     public static void SetSizeModifier(this PlayerPhysics player, float value, object key)
     {
-        Dictionary<object, float> set = sizeModifiers[player];
+        if (!sizeModifiers.TryGetValue(player, out var set))
+        {
+            sizeModifiers[player] = set = new  Dictionary<object, float>();
+        }
         if (Math.Abs(value - 1) < 0.001)
         {
             set.Remove(key);
