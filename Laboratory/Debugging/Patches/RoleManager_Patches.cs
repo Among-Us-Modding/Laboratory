@@ -2,8 +2,6 @@
 using System.Linq;
 using AmongUs.GameOptions;
 using HarmonyLib;
-using Il2CppSystem;
-using Laboratory.Extensions;
 
 namespace Laboratory.Debugging.Patches;
 
@@ -16,18 +14,18 @@ public static class SelectRolesPatch
     {
         if (!ForceImpostorTab.Enabled) return true;
 
-        List<GameData.PlayerInfo> list = GameData.Instance.AllPlayers.ToArray().Where(pcd => !pcd.Disconnected && !pcd.IsDead).ToList();
-        List<GameData.PlayerInfo> impostors = new();
+        List<NetworkedPlayerInfo> list = GameData.Instance.AllPlayers.ToArray().Where(pcd => !pcd.Disconnected && !pcd.IsDead).ToList();
+        List<NetworkedPlayerInfo> impostors = new();
 
         foreach (string name in ForceImpostorTab.CurrentlySelected)
         {
-            GameData.PlayerInfo match = list.FirstOrDefault(p => p.PlayerName == name);
+            NetworkedPlayerInfo match = list.FirstOrDefault(p => p.PlayerName == name);
             if (match == null || match.Disconnected) continue;
             impostors.Add(match);
         }
-        
-        List<GameData.PlayerInfo> crew = list.Where(e => !impostors.Contains(e)).ToList();
-        
+
+        List<NetworkedPlayerInfo> crew = list.Where(e => !impostors.Contains(e)).ToList();
+
         foreach (var playerInfo in impostors)
         {
             playerInfo.Object.RpcSetRole(RoleTypes.Impostor);

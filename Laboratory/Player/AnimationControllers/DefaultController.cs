@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Laboratory.Extensions;
 using Laboratory.Player.Managers;
-using PowerTools;
 using UnityEngine;
 
 namespace Laboratory.Player.AnimationControllers;
@@ -18,7 +16,7 @@ public class DefaultController : IAnimationController
     public DefaultController(PlayerManager owner, MaterialType? materialType)
     {
         Owner = owner;
-        
+
         PlayerControl player = owner.Player;
         if (materialType != null)
         {
@@ -53,11 +51,11 @@ public class DefaultController : IAnimationController
                 }
             }
             groups.Add(value);
-            
+
             Animations.animationGroups = groups.ToIl2CppList();
             Physics.bodyType = value.BodyType;
             Physics.myPlayer.cosmetics.EnsureInitialized(value.BodyType);
-            Animations.SetBodyType(value.BodyType, Physics.myPlayer.cosmetics.FlippedCosmeticOffset);
+            Animations.SetBodyType(value.BodyType, Physics.myPlayer.cosmetics.FlippedCosmeticOffset, Physics.myPlayer.cosmetics.NormalCosmeticOffset);
             Animations.PlayIdleAnimation();
         }
     }

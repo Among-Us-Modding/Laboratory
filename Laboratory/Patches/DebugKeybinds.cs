@@ -23,8 +23,9 @@ public static class KeyboardJoystick_Update_Patch
         {
             GlobalEffectManager.Instance.PrimaryEffect = null;
         }
-        catch (Exception e)
+        catch
         {
+            // ignored
         }
 
         GlobalEffectManager.Instance._primaryEffect = null;
@@ -35,14 +36,15 @@ public static class KeyboardJoystick_Update_Patch
             {
                 effectManager.PrimaryEffect = null;
             }
-            catch (Exception e)
+            catch
             {
+                // ignored
             }
 
             effectManager._primaryEffect = null;
         }
     }
-    
+
     [MethodRpc((uint)CustomRPCs.HardReset)]
     public static void HardReset(PlayerControl player)
     {
@@ -106,7 +108,7 @@ public static class KeyboardJoystick_Update_Patch
         {
             HardReset(PlayerControl.LocalPlayer);
         }
-        
+
         if (Input.GetKey(KeyCode.F2) && Input.GetKeyDown(KeyCode.F4) || Input.GetKey(KeyCode.F4) && Input.GetKeyDown(KeyCode.F2))
         {
             HardReset(PlayerControl.LocalPlayer);

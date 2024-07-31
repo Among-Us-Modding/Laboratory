@@ -1,6 +1,4 @@
 using HarmonyLib;
-using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using UnityEngine;
 
 namespace Laboratory.Patches;
 
@@ -15,14 +13,7 @@ internal static class GameSettingsPatches
         __instance.GetComponentsInChildren<PassiveButton>().Do(t => t.enabled = false);
         return false;
     }
-    
-    [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
-    [HarmonyPrefix]
-    public static void ShowAdditionalOptionsPatch(GameSettingMenu __instance)
-    {
-        __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
-    }
-    
+
     [HarmonyPatch(typeof(ChatController), nameof(ChatController.Update))]
     [HarmonyPrefix]
     public static void ChatMessagesRatePatch(ChatController __instance)

@@ -14,8 +14,8 @@ public static class CustomMurder
     public static void RpcCustomMurder(this PlayerControl murderer, PlayerControl target, bool silent = false)
     {
         murderer.isKilling = false;
-		GameData.PlayerInfo data = target.Data;
-		
+        NetworkedPlayerInfo data = target.Data;
+
 		if (murderer.AmOwner)
 		{
 			if (Constants.ShouldPlaySfx())
@@ -58,7 +58,7 @@ public static class CustomMurder
 		    KillAnimation.SetMovement(source, canMove: false);
 		    KillAnimation.SetMovement(target, canMove: false);
 	    }
-	    
+
 	    if (isParticipant)
 	    {
 		    PlayerControl.LocalPlayer.isKilling = true;

@@ -1,7 +1,6 @@
 using System;
 using HarmonyLib;
 using Laboratory.Player.Extensions;
-using Laboratory.Player.Managers;
 using PowerTools;
 using UnityEngine;
 
@@ -18,12 +17,12 @@ internal static class AnimationPatches
         {
             __instance.BackLayer.enabled = false;
             __instance.FrontLayer.enabled = true;
-            __instance.FrontLayer.sprite = __instance.hatDataAsset?.GetAsset()?.ClimbImage;
+            __instance.FrontLayer.sprite = __instance.viewAsset?.GetAsset()?.ClimbImage;
         }
 
         return false;
     }
-    
+
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.DoingCustomAnimation), MethodType.Getter)]
     [HarmonyPrefix]
     public static bool DoingCustomAnimationGetPatch(PlayerPhysics __instance, ref bool __result)
@@ -32,7 +31,7 @@ internal static class AnimationPatches
         if (manager is not { AnimationController.IsPlayingCustomAnimation: true }) return true;
         return __result = false;
     }
-    
+
     [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.LateUpdate))]
     [HarmonyPrefix]
     public static bool AdjustOffsets(PlayerPhysics __instance)
@@ -46,7 +45,7 @@ internal static class AnimationPatches
         transform.position = position;
 
         __instance.myPlayer.cosmetics.SetCosmeticZIndices();
-        
+
         return false;
     }
 }

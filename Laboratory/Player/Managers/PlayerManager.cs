@@ -49,7 +49,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (AnimationController == null) return;
 
-        GameData.PlayerInfo data = Player.Data;
+        NetworkedPlayerInfo data = Player.Data;
         if (data == null) return;
 
         Player.cosmetics.nameText.enabled = !AnimationController.HideName;

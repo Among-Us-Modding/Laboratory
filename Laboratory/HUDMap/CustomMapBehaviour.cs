@@ -19,27 +19,27 @@ public class CustomMapBehaviour : MonoBehaviour
     public MouseClickEvent MouseUpEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
 
     public Action DisableEvent { [HideFromIl2Cpp] get; [HideFromIl2Cpp] set; }
-    
-    private Dictionary<GameData.PlayerInfo, SpriteRenderer> HerePoints { [HideFromIl2Cpp] get; } = new();
+
+    private Dictionary<NetworkedPlayerInfo, SpriteRenderer> HerePoints { [HideFromIl2Cpp] get; } = new();
 
     public MapBehaviour Parent { get; set; }
-    
+
     public void ShowAllPlayers()
     {
-        foreach ((GameData.PlayerInfo _, SpriteRenderer value) in HerePoints)
+        foreach ((NetworkedPlayerInfo _, SpriteRenderer value) in HerePoints)
         {
             Destroy(value.gameObject);
         }
         HerePoints.Clear();
         if (Parent == null) return;
-        foreach (GameData.PlayerInfo player in GameData.Instance.AllPlayers)
+        foreach (NetworkedPlayerInfo player in GameData.Instance.AllPlayers)
         {
             if (player.Disconnected) continue;
             Transform hereTransform = Parent.HerePoint.transform;
 
             GameObject newHerePoint = Instantiate(Parent.HerePoint.gameObject, hereTransform.parent, true);
             newHerePoint.transform.localScale = hereTransform.localScale;
-                
+
             SpriteRenderer newHerePointRend = newHerePoint.GetComponent<SpriteRenderer>();
             if (player.Object) player.Object.SetPlayerMaterialColors(newHerePointRend);
             HerePoints[player] = newHerePointRend;
@@ -56,11 +56,11 @@ public class CustomMapBehaviour : MonoBehaviour
             return;
         }
         if (HudManager.Instance.IsIntroDisplayed) return;
-        
+
         if (!ShipStatus.Instance)  return;
-        
+
         HudManager.Instance.InitMap();
-        
+
         var action = (Action<MapBehaviour>)(map =>
         {
             if (map.IsOpen)
@@ -68,7 +68,7 @@ public class CustomMapBehaviour : MonoBehaviour
                 map.Close();
                 return;
             }
-                
+
             map.countOverlay.gameObject.SetActive(false);
             map.infectedOverlay.gameObject.SetActive(false);
             map.taskOverlay.Hide();
@@ -89,7 +89,7 @@ public class CustomMapBehaviour : MonoBehaviour
                     instance.MouseUpEvent -= mouseClickEvent;
                 }
             };
-            
+
             var disables = new Action[2];
             customMapBehaviour.DisableEvent += disables[0] = () =>
             {
@@ -100,10 +100,10 @@ public class CustomMapBehaviour : MonoBehaviour
                 foreach (var disable in disables) customMapBehaviour.DisableEvent -= disable;
             };
         });
-        
+
         action(MapBehaviour.Instance);
     }
-        
+
     [HideFromIl2Cpp]
     private Vector2 GetMapPosition(ref bool set, ref Vector2 mapPosition)
     {
@@ -111,7 +111,7 @@ public class CustomMapBehaviour : MonoBehaviour
         set = true;
 
         if (Parent == null) return default;
-        
+
         Vector2 offset = ShipStatus.Instance.Type switch
         {
             ShipStatus.MapType.Ship => new Vector2(-2.3f, -5.4f),
@@ -121,19 +121,19 @@ public class CustomMapBehaviour : MonoBehaviour
             (ShipStatus.MapType) 4 => new Vector2(7.3f, 0.2f),
             _ => Vector2.zero
         };
-        
+
         Vector2 mousePos = Camera.main!.ScreenToWorldPoint(Input.mousePosition);
         Vector2 pointOnMap = Parent.transform.InverseTransformPoint(mousePos);
         pointOnMap.x /= Mathf.Sign(ShipStatus.Instance.transform.localScale.x);
         pointOnMap *= ShipStatus.Instance.MapScale;
         return mapPosition = pointOnMap + offset;
     }
-        
+
     private void Awake()
     {
         Parent = GetComponent<MapBehaviour>();
     }
-        
+
     private void FixedUpdate()
     {
         if (!ShipStatus.Instance)
@@ -141,7 +141,7 @@ public class CustomMapBehaviour : MonoBehaviour
             return;
         }
 
-        foreach ((GameData.PlayerInfo data, SpriteRenderer rend) in HerePoints)
+        foreach ((NetworkedPlayerInfo data, SpriteRenderer rend) in HerePoints)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (data == null || !data.Object || data.IsDead || data.Disconnected)
@@ -157,14 +157,14 @@ public class CustomMapBehaviour : MonoBehaviour
             rend.transform.localPosition = vector;
         }
     }
-        
+
     private void Update()
     {
         var mapPosition = Vector2.zero;
         var mapPositionSet = false;
 
         if (MouseDownEvent != null) InvokeEvent(MouseDownEvent);
-        if (MouseHeldEvent != null) InvokeEvent(MouseHeldEvent);  
+        if (MouseHeldEvent != null) InvokeEvent(MouseHeldEvent);
         if (MouseUpEvent != null) InvokeEvent(MouseUpEvent);
         return;
 
@@ -176,7 +176,7 @@ public class CustomMapBehaviour : MonoBehaviour
             if (Input.GetMouseButtonDown(2)) mouseEvent(this, 2, GetMapPosition(ref mapPositionSet, ref mapPosition));
         }
     }
-        
+
     private void OnDisable()
     {
         DisableEvent?.Invoke();

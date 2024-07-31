@@ -1,5 +1,4 @@
 ﻿global using static Reactor.Utilities.Logger<Laboratory.LaboratoryPlugin>;
-using System.Collections.Generic;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;

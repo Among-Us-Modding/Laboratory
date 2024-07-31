@@ -32,12 +32,12 @@ public class HealthSystem : Object, ICustomSystemType
     /// Set if the players name should be updated when their health changes
     /// </summary>
     public static bool UpdateNameText { get; set; } = true;
-    
+
     /// <summary>
     /// Should a player be killed when their health hits zero
     /// </summary>
     public static bool KillWhenNoHealth { get; set; } = true;
-    
+
     /// <summary>
     /// Action invoked when a player's health is changed with their old and new health values
     /// </summary>
@@ -92,7 +92,7 @@ public class HealthSystem : Object, ICustomSystemType
     /// <param name="newHealth">The new amount of heath to set the player with</param>
     public void SetHealth(byte playerId, int newHealth)
     {
-        GameData.PlayerInfo data = GameData.Instance.GetPlayerById(playerId);
+        NetworkedPlayerInfo data = GameData.Instance.GetPlayerById(playerId);
         int oldHealth = GetHealth(playerId);
         int playerHealth = PlayerHealths[playerId] = Math.Clamp(newHealth, 0, GetMaxHealth(playerId));
         IsDirty = true;
@@ -110,10 +110,10 @@ public class HealthSystem : Object, ICustomSystemType
         }
     }
 
-    public void UpdateHealthText(PlayerControl player, GameData.PlayerInfo data, int playerHealth)
+    public void UpdateHealthText(PlayerControl player, NetworkedPlayerInfo data, int playerHealth)
     {
-        player.cosmetics.nameText.text = data.Role.IsImpostor 
-            ? data.PlayerName 
+        player.cosmetics.nameText.text = data.Role.IsImpostor
+            ? data.PlayerName
             : $"<color=#{Palette.PlayerColors[(data.DefaultOutfit.ColorId + Palette.PlayerColors.Length) % Palette.PlayerColors.Length].ToHtmlStringRGBA()}>{playerHealth}</color>\n{data.PlayerName}";
     }
 

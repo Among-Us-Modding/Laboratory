@@ -2,13 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laboratory", "Laboratory\Laboratory.csproj", "{790E5540-7655-4F57-BBED-8D644A031BC6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{095ED6FA-D3D6-4104-8322-EDD1CCCBBD30}"
-ProjectSection(SolutionItems) = preProject
-	nuget.config = nuget.config
-	.github\workflows\main.yml = .github\workflows\main.yml
-	build.cake = build.cake
-EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -20,7 +20,7 @@ public class GeneralTab : BaseDebugTab
             Screen.SetResolution(2560, 1080, true);
             ResolutionManager.SetResolution(2560, 1080, true);
         }
-        
+
         if (CameraZoomController.Instance != null)
         {
             GUILayout.Label($"Camera Zoom: {CameraZoomController.Instance.OrthographicSize}");
@@ -35,7 +35,7 @@ public class GeneralTab : BaseDebugTab
                 var shouldRunOg = ProgressSystem.Instance.ShouldRun;
                 var newShouldRun = GUILayout.Toggle(shouldRunOg, $"Progress Bar: {(ProgressSystem.Instance.ShouldRun ? "Running" : "Stopped")}", GUI.skin.button);
                 if (newShouldRun != shouldRunOg) ProgressSystem.Instance.ShouldRun = newShouldRun;
-                
+
                 float timer = GUILayout.HorizontalSlider(ProgressSystem.Instance.Timer, 0, ProgressSystem.Instance.TotalTime + 0.0001f);
                 if (Math.Abs(timer - ProgressSystem.Instance.Timer) > 0.001f)
                 {
@@ -44,7 +44,7 @@ public class GeneralTab : BaseDebugTab
                 }
             }
         }
-        
+
         if (HealthSystem.Instance != null)
         {
             GUILayout.Label("Max Health: " + HealthSystem.MaxHealth);
@@ -55,10 +55,10 @@ public class GeneralTab : BaseDebugTab
                 {
                     HealthSystem.MaxHealth = maxHealth;
                 }
-                
+
                 if (GUILayout.Button("Save Current Health"))
                 {
-                    foreach (GameData.PlayerInfo instanceAllPlayer in GameData.Instance.AllPlayers)
+                    foreach (NetworkedPlayerInfo instanceAllPlayer in GameData.Instance.AllPlayers)
                     {
                         OldHealths[instanceAllPlayer.PlayerName] = Math.Clamp(HealthSystem.Instance.GetHealth(instanceAllPlayer.PlayerId), 1, 999999);
                     }
@@ -66,7 +66,7 @@ public class GeneralTab : BaseDebugTab
 
                 if (GUILayout.Button("Load Old Health"))
                 {
-                    foreach (GameData.PlayerInfo instanceAllPlayer in GameData.Instance.AllPlayers)
+                    foreach (NetworkedPlayerInfo instanceAllPlayer in GameData.Instance.AllPlayers)
                     {
                         if (OldHealths.TryGetValue(instanceAllPlayer.PlayerName, out int health))
                         {
@@ -74,7 +74,7 @@ public class GeneralTab : BaseDebugTab
                         }
                     }
                 }
-                
+
                 AllowDeath = GUILayout.Toggle(AllowDeath, "Allow Death When Changing Health");
 
                 List<(byte playerId, int newHealth)> list = new();
