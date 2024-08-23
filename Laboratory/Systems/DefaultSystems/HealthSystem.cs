@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Hazel;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.Injection;
+using Laboratory.Config;
 using Laboratory.Enums;
 using Laboratory.Map;
 using Laboratory.Utilities;
@@ -21,7 +22,10 @@ namespace Laboratory.Systems.DefaultSystems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class HealthSystem : Object, ICustomSystemType
 {
-    public static CustomSystemType SystemType { get; } = CustomSystemType.Register<HealthSystem>();
+    static HealthSystem()
+    {
+        if (GameConfig.EnableDefaultSystems) CustomSystemType.Register<HealthSystem>();
+    }
 
     /// <summary>
     /// The starting and maximum health of each player

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Hazel;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.Injection;
+using Laboratory.Config;
 using Laboratory.Enums;
 using Laboratory.Map;
 using Reactor.Networking.Attributes;
@@ -15,6 +16,11 @@ namespace Laboratory.Systems.DefaultSystems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class CounterSystem : Object, ICustomSystemType
 {
+    static CounterSystem()
+    {
+        if (GameConfig.EnableDefaultSystems) CustomSystemType.Register<CounterSystem>();
+    }
+
     public static int GetCount(uint key)
     {
         Instance!.Counters.TryGetValue(key, out int res);
@@ -39,11 +45,9 @@ public class CounterSystem : Object, ICustomSystemType
             SetCount(player, key, GetCount(key) + change);
         }
     }
-    
+
     private static CounterSystem _instance;
     public static CounterSystem Instance => ShipStatus.Instance ? _instance : null;
-    
-    public static CustomSystemType SystemType { get; } = CustomSystemType.Register<CounterSystem>();
 
     public CounterSystem(IntPtr ptr) : base(ptr)
     {
@@ -54,12 +58,12 @@ public class CounterSystem : Object, ICustomSystemType
         ClassInjector.DerivedConstructorBody(this);
         _instance = this;
     }
-    
+
     public bool IsDirty { get; set; }
-    
+
     [HideFromIl2Cpp]
     public Dictionary<uint, int> Counters { get; } = new();
-    
+
     public void Serialize(MessageWriter writer, bool initialState)
     {
         writer.Write(Counters.Count);
@@ -81,7 +85,7 @@ public class CounterSystem : Object, ICustomSystemType
             Counters[reader.ReadUInt32()] = reader.ReadInt32();
         }
     }
-    
+
     public void Detoriorate(float deltaTime) { }
 
     public void RepairDamage(PlayerControl player, byte amount)
