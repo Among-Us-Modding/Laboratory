@@ -17,7 +17,7 @@ public static class GameConfigPatches
     {
         return !GameConfig.DisableEndGame;
     }
-    
+
     [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.CmdReportDeadBody))]
     [HarmonyPrefix]
     public static bool DisableMeetingsPatch()
@@ -32,7 +32,7 @@ public static class GameConfigPatches
         if (!HudManager.InstanceExists) return;
         DisableUIElementsPatch(HudManager.Instance);
     }
-    
+
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.SetHudActive), typeof(PlayerControl), typeof(RoleBehaviour), typeof(bool))]
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     [HarmonyPostfix]
@@ -47,7 +47,7 @@ public static class GameConfigPatches
         {
             __instance.SabotageButton.gameObject.SetActive(false);
         }
-        
+
         if (GameConfig.DisableKillButton)
         {
             __instance.KillButton.gameObject.SetActive(false);
@@ -63,7 +63,7 @@ public static class GameConfigPatches
             __instance.TaskPanel.gameObject.SetActive(false);
         }
     }
-    
+
     [HarmonyPatch(typeof(ArrowBehaviour), nameof(ArrowBehaviour.Awake))]
     [HarmonyPostfix]
     public static void DisableArrowsPatch(ArrowBehaviour __instance)
@@ -71,7 +71,7 @@ public static class GameConfigPatches
         if (!GameConfig.DisableTaskArrows || !__instance.image) return;
         __instance.image.sprite = null;
     }
-    
+
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.CoShowIntro))]
     [HarmonyPrefix]
     public static bool DisableIntroPatch(HudManager __instance, ref Il2CppSystem.Collections.IEnumerator __result)
@@ -84,7 +84,7 @@ public static class GameConfigPatches
         __result = ModifiedCoShowIntro(__instance).WrapToIl2Cpp();
         return false;
     }
-    
+
     private static IEnumerator ModifiedCoShowIntro(HudManager hudManager)
     {
         while (!ShipStatus.Instance)
@@ -95,14 +95,14 @@ public static class GameConfigPatches
         hudManager.LobbyTimerExtensionUI.HideAll();
         DestroyableSingleton<HudManager>.Instance.FullScreen.transform.localPosition = new Vector3(0f, 0f, -250f);
         PlayerControl.LocalPlayer.SetKillTimer(10f);
-        
+
         ShipStatus.Instance.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>().SetInitialSabotageCooldown();
         ShipStatus.Instance.Systems.TryGetValue(SystemTypes.Doors, out var systemType);
         if (systemType.TryCast<IDoorSystem>() is { } doorSystem)
         {
             doorSystem.SetInitialSabotageCooldown();
         }
-        
+
         yield return ShipStatus.Instance.PrespawnStep();
         PlayerControl.LocalPlayer.AdjustLighting();
         yield return hudManager.CoFadeFullScreen(Color.black, Color.clear, 0.2f, false);
@@ -112,10 +112,6 @@ public static class GameConfigPatches
         GameManager.Instance.StartGame();
     }
 
-    [HarmonyPatch(typeof(KillButton), nameof(KillButton.SetTarget))]
-    [HarmonyPrefix]
-    public static bool DisableOutlinePatch() => false;
-    
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     [HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void DisablePingTrackerPatch(PingTracker __instance)
