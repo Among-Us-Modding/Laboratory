@@ -15,28 +15,28 @@ internal static class UIPatches
             if (textBox.GetHashCode() != __instance.GetHashCode()) textBox.LoseFocus();
         }
     }
-    
+
     [HarmonyPatch(typeof(ActionMapGlyphDisplay), nameof(ActionMapGlyphDisplay.Awake))]
     [HarmonyPostfix]
     public static void HideControllerGlyphPatch(ActionMapGlyphDisplay __instance)
     {
-        __instance.sr.gameObject.SetActive(false);
+        __instance.spriteRenderer.gameObject.SetActive(false);
     }
-    
+
     [HarmonyPatch(typeof(ControllerManager), nameof(ControllerManager.OpenTopmostMenu))]
     [HarmonyPrefix]
     public static bool StopAutomaticGreenHighlighting()
     {
         return false;
     }
-    
+
     [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
     [HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void DisablePingTrackerPatch(PingTracker __instance)
     {
         __instance.gameObject.SetActive(false);
     }
-    
+
     [HarmonyPatch(typeof(StoreMenu), nameof(StoreMenu.Open))]
     [HarmonyPrefix]
     public static bool NoStorePatch()
