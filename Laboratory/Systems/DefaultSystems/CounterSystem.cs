@@ -16,11 +16,6 @@ namespace Laboratory.Systems.DefaultSystems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class CounterSystem : Object, ICustomSystemType
 {
-    static CounterSystem()
-    {
-        if (GameConfig.EnableDefaultSystems) CustomSystemType.Register<CounterSystem>();
-    }
-
     public static int GetCount(uint key)
     {
         Instance!.Counters.TryGetValue(key, out int res);

@@ -22,11 +22,6 @@ namespace Laboratory.Systems.DefaultSystems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class HealthSystem : Object, ICustomSystemType
 {
-    static HealthSystem()
-    {
-        if (GameConfig.EnableDefaultSystems) CustomSystemType.Register<HealthSystem>();
-    }
-
     /// <summary>
     /// The starting and maximum health of each player
     /// </summary>

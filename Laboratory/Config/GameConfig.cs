@@ -12,5 +12,4 @@ public static class GameConfig
     public static bool DisableTaskPanel { get; set; } = true;
     public static bool DisableIntroCutscene { get; set; } = true;
     public static bool DisableVents { get; set; } = true;
-    public static bool EnableDefaultSystems { get; set; } = true;
 }

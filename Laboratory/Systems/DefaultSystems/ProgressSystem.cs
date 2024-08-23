@@ -14,11 +14,6 @@ namespace Laboratory.Systems.DefaultSystems;
 [RegisterInIl2Cpp(typeof(ISystemType))]
 public class ProgressSystem : Object, ICustomSystemType
 {
-    static ProgressSystem()
-    {
-        if (GameConfig.EnableDefaultSystems) CustomSystemType.Register<ProgressSystem>();
-    }
-
     private static ProgressSystem _instance;
     public static ProgressSystem Instance => ShipStatus.Instance ? _instance : null;
     public static float[] Stages { get; set; } = {
