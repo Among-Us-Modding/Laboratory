@@ -45,11 +45,6 @@ internal static class SaveDataPatches
     [HarmonyPrefix]
     public static bool SetPurchasedPatch()
     {
-        if (GameConfig.CustomSaveData)
-        {
-            return false;
-        }
-
-        return true;
+        return !GameConfig.CustomSaveData;
     }
 }

@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Laboratory.Config;
 using UnityEngine;
 
 namespace Laboratory.Patches;
@@ -41,6 +42,6 @@ internal static class UIPatches
     [HarmonyPrefix]
     public static bool NoStorePatch()
     {
-        return false;
+        return !GameConfig.CustomSaveData;
     }
 }

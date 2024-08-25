@@ -17,11 +17,8 @@ public static class GameConfig
 
     public static bool CustomSaveData
     {
-        get
-        {
-            Message("Getting CustomSaveData");
-            return _customSaveData;
-        }
+        get => _customSaveData;
+        // ReSharper disable once UnusedMember.Global
         set
         {
             Message("Setting CustomSaveData to " + value);
