@@ -12,4 +12,20 @@ public static class GameConfig
     public static bool DisableTaskPanel { get; set; } = true;
     public static bool DisableIntroCutscene { get; set; } = true;
     public static bool DisableVents { get; set; } = true;
+
+    private static bool _customSaveData = true;
+
+    public static bool CustomSaveData
+    {
+        get
+        {
+            Message("Getting CustomSaveData");
+            return _customSaveData;
+        }
+        set
+        {
+            Message("Setting CustomSaveData to " + value);
+            _customSaveData = value;
+        }
+    }
 }

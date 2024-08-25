@@ -1,5 +1,6 @@
 using System.IO;
 using HarmonyLib;
+using Laboratory.Config;
 
 namespace Laboratory.Patches;
 
@@ -12,33 +13,43 @@ internal static class SaveDataPatches
     {
         __result = false;
     }
-    
+
     [HarmonyPatch(typeof(PlatformPaths), nameof(PlatformPaths.persistentDataPath), MethodType.Getter)]
     [HarmonyPrepare]
     public static void PreparePersistentDataPatch()
     {
-        Directory.CreateDirectory(Path.Combine(PlatformPaths.persistentDataPath, LaboratoryPlugin.Instance.AppDataSubFolderName));
+        if (GameConfig.CustomSaveData) Directory.CreateDirectory(Path.Combine(PlatformPaths.persistentDataPath, LaboratoryPlugin.Instance.AppDataSubFolderName));
     }
-        
+
     [HarmonyPatch(typeof(PlatformPaths), nameof(PlatformPaths.persistentDataPath), MethodType.Getter)]
     [HarmonyPostfix]
     public static void PersistentDataPatch(ref string __result)
     {
-        __result = Path.Combine(__result, LaboratoryPlugin.Instance.AppDataSubFolderName);
+        if (GameConfig.CustomSaveData) __result = Path.Combine(__result, LaboratoryPlugin.Instance.AppDataSubFolderName);
     }
-    
+
     [HarmonyPatch(typeof(PlayerPurchasesData), nameof(PlayerPurchasesData.GetPurchase))]
     [HarmonyPrefix]
-    public static bool GetPurchasePatch(out bool __result)
+    public static bool GetPurchasePatch(ref bool __result)
     {
-        __result = true;
-        return false;
+        if (GameConfig.CustomSaveData)
+        {
+            __result = true;
+            return false;
+        }
+
+        return true;
     }
-        
+
     [HarmonyPatch(typeof(PlayerPurchasesData), nameof(PlayerPurchasesData.SetPurchased))]
     [HarmonyPrefix]
     public static bool SetPurchasedPatch()
     {
-        return false;
+        if (GameConfig.CustomSaveData)
+        {
+            return false;
+        }
+
+        return true;
     }
 }
